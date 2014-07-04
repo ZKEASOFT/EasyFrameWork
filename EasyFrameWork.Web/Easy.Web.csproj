@@ -72,7 +72,13 @@
     <Compile Include="Metadata\EasyModelMetaData.cs" />
     <Compile Include="ModelBinderProvider\EasyBinderProvider.cs" />
     <Compile Include="ModelBinder\EasyBinder.cs" />
+    <Compile Include="Page\HtmlStringWriter.cs" />
+    <Compile Include="Page\ResourceEntity.cs" />
+    <Compile Include="Page\ResourceRegister.cs" />
+    <Compile Include="Page\ViewPage.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Route\IRouteRegister.cs" />
+    <Compile Include="Route\RouteDescriptor.cs" />
     <Compile Include="ValidatorProvider\EasyModelValidatorProvider.cs" />
     <Compile Include="Validator\ModelValidatorBase.cs" />
     <Compile Include="Validator\RangeModelValidator.cs" />

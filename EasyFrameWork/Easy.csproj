@@ -38,12 +38,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="ChineseConverter">
-      <HintPath>..\DLL\CHTCHSConv\ChineseConverter.dll</HintPath>
-    </Reference>
-    <Reference Include="ChnCharInfo">
-      <HintPath>..\DLL\CHSPinYinConv\ChnCharInfo.dll</HintPath>
-    </Reference>
     <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\..\..\BusinessPromotionPlatform\BPP.Web\packages\Newtonsoft.Json.5.0.8\lib\net40\Newtonsoft.Json.dll</HintPath>
     </Reference>
@@ -59,6 +53,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Extend\ExtDate.cs" />
+    <Compile Include="Extend\ExtIEnumerable.cs" />
     <Compile Include="IOCAdapter\Exceptions\UnregisteredException.cs" />
     <Compile Include="Models\AutoComplete.cs" />
     <Compile Include="Models\EditorEntity.cs" />

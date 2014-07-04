@@ -5,8 +5,8 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Web;
-using Microsoft.International.Converters.TraditionalChineseToSimplifiedConverter;
-using Microsoft.International.Converters.PinYinConverter;
+//using Microsoft.International.Converters.TraditionalChineseToSimplifiedConverter;
+//using Microsoft.International.Converters.PinYinConverter;
 using System.Security.Cryptography;
 using System.Net;
 
@@ -176,7 +176,7 @@ namespace Easy.Extend
         {
             return System.Net.WebUtility.HtmlEncode(value);
         }
-        
+
         public static string UrlEncode(this string value)
         {
             StringBuilder sb = new StringBuilder();
@@ -192,65 +192,65 @@ namespace Easy.Extend
         /// </summary>
         /// <param name="value"></param>
         /// <returns></returns>
-        public static string ToSimpleChinese(this string value)
-        {
-            return ChineseConverter.Convert(value, ChineseConversionDirection.TraditionalToSimplified);
-        }
+        //public static string ToSimpleChinese(this string value)
+        //{
+        //    return ChineseConverter.Convert(value, ChineseConversionDirection.TraditionalToSimplified);
+        //}
         /// <summary>
         /// 转为繁体中文
         /// </summary>
         /// <param name="value"></param>
         /// <returns></returns>
-        public static string ToTraditionalChinese(this string value)
-        {
-            return ChineseConverter.Convert(value, ChineseConversionDirection.SimplifiedToTraditional);
-        }
+        //public static string ToTraditionalChinese(this string value)
+        //{
+        //    return ChineseConverter.Convert(value, ChineseConversionDirection.SimplifiedToTraditional);
+        //}
         /// <summary>
         /// 获取汉字拼音
         /// </summary>
         /// <param name="value"></param>
         /// <returns></returns>
-        public static string GetPinyin(this string value)
-        {
-            string r = string.Empty;
-            foreach (char obj in value)
-            {
-                try
-                {
-                    ChineseChar chineseChar = new ChineseChar(obj);
-                    string t = chineseChar.Pinyins[0].ToString();
-                    r += t.Substring(0, t.Length - 1);
-                }
-                catch
-                {
-                    r += obj.ToString();
-                }
-            }
-            return r;
-        }
+        //public static string GetPinyin(this string value)
+        //{
+        //    string r = string.Empty;
+        //    foreach (char obj in value)
+        //    {
+        //        try
+        //        {
+        //            ChineseChar chineseChar = new ChineseChar(obj);
+        //            string t = chineseChar.Pinyins[0].ToString();
+        //            r += t.Substring(0, t.Length - 1);
+        //        }
+        //        catch
+        //        {
+        //            r += obj.ToString();
+        //        }
+        //    }
+        //    return r;
+        //}
         /// <summary>
         /// 获取拼音首字母
         /// </summary>
         /// <param name="value"></param>
         /// <returns></returns>
-        public static string GetFirstPinyin(this string value)
-        {
-            string r = string.Empty;
-            foreach (char obj in value)
-            {
-                try
-                {
-                    ChineseChar chineseChar = new ChineseChar(obj);
-                    string t = chineseChar.Pinyins[0].ToString();
-                    r += t.Substring(0, 1);
-                }
-                catch
-                {
-                    r += obj.ToString();
-                }
-            }
-            return r;
-        }
+        //public static string GetFirstPinyin(this string value)
+        //{
+        //    string r = string.Empty;
+        //    foreach (char obj in value)
+        //    {
+        //        try
+        //        {
+        //            ChineseChar chineseChar = new ChineseChar(obj);
+        //            string t = chineseChar.Pinyins[0].ToString();
+        //            r += t.Substring(0, 1);
+        //        }
+        //        catch
+        //        {
+        //            r += obj.ToString();
+        //        }
+        //    }
+        //    return r;
+        //}
 
         public static string ToUnicode(this string value)
         {
@@ -267,7 +267,7 @@ namespace Easy.Extend
         private static readonly Regex webUrlExpression = new Regex(@"(http|https)://([\w-]+\.)+[\w-]+(/[\w- ./?%&=]*)?", RegexOptions.Singleline | RegexOptions.CultureInvariant | RegexOptions.Compiled);
         private static readonly Regex stripHTMLExpression = new Regex("<\\S[^><]*>", RegexOptions.IgnoreCase | RegexOptions.Singleline | RegexOptions.Multiline | RegexOptions.CultureInvariant | RegexOptions.Compiled);
 
-       
+
         public static string FormatWith(this string instance, params object[] args)
         {
 
