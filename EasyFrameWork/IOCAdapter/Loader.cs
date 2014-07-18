@@ -19,7 +19,8 @@ namespace Easy.IOCAdapter
                 }
                 else
                 {
-                    throw new UnregisteredException(ty);
+                    return default(T);
+                    //throw new UnregisteredException(ty);
                 }
             }
             else if (!ty.IsInterface)

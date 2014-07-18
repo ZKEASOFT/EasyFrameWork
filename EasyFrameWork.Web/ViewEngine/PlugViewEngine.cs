@@ -68,7 +68,6 @@ namespace Easy.Web.ViewEngine
         }
         protected override IView CreatePartialView(ControllerContext controllerContext, string partialPath)
         {
-
             return base.CreatePartialView(controllerContext, partialPath);
 
         }

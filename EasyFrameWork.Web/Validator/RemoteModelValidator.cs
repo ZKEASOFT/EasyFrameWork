@@ -33,10 +33,10 @@ namespace Easy.Web.Validator
 
         public override IEnumerable<ModelClientValidationRule> GetClientValidationRules()
         {
-            string url = (this.ControllerContext.Controller as Controller).Url.Content(string.Format("~/{0}/{1}", this.controller, this.action));
+            string url = (this.ControllerContext.Controller as System.Web.Mvc.Controller).Url.Content(string.Format("~/{0}/{1}", this.controller, this.action));
             if (!string.IsNullOrEmpty(area))
             {
-                url = (this.ControllerContext.Controller as Controller).Url.Content(string.Format("~/{0}/{1}/{2}", this.area, this.controller, this.action));
+                url = (this.ControllerContext.Controller as System.Web.Mvc.Controller).Url.Content(string.Format("~/{0}/{1}/{2}", this.area, this.controller, this.action));
             }
             return new[] { new ModelClientValidationRemoteRule(this.Attribute.ErrorMessage, url, this.Attribute.HttpMethod, this.Attribute.AdditionalFields) };
         }

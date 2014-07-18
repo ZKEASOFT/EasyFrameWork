@@ -24,24 +24,24 @@ namespace Easy.Web.HTML
             }
             if (string.IsNullOrEmpty(area))
             {
-                getList = (this.viewContex.Controller as Controller).Url.Content(string.Format("~/{0}/GetList", controller));
-                delete = (this.viewContex.Controller as Controller).Url.Content(string.Format("~/{0}/Delete", controller));
+                getList = (this.viewContex.Controller as System.Web.Mvc.Controller).Url.Content(string.Format("~/{0}/GetList", controller));
+                delete = (this.viewContex.Controller as System.Web.Mvc.Controller).Url.Content(string.Format("~/{0}/Delete", controller));
             }
             else
             {
-                getList = (this.viewContex.Controller as Controller).Url.Content(string.Format("~/{0}/{1}/GetList", area, controller));
-                delete = (this.viewContex.Controller as Controller).Url.Content(string.Format("~/{0}/{1}/Delete", area, controller));
+                getList = (this.viewContex.Controller as System.Web.Mvc.Controller).Url.Content(string.Format("~/{0}/{1}/GetList", area, controller));
+                delete = (this.viewContex.Controller as System.Web.Mvc.Controller).Url.Content(string.Format("~/{0}/{1}/Delete", area, controller));
             }
             base.DataSource(getList);
             base.DeleteUrl(delete);
         }
         public override Easy.HTML.Grid.EasyGrid<T> DataSource(string url)
         {
-            return base.DataSource((this.viewContex.Controller as Controller).Url.Content(url));
+            return base.DataSource((this.viewContex.Controller as System.Web.Mvc.Controller).Url.Content(url));
         }
         public override Easy.HTML.Grid.EasyGrid<T> DeleteUrl(string url)
         {
-            return base.DeleteUrl((this.viewContex.Controller as Controller).Url.Content(url));
+            return base.DeleteUrl((this.viewContex.Controller as System.Web.Mvc.Controller).Url.Content(url));
         }
         public override string ToString()
         {

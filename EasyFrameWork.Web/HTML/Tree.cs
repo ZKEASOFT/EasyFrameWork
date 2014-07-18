@@ -17,7 +17,7 @@ namespace Easy.Web.HTML
         }
         public override Easy.HTML.zTree.Tree<T> Source(string url)
         {
-            return base.Source((viewContex.Controller as Controller).Url.Content(url));
+            return base.Source((viewContex.Controller as System.Web.Mvc.Controller).Url.Content(url));
         }
         public override string ToString()
         {

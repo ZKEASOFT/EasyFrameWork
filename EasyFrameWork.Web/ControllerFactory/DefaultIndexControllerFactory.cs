@@ -16,9 +16,9 @@ namespace Easy.Web.ControllerFactory
         protected override IController GetControllerInstance(System.Web.Routing.RequestContext requestContext, Type controllerType)
         {
             IController controller = base.GetControllerInstance(requestContext, controllerType);
-            if (controller is Controller)
+            if (controller is System.Web.Mvc.Controller)
             {
-                (controller as Controller).ActionInvoker = new DefaultIndexActionInvoder();
+                (controller as System.Web.Mvc.Controller).ActionInvoker = new DefaultIndexActionInvoder();
             }
             return controller;
         }

@@ -1,4 +1,5 @@
 ﻿using Easy.Cache;
+using Easy.IOCAdapter.Exceptions;
 using Easy.Modules.MutiLanguage;
 using System;
 using System.Collections.Generic;
@@ -15,7 +16,15 @@ namespace Easy
             ILanguageEntity lan = lanCache.Get(lanKey);
             if (lan == null)
             {
-                ILanguageService lanService = Easy.IOCAdapter.Loader.CreateInstance<ILanguageService>();
+                ILanguageService lanService;
+                try
+                {
+                    lanService = Easy.IOCAdapter.Loader.CreateInstance<ILanguageService>();
+                }
+                catch (UnregisteredException ex)
+                {
+                    return lanKey;
+                }
                 if (lanService == null)
                     return lanKey;
                 lan = lanService.Get(lanKey, GetCurrentLanID());
@@ -49,7 +58,19 @@ namespace Easy
         }
         public static Dictionary<string, string> InitLan(Dictionary<string, string> source)
         {
-            ILanguageService lanService = Easy.IOCAdapter.Loader.CreateInstance<ILanguageService>();
+            ILanguageService lanService;
+            try
+            {
+                lanService = Easy.IOCAdapter.Loader.CreateInstance<ILanguageService>();
+            }
+            catch (UnregisteredException ex)
+            {
+                foreach (string item in source.Keys.ToArray<string>())
+                {
+                    source[item] = item;
+                }
+                return source;
+            }
             if (lanService != null)
                 return lanService.InitLan(source);
             else
