@@ -123,7 +123,7 @@ namespace Easy.Attribute
         {
             get
             {
-                IApplicationContext app = Easy.IOCAdapter.Loader.CreateInstance<IApplicationContext>();
+                IApplicationContext app = Easy.Loader.CreateInstance<IApplicationContext>();
                 if (app != null)
                 {
                     _user = app.CurrentUser;

@@ -37,7 +37,7 @@ namespace Easy.Data.DataBase
             }
             else
             {
-                var proertyInfoArray = Easy.IOCAdapter.Loader.GetType<T>().GetProperties();
+                var proertyInfoArray = Easy.Loader.GetType<T>().GetProperties();
                 foreach (var item in proertyInfoArray)
                 {
                     if (item.CanWrite)

@@ -1,0 +1,7 @@
+msiexec /a "E:\产品\MyFrameWork\EasyFrameWork\DLL\CHSPinYinConv.msi" /qb TARGETDIR="E:\产品\MyFrameWork\EasyFrameWork\DLL\CHSPinYinConv"
+
+msiexec /a "E:\桌面应用\图片识别\CHSOCR.msi" /qb TARGETDIR="E:\桌面应用\图片识别\CHSOCR"
+
+
+
+--抽取MSI内容

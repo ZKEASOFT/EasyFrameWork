@@ -38,7 +38,7 @@ namespace Easy.Reflection
         /// <returns>属性值</returns>
         public static object GetPropertyValue<T>(T item, string property)
         {
-            Type entityType = Easy.IOCAdapter.Loader.GetType<T>();
+            Type entityType = Easy.Loader.GetType<T>();
             PropertyInfo proper = entityType.GetProperty(property);
             if (proper != null && proper.CanRead)
             {
@@ -67,7 +67,7 @@ namespace Easy.Reflection
         /// <param name="value"></param>
         public static void SetPropertyValue<T>(T item, string property, object value)
         {
-            Type entityType = Easy.IOCAdapter.Loader.GetType<T>();
+            Type entityType = Easy.Loader.GetType<T>();
             PropertyInfo proper = entityType.GetProperty(property);
             if (proper != null && proper.CanWrite)
             {
@@ -85,7 +85,7 @@ namespace Easy.Reflection
         {
             if (data == null || data.Rows.Count == 0)
                 return default(T);
-            Type ty = Easy.IOCAdapter.Loader.GetType<T>();
+            Type ty = Easy.Loader.GetType<T>();
             T obj;
             if (ty.IsClass && ty.Name != "String")
             {
@@ -123,8 +123,8 @@ namespace Easy.Reflection
         {
             if (data == null || data.Rows.Count == 0)
                 return default(T);
-            Type ty = Easy.IOCAdapter.Loader.GetType<T>();
-            T obj = Easy.IOCAdapter.Loader.CreateInstance<T>();
+            Type ty = Easy.Loader.GetType<T>();
+            T obj = Easy.Loader.CreateInstance<T>();
             foreach (var item in columns)
             {
                 if (!data.Columns.Contains(item.Key))
@@ -148,8 +148,8 @@ namespace Easy.Reflection
         /// <returns>返回Model对象</returns>
         public static T GetModel<T>(NameValueCollection collection) where T : class
         {
-            Type objType = Easy.IOCAdapter.Loader.GetType<T>();
-            T obj = Easy.IOCAdapter.Loader.CreateInstance<T>();
+            Type objType = Easy.Loader.GetType<T>();
+            T obj = Easy.Loader.CreateInstance<T>();
             var properties = objType.GetProperties();
             foreach (string key in collection.AllKeys)
             {
@@ -192,8 +192,8 @@ namespace Easy.Reflection
         /// <returns>Model对象</returns>
         public static T GetModel<T>(NameValueCollection collection, string replaceKey) where T : class
         {
-            Type objType = Easy.IOCAdapter.Loader.GetType<T>();
-            T obj = Easy.IOCAdapter.Loader.CreateInstance<T>();
+            Type objType = Easy.Loader.GetType<T>();
+            T obj = Easy.Loader.CreateInstance<T>();
             var properties = objType.GetProperties();
             foreach (string key in collection.AllKeys)
             {
@@ -212,7 +212,7 @@ namespace Easy.Reflection
 
         public static object GetModel(Type target, NameValueCollection collection, string replaceKey)
         {
-            object obj = Activator.CreateInstance(target);
+            object obj = Loader.CreateInstance(target);
             var properties = target.GetProperties();
             foreach (string key in collection.AllKeys)
             {

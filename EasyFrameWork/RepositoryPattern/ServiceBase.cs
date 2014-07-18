@@ -14,7 +14,7 @@ namespace Easy.RepositoryPattern
         public ServiceBase()
         {
             repBase = new RepositoryBase<T>();
-            applicationContext = Easy.IOCAdapter.Loader.CreateInstance<IApplicationContext>();
+            applicationContext = Easy.Loader.CreateInstance<IApplicationContext>();
         }
         public virtual T Get(params object[] primaryKeys)
         {

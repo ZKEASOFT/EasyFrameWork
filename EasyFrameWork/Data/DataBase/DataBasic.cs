@@ -30,7 +30,7 @@ namespace Easy.Data.DataBase
         protected string GetSelectColumn<T>(DataConfigureAttribute custAttribute, out List<KeyValuePair<string, string>> comMatch) where T : class
         {
             StringBuilder selectCom = new StringBuilder();
-            System.Reflection.PropertyInfo[] propertys = Easy.IOCAdapter.Loader.GetType<T>().GetProperties();
+            System.Reflection.PropertyInfo[] propertys = Easy.Loader.GetType<T>().GetProperties();
             selectCom = new StringBuilder();
             comMatch = new List<KeyValuePair<string, string>>();
             foreach (var item in propertys)
@@ -314,7 +314,7 @@ namespace Easy.Data.DataBase
                     {
                         if (dataConfig.Value.IsPrimaryKey && dataConfig.Value.IsIncreasePrimaryKey)
                         {
-                            PropertyInfo pro = Easy.IOCAdapter.Loader.GetType<T>().GetProperty(dataConfig.Value.PropertyName);
+                            PropertyInfo pro = Easy.Loader.GetType<T>().GetProperty(dataConfig.Value.PropertyName);
                             if (pro != null && pro.CanWrite)
                             {
                                 pro.SetValue(item, Easy.Reflection.ClassAction.ValueConvert(pro, resu), null);
@@ -329,7 +329,7 @@ namespace Easy.Data.DataBase
         {
             DataConfigureAttribute custAttribute = DataConfigureAttribute.GetAttribute<T>();
             string tableName = GetTableName<T>(custAttribute);
-            System.Reflection.PropertyInfo[] propertys = Easy.IOCAdapter.Loader.GetType<T>().GetProperties();
+            System.Reflection.PropertyInfo[] propertys = Easy.Loader.GetType<T>().GetProperties();
             StringBuilder builder = new StringBuilder();
             List<KeyValuePair<string, object>> keyValue = new List<KeyValuePair<string, object>>();
             foreach (var property in propertys)
@@ -411,7 +411,7 @@ namespace Easy.Data.DataBase
             }
             else
             {
-                Type entityType = Easy.IOCAdapter.Loader.GetType<T>();
+                Type entityType = Easy.Loader.GetType<T>();
                 foreach (int primary in primaryKey.Keys)
                 {
                     string proPerty = primaryKey[primary];

@@ -1,0 +1,3 @@
+﻿The following files may be redistributed under the Traditional Chinese to Simplified Chinese Conversion Library and Add-In Tool license:
+
+ChineseConverter.dll

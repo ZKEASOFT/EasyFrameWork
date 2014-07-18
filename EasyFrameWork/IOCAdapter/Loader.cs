@@ -1,10 +1,11 @@
-﻿using Easy.IOCAdapter.Exceptions;
+﻿using Easy.IOCAdapter;
+using Easy.IOCAdapter.Exceptions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Easy.IOCAdapter
+namespace Easy
 {
     public static class Loader
     {
@@ -28,6 +29,18 @@ namespace Easy.IOCAdapter
                 return System.Activator.CreateInstance<T>();
             }
             return default(T);
+        }
+        public static T CreateInstance<T>(string assemblyName, string fullClassName) where T : class
+        {
+            return System.Activator.CreateInstance(assemblyName, fullClassName).Unwrap() as T;
+        }
+        public static object CreateInstance(Type type)
+        {
+            if (Container.All.ContainsKey(type))
+            {
+                type = Container.All[type];
+            }
+            return Activator.CreateInstance(type);
         }
         public static Type GetType<T>()
         {

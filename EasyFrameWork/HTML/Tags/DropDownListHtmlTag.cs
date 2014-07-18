@@ -148,7 +148,7 @@ namespace Easy.HTML.Tags
         {
             if (type == SourceType.Dictionary)
             {
-                IDataDictionaryService dicService = Easy.IOCAdapter.Loader.CreateInstance<IDataDictionaryService>();
+                IDataDictionaryService dicService = Easy.Loader.CreateInstance<IDataDictionaryService>();
                 if (dicService != null)
                 {
                     foreach (DataDictionaryEntity item in dicService.GetDictionaryByType(dictionaryType))
@@ -169,7 +169,7 @@ namespace Easy.HTML.Tags
             string dictionaryType = this.ModelType.Name + "_" + this.Name;
             if (type == SourceType.Dictionary)
             {
-                IDataDictionaryService dicService = Easy.IOCAdapter.Loader.CreateInstance<IDataDictionaryService>();
+                IDataDictionaryService dicService = Easy.Loader.CreateInstance<IDataDictionaryService>();
                 if (dicService != null)
                 {
                     foreach (DataDictionaryEntity item in dicService.GetDictionaryByType(dictionaryType))

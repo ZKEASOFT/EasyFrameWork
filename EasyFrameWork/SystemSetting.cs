@@ -13,7 +13,7 @@ namespace Easy
         static Modules.SystemSetting.SystemSettingService service;
         static SystemSetting()
         {
-            service = IOCAdapter.Loader.CreateInstance<Modules.SystemSetting.SystemSettingService>();
+            service = Loader.CreateInstance<Modules.SystemSetting.SystemSettingService>();
         }
         public static Modules.SystemSetting.SystemSettingBase Get()
         {

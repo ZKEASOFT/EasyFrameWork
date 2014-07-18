@@ -1,0 +1,14 @@
+E:\产品\MyFrameWork\EasyFrameWork\EasyFrameWork.Web\bin\Release\Easy.Web.dll
+E:\产品\MyFrameWork\EasyFrameWork\EasyFrameWork.Web\bin\Release\Easy.Web.pdb
+E:\产品\MyFrameWork\EasyFrameWork\EasyFrameWork.Web\bin\Release\Easy.dll
+E:\产品\MyFrameWork\EasyFrameWork\EasyFrameWork.Web\bin\Release\ChineseConverter.dll
+E:\产品\MyFrameWork\EasyFrameWork\EasyFrameWork.Web\bin\Release\ChnCharInfo.dll
+E:\产品\MyFrameWork\EasyFrameWork\EasyFrameWork.Web\bin\Release\Newtonsoft.Json.dll
+E:\产品\MyFrameWork\EasyFrameWork\EasyFrameWork.Web\bin\Release\Easy.pdb
+E:\产品\MyFrameWork\EasyFrameWork\EasyFrameWork.Web\bin\Release\ChineseConverter.xml
+E:\产品\MyFrameWork\EasyFrameWork\EasyFrameWork.Web\bin\Release\ChnCharInfo.xml
+E:\产品\MyFrameWork\EasyFrameWork\EasyFrameWork.Web\bin\Release\Newtonsoft.Json.xml
+E:\产品\MyFrameWork\EasyFrameWork\EasyFrameWork.Web\bin\Release\zh-CN\ChnCharInfo.resources.dll
+E:\产品\MyFrameWork\EasyFrameWork\EasyFrameWork.Web\obj\Release\Easy.Web.csprojResolveAssemblyReference.cache
+E:\产品\MyFrameWork\EasyFrameWork\EasyFrameWork.Web\obj\Release\Easy.Web.dll
+E:\产品\MyFrameWork\EasyFrameWork\EasyFrameWork.Web\obj\Release\Easy.Web.pdb

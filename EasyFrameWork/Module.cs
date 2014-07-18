@@ -19,7 +19,7 @@ namespace Easy
             get
             {
                 if (!string.IsNullOrEmpty(appPath)) return appPath;
-                IApplicationContext app = Easy.IOCAdapter.Loader.CreateInstance<IApplicationContext>();
+                IApplicationContext app = Easy.Loader.CreateInstance<IApplicationContext>();
                 if (app != null)
                 {
                     appPath = app.VirtualPath;

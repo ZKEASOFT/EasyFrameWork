@@ -1,0 +1,4 @@
+﻿The following files may be redistributed under the Simplified Chinese Pin-Yin Conversion Library license:
+ 
+ChnCharInfo.dll
+zh-CN\ChnCharInfo.resources.dll

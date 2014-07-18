@@ -13,8 +13,8 @@ namespace Easy.Modules.SystemSetting
         public SystemSettingBase Get()
         {
             DataTable table = DB.CustomerSql("select Property,Val from SystemSetting").ToDataTable();
-            Type setType = Easy.IOCAdapter.Loader.GetType<SystemSettingBase>();
-            SystemSettingBase setting = Easy.IOCAdapter.Loader.CreateInstance<SystemSettingBase>();
+            Type setType = Easy.Loader.GetType<SystemSettingBase>();
+            SystemSettingBase setting = Easy.Loader.CreateInstance<SystemSettingBase>();
             foreach (DataRow item in table.Rows)
             {
                 string property = item["Property"].ToString();
@@ -29,7 +29,7 @@ namespace Easy.Modules.SystemSetting
         }
         public void Update(SystemSettingBase setting)
         {
-            Type setType = Easy.IOCAdapter.Loader.GetType<SystemSettingBase>();
+            Type setType = Easy.Loader.GetType<SystemSettingBase>();
             PropertyInfo[] propertys = setType.GetProperties();
             DB.CustomerSql("Delete From SystemSetting").ExecuteNonQuery();
             foreach (PropertyInfo item in propertys)

@@ -19,7 +19,7 @@ namespace Easy
                 ILanguageService lanService;
                 try
                 {
-                    lanService = Easy.IOCAdapter.Loader.CreateInstance<ILanguageService>();
+                    lanService = Easy.Loader.CreateInstance<ILanguageService>();
                 }
                 catch (UnregisteredException ex)
                 {
@@ -61,7 +61,7 @@ namespace Easy
             ILanguageService lanService;
             try
             {
-                lanService = Easy.IOCAdapter.Loader.CreateInstance<ILanguageService>();
+                lanService = Easy.Loader.CreateInstance<ILanguageService>();
             }
             catch (UnregisteredException ex)
             {

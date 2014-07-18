@@ -134,7 +134,7 @@ namespace Easy.Attribute
         /// <returns></returns>
         public static DataConfigureAttribute GetAttribute<T>()
         {
-            Type targetType = Easy.IOCAdapter.Loader.GetType<T>();
+            Type targetType = Easy.Loader.GetType<T>();
             Easy.Cache.StaticCache<DataConfigureAttribute> cache = new Cache.StaticCache<DataConfigureAttribute>();
             string typeName = typeof(T).FullName;
             DataConfigureAttribute attribute = cache.Get(typeName);

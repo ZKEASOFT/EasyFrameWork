@@ -17,7 +17,7 @@ namespace Easy.HTML
         Type EntityType;
         public ViewModelDecode()
         {
-            EntityType = IOCAdapter.Loader.GetType<T>();
+            EntityType = Loader.GetType<T>();
             attribute = DataConfigureAttribute.GetAttribute<T>();         
         }
         public ViewModelDecode(T Entity)
@@ -29,9 +29,9 @@ namespace Easy.HTML
             }
             else
             {
-                entity = IOCAdapter.Loader.CreateInstance<T>();
+                entity = Loader.CreateInstance<T>();
             }
-            EntityType = IOCAdapter.Loader.GetType<T>();
+            EntityType = Loader.GetType<T>();
             attribute = DataConfigureAttribute.GetAttribute<T>();
             if (attribute == null)
             {
