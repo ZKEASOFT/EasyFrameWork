@@ -7,16 +7,10 @@ using System.ComponentModel;
 
 namespace Easy.CMS.Widget
 {
-    public abstract class WidgetPartDriver : ServiceBase<WidgetBase>
+    public interface IWidgetPartDriver
     {
-        public override void Add(WidgetBase item)
-        {
-            Type thisType = this.GetType();
-            item.AssemblyName = thisType.Assembly.GetName().Name;
-            item.FullTypeName = thisType.FullName;
-            base.Add(item);
-        }
-        public abstract WidgetPart Display(WidgetBase wedget, System.Web.HttpContextBase httpContext);
+        WidgetBase GetWidget(string widgetId);
+        WidgetPart Display(WidgetBase widget, System.Web.HttpContextBase httpContext);
     }
-    
+
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -270,6 +271,19 @@ namespace Easy.Reflection
                 case TypeCode.UInt32: return Convert.ToUInt32(obj);
                 case TypeCode.UInt64: return Convert.ToUInt64(obj);
                 default: return obj;
+            }
+        }
+        public static void CopyProperty(object obj, object toObj)
+        {
+            PropertyDescriptorCollection objPropertites = TypeDescriptor.GetProperties(obj);
+            PropertyDescriptorCollection toObjPropertites = TypeDescriptor.GetProperties(toObj);
+
+            foreach (PropertyDescriptor item in objPropertites)
+            {
+                if (toObjPropertites.Contains(item))
+                {
+                    toObjPropertites[item.Name].SetValue(toObj, item.GetValue(obj));
+                }
             }
         }
     }

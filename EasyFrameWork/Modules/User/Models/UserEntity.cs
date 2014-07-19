@@ -44,7 +44,7 @@ namespace Easy.Modules.User.Models
     }
     public class UserMetaData : DataViewMetaData<UserEntity>
     {
-        public override void DataConfigure()
+        protected override void DataConfigure()
         {
             DataTable("Users");
             DataConfig(m => m.UserID).Update(false).Insert(true).AsPrimaryKey();
@@ -53,7 +53,7 @@ namespace Easy.Modules.User.Models
             DataConfig(m => m.Title).Ignore();
         }
 
-        public override void ViewConfigure()
+        protected override void ViewConfigure()
         {
             ViewConfig(p => p.PassWord).AsPassWord().HideInGrid().Required();
             ViewConfig(p => p.NickName).AsTextBox().Required().Order(2);

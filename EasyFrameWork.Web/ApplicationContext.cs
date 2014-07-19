@@ -18,7 +18,7 @@ namespace Easy.Web
                 {
                     if (_CurrentUser == null)
                     {
-                        IUserService userService = Easy.IOCAdapter.Loader.CreateInstance<IUserService>();
+                        IUserService userService = Easy.Loader.CreateInstance<IUserService>();
                         if (userService != null)
                         {
                             _CurrentUser = userService.Get(System.Web.HttpContext.Current.User.Identity.Name);

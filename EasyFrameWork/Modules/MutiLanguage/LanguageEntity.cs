@@ -18,7 +18,7 @@ namespace Easy.Modules.MutiLanguage
     }
     class LanguageEntityMetaData : DataViewMetaData<LanguageEntity>
     {
-        public override void DataConfigure()
+        protected override void DataConfigure()
         {
             DataTable("Language");
             DataConfig(m => m.LanKey).Update().AsPrimaryKey();
@@ -27,7 +27,7 @@ namespace Easy.Modules.MutiLanguage
             DataConfig(m => m.Module).Update();
         }
 
-        public override void ViewConfigure()
+        protected override void ViewConfigure()
         {
             ViewConfig(m => m.LanID).AsTextBox().ReadOnly();
             ViewConfig(m => m.LanKey).AsTextBox().ReadOnly();

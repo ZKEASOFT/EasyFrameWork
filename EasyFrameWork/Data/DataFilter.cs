@@ -16,11 +16,19 @@ namespace Easy.Data
             _ConditionGroups = new List<ConditionGroup>();
             _Orders = new List<Order>();
         }
+        public DataFilter(List<string> updateProperties)
+        {
+            _Conditions = new List<Condition>();
+            _ConditionGroups = new List<ConditionGroup>();
+            _Orders = new List<Order>();
+            this.UpdateProperties = updateProperties;
+        }
         List<Condition> _Conditions;
 
         List<ConditionGroup> _ConditionGroups;
 
         List<Order> _Orders;
+        public List<string> UpdateProperties { get; set; }
 
         public List<ConditionGroup> ConditionGroups
         {

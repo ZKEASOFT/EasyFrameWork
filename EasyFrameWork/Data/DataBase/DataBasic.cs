@@ -144,7 +144,10 @@ namespace Easy.Data.DataBase
         public List<T> Get<T>(DataFilter filter) where T : class
         {
             DataConfigureAttribute custAttribute = DataConfigureAttribute.GetAttribute<T>();
-            filter = custAttribute.MetaData.DataAccess(filter);//数据权限
+            if (custAttribute != null)
+            {
+                filter = custAttribute.MetaData.DataAccess(filter);//数据权限
+            }
             string tableName = GetTableName<T>(custAttribute);
             List<KeyValuePair<string, string>> comMatch;
             string selectCol = GetSelectColumn<T>(custAttribute, out comMatch);
@@ -279,6 +282,7 @@ namespace Easy.Data.DataBase
         public void Add<T>(T item) where T : class
         {
             DataConfigureAttribute custAttribute = DataConfigureAttribute.GetAttribute<T>();
+
             string tableName = GetTableName<T>(custAttribute);
             Dictionary<string, object> allValues = Reflection.ClassAction.GetPropertieValues<T>(item);
             Dictionary<string, object> InsertValues = new Dictionary<string, object>();
@@ -334,6 +338,10 @@ namespace Easy.Data.DataBase
             List<KeyValuePair<string, object>> keyValue = new List<KeyValuePair<string, object>>();
             foreach (var property in propertys)
             {
+                if (filter.UpdateProperties != null && !filter.UpdateProperties.Contains(property.Name))
+                {
+                    continue;
+                }
                 string name = property.Name;
                 object value = property.GetValue(item, null);
 

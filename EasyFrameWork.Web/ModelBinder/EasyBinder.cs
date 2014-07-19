@@ -12,7 +12,7 @@ namespace Easy.Web.ModelBinder
         {
             if (bindingContext.ModelType.IsInterface || bindingContext.ModelType.IsAbstract)
             {
-                return Easy.Reflection.ClassAction.GetModel(Easy.IOCAdapter.Loader.GetType(bindingContext.ModelType), controllerContext.RequestContext.HttpContext.Request.Form);
+                return Easy.Reflection.ClassAction.GetModel(Easy.Loader.GetType(bindingContext.ModelType), controllerContext.RequestContext.HttpContext.Request.Form);
             }
             else
             {

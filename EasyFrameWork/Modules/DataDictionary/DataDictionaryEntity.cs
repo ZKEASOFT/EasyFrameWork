@@ -42,7 +42,7 @@ namespace Easy.Modules.DataDictionary
     }
     class DataDictionaryEntityMetaData : DataViewMetaData<DataDictionaryEntity>
     {
-        public override void DataConfigure()
+        protected override void DataConfigure()
         {
             DataTable("DataDictionary");
             DataConfig(m => m.ID).AsIncreasePrimaryKey();
@@ -55,7 +55,7 @@ namespace Easy.Modules.DataDictionary
             DataConfig(m => m.UpImage).Ignore();
         }
 
-        public override void ViewConfigure()
+        protected override void ViewConfigure()
         {
             ViewConfig(m => m.ID).AsHidden();
             ViewConfig(m => m.TypeName).AsHidden();

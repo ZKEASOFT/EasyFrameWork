@@ -8,6 +8,8 @@ using Easy.HTML.Tags;
 using Easy.Data;
 using Easy.Constant;
 using Easy.Models;
+using System.ComponentModel;
+using Easy;
 
 namespace Easy.Attribute
 {
@@ -19,6 +21,11 @@ namespace Easy.Attribute
     {
         public DataViewMetaData()
         {
+            Init();
+        }
+        public void Init()
+        {
+
             this.Alias = "T0";
             this.TargetType = typeof(T);
             foreach (var item in this.TargetType.GetProperties())
@@ -94,6 +101,10 @@ namespace Easy.Attribute
             {
                 ViewConfig("ImageUrl").AsTextBox().HideInGrid();
                 ViewConfig("ImageThumbUrl").AsTextBox().HideInGrid();
+            }
+            if (IsIgnoreBase())
+            {
+                IgnoreBase();
             }
             this.DataConfigure();
             this.ViewConfigure();
@@ -185,11 +196,11 @@ namespace Easy.Attribute
         /// <summary>
         /// 数据配置 方法[DataConfig][DataTable][DataPrimaryKey]
         /// </summary>
-        public abstract void DataConfigure();
+        protected abstract void DataConfigure();
         /// <summary>
         /// 视图配置 方法[ViewConfig]
         /// </summary>
-        public abstract void ViewConfigure();
+        protected abstract void ViewConfigure();
         public virtual DataFilter DataAccess(DataFilter filter)
         {
             return filter;
@@ -202,7 +213,7 @@ namespace Easy.Attribute
         protected TagsHelper ViewConfig(Expression<Func<T, object>> ex)
         {
             string key = Common.GetLinqExpressionText(ex);
-            return new TagsHelper(key, ref _HtmlTags, TargetType, TargetType.GetProperty(key));
+            return ViewConfig(key);
         }
         /// <summary>
         /// 视图配置，界面显示
@@ -224,15 +235,7 @@ namespace Easy.Attribute
         protected PropertyDataInfoHelper DataConfig(Expression<Func<T, object>> expression)
         {
             string key = Common.GetLinqExpressionText(expression);
-            PropertyDataInfo data;
-            if (PropertyDataConfig.ContainsKey(key))
-                data = PropertyDataConfig[key];
-            else
-            {
-                data = new PropertyDataInfo(key);
-                PropertyDataConfig.Add(key, data);
-            }
-            return new PropertyDataInfoHelper(data, this);
+            return DataConfig(key);
         }
         /// <summary>
         /// 数据配置，与数据库对应
@@ -251,6 +254,7 @@ namespace Easy.Attribute
                 data.ColumnName = property;
                 PropertyDataConfig.Add(property, data);
             }
+            data.Ignore = false;
             return new PropertyDataInfoHelper(data, this);
         }
         /// <summary>
@@ -262,10 +266,18 @@ namespace Easy.Attribute
             this.Table = table;
             return new RelationHelper(this._DataRelations);
         }
-        /// <summary>
-        /// 设置主键，数据表里的字段名
-        /// </summary>
-        /// <param name="increment">列名</param>
+        protected virtual bool IsIgnoreBase()
+        {
+            return false;
+        }
+        private void IgnoreBase()
+        {
+            PropertyDescriptorCollection attrs = TypeDescriptor.GetProperties(this.TargetType.BaseType);
+            foreach (PropertyDescriptor item in attrs)
+            {
+                DataConfig(item.Name).Ignore();
+            }
+        }
     }
 
 }

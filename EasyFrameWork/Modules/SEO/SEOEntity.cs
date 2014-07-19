@@ -28,13 +28,13 @@ namespace Easy.Modules.SEO
 
     class SEOEntityMetaData : DataViewMetaData<SEOEntity>
     {
-        public override void DataConfigure()
+        protected override void DataConfigure()
         {
             DataTable("SEO");
             DataConfig(m => m.ID).AsPrimaryKey();
         }
 
-        public override void ViewConfigure()
+        protected override void ViewConfigure()
         {
             ViewConfig(m => m.ID).AsTextBox().Required();
             ViewConfig(m => m.SEOTitle).AsTextBox().Required();

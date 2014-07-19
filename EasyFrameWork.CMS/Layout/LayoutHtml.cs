@@ -21,13 +21,13 @@ namespace Easy.CMS.Layout
     }
     class LayoutHtmlMetaData : DataViewMetaData<LayoutHtml>
     {
-        public override void DataConfigure()
+        protected override void DataConfigure()
         {
             DataTable("CMS_LayoutHtml");
             DataConfig(m => m.LayoutHtmlId).AsIncreasePrimaryKey();
         }
 
-        public override void ViewConfigure()
+        protected override void ViewConfigure()
         {
 
         }

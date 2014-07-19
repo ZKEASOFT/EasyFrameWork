@@ -43,7 +43,7 @@ namespace Easy.Web.Controller
         public S Service;
         public BasicController()
         {
-            Service = Easy.IOCAdapter.Loader.CreateInstance<S>();
+            Service = Easy.Loader.CreateInstance<S>();
         }
         protected IImage UpLoadImage(IImage entity)
         {

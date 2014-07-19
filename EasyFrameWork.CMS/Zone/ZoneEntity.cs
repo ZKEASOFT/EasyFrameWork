@@ -17,19 +17,16 @@ namespace Easy.CMS.Zone
         public string LayoutId { get; set; }
         public string ZoneName { get; set; }
     }
-    public class ZoneCollection : Collection<ZoneEntity>
-    {
-
-    }
+  
     public class ZoneEntityMetaData : DataViewMetaData<ZoneEntity>
     {
-        public override void DataConfigure()
+        protected override void DataConfigure()
         {
             DataTable("CMS_Zone");
             DataConfig(m => m.ZoneId).AsPrimaryKey();
         }
 
-        public override void ViewConfigure()
+        protected override void ViewConfigure()
         {
 
         }
