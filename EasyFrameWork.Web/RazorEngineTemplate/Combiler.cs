@@ -45,11 +45,12 @@ namespace Easy.Web.RazorEngineTemplate
                 codeProvider.GenerateCodeFromCompileUnit(GenerateCode(modelType, viewPath).GeneratedCode, writer, new CodeGeneratorOptions());
             }
             var result = codeProvider.CompileAssemblyFromSource(BuildCompilerParameters(), new[] { builder.ToString() });
+
             if (!string.IsNullOrEmpty(result.PathToAssembly) && CacheAssembly)
             {
                 if (File.Exists(result.PathToAssembly))
                 {
-                    File.Move(result.PathToAssembly, templateAssembly);
+                    File.Copy(result.PathToAssembly, templateAssembly);
                 }
                 else
                 {
@@ -91,7 +92,7 @@ namespace Easy.Web.RazorEngineTemplate
                     assembly.ManifestModule.Name != "<In Memory Module>")
                     param.ReferencedAssemblies.Add(assembly.Location);
             }
-            param.GenerateInMemory = false;
+            param.GenerateInMemory = !CacheAssembly;
             param.IncludeDebugInformation = false;
             param.GenerateExecutable = false;
             param.CompilerOptions = "/target:library /optimize";
