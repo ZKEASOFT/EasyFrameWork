@@ -2,30 +2,28 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using Easy.Extend;
 
 namespace Easy.Cache
 {
-    /// <summary>
-    /// 静态缓存，自动移除20分钟没有访问的对象
-    /// </summary>
     public class StaticCache
     {
         public class CacheObject
         {
             public bool AutoRemove { get; set; }
             public DateTime LastVisit { get; set; }
-            object obj;
+            readonly object _obj;
             public CacheObject(object obj, bool autoRemove)
             {
-                this.obj = obj;
+                this._obj = obj;
                 LastVisit = DateTime.Now;
                 this.AutoRemove = autoRemove;
             }
             public object Get()
             {
                 LastVisit = DateTime.Now;
-                return this.obj;
+                return this._obj;
             }
         }
 
@@ -34,25 +32,22 @@ namespace Easy.Cache
         static StaticCache()
         {
             Cache = new Dictionary<string, CacheObject>();
-            System.Threading.Thread thr = new System.Threading.Thread(new System.Threading.ThreadStart(() =>
+            var thr = new Thread(new ThreadStart(() =>
             {
                 while (true)
                 {
-                    System.Threading.Thread.Sleep(new TimeSpan(0, 20, 1));
+                    Thread.Sleep(new TimeSpan(0, 20, 1));
                     lock (Cache)
                     {
-                        List<string> needRemove = new List<string>();
-                        foreach (var item in Cache)
+                        var needRemove = new List<string>();
+                        Cache.Each(item =>
                         {
                             if (item.Value.AutoRemove && (DateTime.Now - item.Value.LastVisit).TotalMinutes > 20)
                             {
                                 needRemove.Add(item.Key);
                             }
-                        }
-                        foreach (var item in needRemove)
-                        {
-                            Cache.Remove(item);
-                        }
+                        });
+                        needRemove.Each(item => Cache.Remove(item));
                     }
                 }
             }));
@@ -79,6 +74,17 @@ namespace Easy.Cache
             }
         }
 
+        public void Remove(string key)
+        {
+            lock (Cache)
+            {
+                if (Cache.ContainsKey(key))
+                {
+                    Cache[key] = null;
+                    Cache.Remove(key);
+                }
+            }
+        }
 
         public static int Count
         {
@@ -125,6 +131,10 @@ namespace Easy.Cache
                         cacheKeys.Add(CacheKey);
                     }
                 }
+                else
+                {
+                    SignalRela.Add(signal, new List<string> { CacheKey });
+                }
             }
         }
 
@@ -141,6 +151,7 @@ namespace Easy.Cache
                         {
                             if (StaticCache.Cache.ContainsKey(m))
                             {
+                                StaticCache.Cache[m] = null;
                                 StaticCache.Cache.Remove(m);
                             }
 

@@ -109,14 +109,14 @@ namespace Easy.Attribute
             this.DataConfigure();
             this.ViewConfigure();
         }
-        Dictionary<string, HtmlTagBase> _HtmlTags = new Dictionary<string, HtmlTagBase>();
-        Dictionary<string, PropertyDataInfo> _PorpertyDataConfig = new Dictionary<string, PropertyDataInfo>();
-        List<Relation> _DataRelations = new List<Relation>();
-        Dictionary<int, string> _Primarykey;
+        Dictionary<string, HtmlTagBase> _htmlTags = new Dictionary<string, HtmlTagBase>();
+        Dictionary<string, PropertyDataInfo> _porpertyDataConfig = new Dictionary<string, PropertyDataInfo>();
+        List<Relation> _dataRelations = new List<Relation>();
+        Dictionary<int, string> _primarykey;
         public Dictionary<string, HtmlTagBase> HtmlTags
         {
-            get { return this._HtmlTags; }
-            private set { this._HtmlTags = value; }
+            get { return this._htmlTags; }
+            private set { this._htmlTags = value; }
         }
 
         public Type TargetType
@@ -126,15 +126,15 @@ namespace Easy.Attribute
         }
         public Dictionary<string, PropertyDataInfo> PropertyDataConfig
         {
-            get { return this._PorpertyDataConfig; }
-            private set { this._PorpertyDataConfig = value; }
+            get { return this._porpertyDataConfig; }
+            private set { this._porpertyDataConfig = value; }
         }
         IUser _user;
         public IUser User
         {
             get
             {
-                IApplicationContext app = Easy.Loader.CreateInstance<IApplicationContext>();
+                var app = Loader.CreateInstance<IApplicationContext>();
                 if (app != null)
                 {
                     _user = app.CurrentUser;
@@ -145,29 +145,29 @@ namespace Easy.Attribute
 
         public List<Relation> DataRelations
         {
-            get { return this._DataRelations; }
-            private set { this._DataRelations = value; }
+            get { return this._dataRelations; }
+            private set { this._dataRelations = value; }
         }
         public Dictionary<int, string> Primarykey
         {
             get
             {
-                if (_Primarykey != null)
-                    return _Primarykey;
+                if (_primarykey != null)
+                    return _primarykey;
                 else
                 {
-                    foreach (var item in _PorpertyDataConfig)
+                    foreach (var item in _porpertyDataConfig)
                     {
                         if (item.Value.IsPrimaryKey)
                         {
-                            if (_Primarykey == null)
+                            if (_primarykey == null)
                             {
-                                _Primarykey = new Dictionary<int, string>();
+                                _primarykey = new Dictionary<int, string>();
                             }
-                            _Primarykey.Add(item.Value.PrimaryKeyIndex, item.Value.ColumnName);
+                            _primarykey.Add(item.Value.PrimaryKeyIndex, item.Value.ColumnName);
                         }
                     }
-                    return _Primarykey;
+                    return _primarykey;
                 }
             }
         }
@@ -222,7 +222,7 @@ namespace Easy.Attribute
         /// <returns></returns>
         protected TagsHelper ViewConfig(string properyt)
         {
-            return new TagsHelper(properyt, ref _HtmlTags, TargetType, TargetType.GetProperty(properyt));
+            return new TagsHelper(properyt, ref _htmlTags, TargetType, TargetType.GetProperty(properyt));
         }
         /// <summary>
         /// 主键
@@ -264,7 +264,7 @@ namespace Easy.Attribute
         protected RelationHelper DataTable(string table)
         {
             this.Table = table;
-            return new RelationHelper(this._DataRelations);
+            return new RelationHelper(this._dataRelations);
         }
         protected virtual bool IsIgnoreBase()
         {

@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Easy.Extend;
 
 namespace Easy.Data
 {
@@ -13,11 +14,11 @@ namespace Easy.Data
     /// </summary>
     public class Condition
     {
-        string valueKey;
+        readonly string _valueKey;
         public Condition()
         {
             this.ConditionType = DataEnumerate.ConditionType.And;
-            this.valueKey = Guid.NewGuid().ToString().Replace("-", "");
+            this._valueKey = Guid.NewGuid().ToString("N");
         }
 
         public Condition(string property, DataEnumerate.OperatorType operatorType, object value)
@@ -26,7 +27,7 @@ namespace Easy.Data
             this.OperatorType = operatorType;
             this.Value = value;
             this.ConditionType = DataEnumerate.ConditionType.And;
-            this.valueKey = Guid.NewGuid().ToString().Replace("-", "");
+            this._valueKey = Guid.NewGuid().ToString("N");
         }
 
         public Condition(string condition, DataEnumerate.ConditionType conditionTyep)
@@ -68,7 +69,7 @@ namespace Easy.Data
             {
                 if (this.ConditionString.Contains("{0}"))
                 {
-                    builder.AppendFormat(this.ConditionString, "@" + valueKey);
+                    builder.AppendFormat(this.ConditionString, "@" + _valueKey);
                 }
                 else
                 {
@@ -84,11 +85,11 @@ namespace Easy.Data
                         {
                             if (this.Property.Contains("["))
                             {
-                                builder.AppendFormat(" {0}=@{1} ", this.Property, valueKey);
+                                builder.AppendFormat(" {0}=@{1} ", this.Property, _valueKey);
                             }
                             else
                             {
-                                builder.AppendFormat(" [{0}]=@{1} ", this.Property, valueKey);
+                                builder.AppendFormat(" [{0}]=@{1} ", this.Property, _valueKey);
                             }
                             break;
                         }
@@ -96,11 +97,11 @@ namespace Easy.Data
                         {
                             if (this.Property.Contains("["))
                             {
-                                builder.AppendFormat(" {0}>@{1} ", this.Property, valueKey);
+                                builder.AppendFormat(" {0}>@{1} ", this.Property, _valueKey);
                             }
                             else
                             {
-                                builder.AppendFormat(" [{0}]>@{1} ", this.Property, valueKey);
+                                builder.AppendFormat(" [{0}]>@{1} ", this.Property, _valueKey);
                             }
                             break;
                         }
@@ -108,11 +109,11 @@ namespace Easy.Data
                         {
                             if (this.Property.Contains("["))
                             {
-                                builder.AppendFormat(" {0}>=@{1} ", this.Property, valueKey);
+                                builder.AppendFormat(" {0}>=@{1} ", this.Property, _valueKey);
                             }
                             else
                             {
-                                builder.AppendFormat(" [{0}]>=@{1} ", this.Property, valueKey);
+                                builder.AppendFormat(" [{0}]>=@{1} ", this.Property, _valueKey);
                             }
                             break;
                         }
@@ -120,11 +121,11 @@ namespace Easy.Data
                         {
                             if (this.Property.Contains("["))
                             {
-                                builder.AppendFormat(" {0}<@{1} ", this.Property, valueKey);
+                                builder.AppendFormat(" {0}<@{1} ", this.Property, _valueKey);
                             }
                             else
                             {
-                                builder.AppendFormat(" [{0}]<@{1} ", this.Property, valueKey);
+                                builder.AppendFormat(" [{0}]<@{1} ", this.Property, _valueKey);
                             }
                             break;
                         }
@@ -132,11 +133,11 @@ namespace Easy.Data
                         {
                             if (this.Property.Contains("["))
                             {
-                                builder.AppendFormat(" {0}<=@{1} ", this.Property, valueKey);
+                                builder.AppendFormat(" {0}<=@{1} ", this.Property, _valueKey);
                             }
                             else
                             {
-                                builder.AppendFormat(" [{0}]<=@{1} ", this.Property, valueKey);
+                                builder.AppendFormat(" [{0}]<=@{1} ", this.Property, _valueKey);
                             }
                             break;
                         }
@@ -144,11 +145,11 @@ namespace Easy.Data
                         {
                             if (this.Property.Contains("["))
                             {
-                                builder.AppendFormat(" {0}<>@{1} ", this.Property, valueKey);
+                                builder.AppendFormat(" {0}<>@{1} ", this.Property, _valueKey);
                             }
                             else
                             {
-                                builder.AppendFormat(" [{0}]<>@{1} ", this.Property, valueKey);
+                                builder.AppendFormat(" [{0}]<>@{1} ", this.Property, _valueKey);
                             }
                             break;
                         }
@@ -158,20 +159,20 @@ namespace Easy.Data
                         {
                             if (this.Property.Contains("["))
                             {
-                                builder.AppendFormat(" {0} like @{1} ", this.Property, valueKey);
+                                builder.AppendFormat(" {0} like @{1} ", this.Property, _valueKey);
                             }
                             else
                             {
-                                builder.AppendFormat(" [{0}] like @{1} ", this.Property, valueKey);
+                                builder.AppendFormat(" [{0}] like @{1} ", this.Property, _valueKey);
                             }
                             break;
                         }
                     case DataEnumerate.OperatorType.In:
                         {
-                            StringBuilder valuesBuilder = new StringBuilder();
-                            if (typeof(IEnumerable).IsAssignableFrom(this.Value.GetType()))
+                            var valuesBuilder = new StringBuilder();
+                            if (this.Value is IEnumerable)
                             {
-                                IEnumerable valueEnum = this.Value as IEnumerable;
+                                var valueEnum = this.Value as IEnumerable;
                                 Type itemType = null;
                                 foreach (var item in valueEnum)
                                 {
@@ -203,10 +204,10 @@ namespace Easy.Data
                         }
                     case DataEnumerate.OperatorType.NotIn:
                         {
-                            StringBuilder valuesBuilder = new StringBuilder();
-                            if (typeof(IEnumerable).IsAssignableFrom(this.Value.GetType()))
+                            var valuesBuilder = new StringBuilder();
+                            if (this.Value is IEnumerable)
                             {
-                                IEnumerable valueEnum = this.Value as IEnumerable;
+                                var valueEnum = this.Value as IEnumerable;
                                 Type itemType = null;
                                 foreach (var item in valueEnum)
                                 {
@@ -240,11 +241,11 @@ namespace Easy.Data
                         {
                             if (this.Property.Contains("["))
                             {
-                                builder.AppendFormat(" {0}=@{1} ", this.Property, valueKey);
+                                builder.AppendFormat(" {0}=@{1} ", this.Property, _valueKey);
                             }
                             else
                             {
-                                builder.AppendFormat(" [{0}]=@{1} ", this.Property, valueKey);
+                                builder.AppendFormat(" [{0}]=@{1} ", this.Property, _valueKey);
                             }
                             break;
                         }
@@ -272,12 +273,12 @@ namespace Easy.Data
         {
             switch (this.OperatorType)
             {
-                case DataEnumerate.OperatorType.StartWith: return new KeyValuePair<string, object>(valueKey, Value + "%");
-                case DataEnumerate.OperatorType.EndWith: return new KeyValuePair<string, object>(valueKey, "%" + Value + "%");
-                case DataEnumerate.OperatorType.Contains: return new KeyValuePair<string, object>(valueKey, "%" + Value + "%");
+                case DataEnumerate.OperatorType.StartWith: return new KeyValuePair<string, object>(_valueKey, Value + "%");
+                case DataEnumerate.OperatorType.EndWith: return new KeyValuePair<string, object>(_valueKey, "%" + Value + "%");
+                case DataEnumerate.OperatorType.Contains: return new KeyValuePair<string, object>(_valueKey, "%" + Value + "%");
                 case DataEnumerate.OperatorType.In:
                 case DataEnumerate.OperatorType.NotIn: return new KeyValuePair<string, object>();
-                default: return new KeyValuePair<string, object>(valueKey, Value);
+                default: return new KeyValuePair<string, object>(_valueKey, Value);
             }
 
         }
@@ -287,14 +288,13 @@ namespace Easy.Data
     {
         public ConditionGroup()
         {
-            this._Conditions = new List<Condition>();
+            this.Conditions = new List<Condition>();
         }
-        List<Condition> _Conditions;
 
         public List<Condition> Conditions
         {
-            get { return _Conditions; }
-            set { _Conditions = value; }
+            get;
+            set;
         }
         /// <summary>
         /// 条件类型
@@ -306,7 +306,7 @@ namespace Easy.Data
         }
         public override string ToString()
         {
-            StringBuilder builder = new StringBuilder();
+            var builder = new StringBuilder();
             int i = 0;
             if (Conditions.Count > 0)
             {
@@ -340,14 +340,14 @@ namespace Easy.Data
         }
         public List<KeyValuePair<string, object>> GetKeyAndValue()
         {
-            List<KeyValuePair<string, object>> list = new List<KeyValuePair<string, object>>();
-            foreach (var item in Conditions)
+            var list = new List<KeyValuePair<string, object>>();
+            Conditions.Each(item =>
             {
                 if (item.Value != null)
                 {
                     list.Add(item.GetKeyAndValue());
                 }
-            }
+            });
             return list;
         }
         public void Add(Condition condition)
