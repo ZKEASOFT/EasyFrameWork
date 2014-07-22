@@ -8,7 +8,7 @@ using Easy.Attribute;
 namespace Easy.Modules.Discuss
 {
     [DataConfigure(typeof(DiscussEntityMetaData))]
-    public class DiscussEntity : BasicEntity
+    public class DiscussEntity : IBasicEntity<long>
     {
         public long ParentID { get; set; }
         public int RelationType { get; set; }
@@ -16,20 +16,24 @@ namespace Easy.Modules.Discuss
         public string Message { get; set; }
         public string ImageUrl { get; set; }
 
+
+        public long ID { get; set; }
+
+        public string Title { get; set; }
+
+        public string Description { get; set; }
+
+        public bool IsPassed { get; set; }
     }
     class DiscussEntityMetaData : DataViewMetaData<DiscussEntity>
     {
-        public override void DataConfigure()
+        protected override void DataConfigure()
         {
             DataTable("Discuss");
-            DataPrimarykey("ID");
-
-            DataConfig(m => m.CreateBy).Update(false);
-            DataConfig(m => m.CreatebyName).Update(false);
-            DataConfig(m => m.CreateDate).Update(false);
+            DataConfig(m=>m.ID).AsIncreasePrimaryKey();
         }
 
-        public override void ViewConfigure()
+        protected override void ViewConfigure()
         {
             
         }

@@ -16,6 +16,7 @@ namespace Easy.CMS.Layout
         public const string LayoutKey = "ViewDataKey_Layout";
         public string LayoutId { get; set; }
         public string LayoutName { get; set; }
+        public string ContainerClass { get; set; }
         public string StylePath { get; set; }
         public string IncludeScript { get; set; }
         public string IncludeStyle { get; set; }

@@ -1,4 +1,5 @@
-﻿using Easy.RepositoryPattern;
+﻿using Easy.Cache;
+using Easy.RepositoryPattern;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,21 +10,20 @@ namespace Easy.Modules.SystemSetting
     public abstract class SystemSettingService
     {
         SystemSettingRepository rep = new SystemSettingRepository();
-        Easy.Cache.StaticCache<SystemSettingBase> cache = new Cache.StaticCache<SystemSettingBase>();
+        StaticCache cache = new StaticCache();
+        private const string SignalSystemSettingUpdate = "Signal_SystemSettingUpdate";
         public virtual SystemSettingBase Get()
         {
-            SystemSettingBase setting = cache.Get();
-            if (setting == null)
+            return cache.Get("CacheKey_SystemSettingAll", m =>
             {
-                setting = rep.Get();
-                cache.Add(setting);
-            }
-            return setting;
+                m.When(SignalSystemSettingUpdate);
+                return rep.Get();
+            });
         }
         public virtual void Update(SystemSettingBase setting)
         {
+            new Signal().Do(SignalSystemSettingUpdate);
             rep.Update(setting);
-            cache.Add(setting);
         }
     }
 }

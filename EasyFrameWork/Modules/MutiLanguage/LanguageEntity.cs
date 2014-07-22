@@ -8,7 +8,7 @@ using Easy.Models;
 namespace Easy.Modules.MutiLanguage
 {
     [DataConfigure(typeof(LanguageEntityMetaData))]
-    public class LanguageEntity : ILanguageEntity
+    public class LanguageEntity
     {
         public string LanKey { get; set; }
         public int LanID { get; set; }

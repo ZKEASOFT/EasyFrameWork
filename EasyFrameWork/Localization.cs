@@ -12,23 +12,15 @@ namespace Easy
     {
         public static string Get(string lanKey)
         {
-            StaticCache<ILanguageEntity> lanCache = new StaticCache<ILanguageEntity>();
-            ILanguageEntity lan = lanCache.Get(lanKey);
-            if (lan == null)
+            var lanCache = new StaticCache();
+            LanguageEntity lan = lanCache.Get(lanKey, m =>
             {
-                ILanguageService lanService;
-                try
-                {
-                    lanService = Easy.Loader.CreateInstance<ILanguageService>();
-                }
-                catch (UnregisteredException ex)
-                {
-                    return lanKey;
-                }
+                m.When(LanguageService.SignalLanguageUpdate);
+                var lanService = Loader.CreateInstance<ILanguageService>();
                 if (lanService == null)
-                    return lanKey;
-                lan = lanService.Get(lanKey, GetCurrentLanID());
-                if (lan == null)
+                    return new LanguageEntity { LanKey = lanKey, LanValue = lanKey };
+                var language = lanService.Get(lanKey, GetCurrentLanID());
+                if (language == null)
                 {
                     string lanValue = lanKey;
                     string LanType = "UnKnown";
@@ -39,21 +31,18 @@ namespace Easy
                         LanType = "EntityProperty";
                         Module = lanKey.Split('@')[0];
                     }
-                    lan = new LanguageEntity();
-                    lan.LanID = GetCurrentLanID();
-                    lan.LanValue = lanValue;
-                    lan.LanKey = lanKey;
-                    lan.LanType = LanType;
-                    lan.Module = Module;
-                    lanService.Add(lan);
-                    lanCache.Add(lanKey, lan);
-                    return lanValue;
+                    language = new LanguageEntity
+                    {
+                        LanID = GetCurrentLanID(),
+                        LanValue = lanValue,
+                        LanKey = lanKey,
+                        LanType = LanType,
+                        Module = Module
+                    };
+                    lanService.Add(language);
                 }
-                else
-                {
-                    lanCache.Add(lanKey, lan);
-                }
-            }
+                return language;
+            });
             return lan.LanValue;
         }
         public static Dictionary<string, string> InitLan(Dictionary<string, string> source)

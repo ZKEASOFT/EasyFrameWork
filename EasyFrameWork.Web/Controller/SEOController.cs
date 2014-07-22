@@ -62,13 +62,12 @@ namespace Easy.Web.Controller
                                 }
                             }
                         }
-                        Easy.Cache.StaticCache<SEOEntity> cache = new Easy.Cache.StaticCache<SEOEntity>(path);
-                        SEOEntity entity = cache.Get();
-                        SEOService seoService = new SEOService();
-                        if (entity == null)
+                        var cache = new Easy.Cache.StaticCache();
+                        SEOEntity entity = cache.Get(path, m =>
                         {
-                            entity = seoService.Get(path);
-                        }
+                            m.When(SEOService.SignalSEOEntityUpdate);
+                            return new SEOService().Get(m.CacheKey);
+                        });
                         if (entity != null)
                         {
                             ViewBag.SEO = entity;
@@ -85,7 +84,7 @@ namespace Easy.Web.Controller
                                 SEOKeyWords = "zkea,品质,生活,交流,见闻,资讯,优铺,学识,优品,冏事",
                                 IsPassed = true
                             };
-                           // seoService.Add(entity);
+                            // seoService.Add(entity);
                             ViewBag.SEO = entity;
                         }
                     }

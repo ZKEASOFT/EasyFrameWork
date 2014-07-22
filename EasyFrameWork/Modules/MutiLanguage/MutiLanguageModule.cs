@@ -10,7 +10,6 @@ namespace Easy.Modules.MutiLanguage
     {
         public void Load()
         {
-            Container.Register(typeof(ILanguageEntity), typeof(LanguageEntity));
             Container.Register(typeof(ILanguageService), typeof(LanguageService));
         }
     }

@@ -11,10 +11,14 @@
     <AssemblyName>Easy.Web</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <SccProjectName>SAK</SccProjectName>
-    <SccLocalPath>SAK</SccLocalPath>
-    <SccAuxPath>SAK</SccAuxPath>
-    <SccProvider>SAK</SccProvider>
+    <SccProjectName>
+    </SccProjectName>
+    <SccLocalPath>
+    </SccLocalPath>
+    <SccAuxPath>
+    </SccAuxPath>
+    <SccProvider>
+    </SccProvider>
     <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -77,6 +81,7 @@
     <Compile Include="ActionInvoker\DefaultIndexActionInvoder.cs" />
     <Compile Include="AjaxState.cs" />
     <Compile Include="ApplicationContext.cs" />
+    <Compile Include="Attribute\AdminAttribute.cs" />
     <Compile Include="Attribute\OnceSubmitAttribute.cs" />
     <Compile Include="Attribute\SEOAttribute.cs" />
     <Compile Include="Cache\MemoryCache.cs" />
