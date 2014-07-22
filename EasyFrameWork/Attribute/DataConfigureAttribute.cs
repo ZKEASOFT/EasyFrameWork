@@ -1,4 +1,5 @@
-﻿using Easy.Data;
+﻿using Easy.Cache;
+using Easy.Data;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,8 +21,7 @@ namespace Easy.Attribute
         public DataConfigureAttribute(Type MetaDataType)
         {
             Easy.Cache.StaticCache cache = new Easy.Cache.StaticCache();
-            IDataViewMetaData metaData = cache.Get(MetaDataType.FullName) as IDataViewMetaData;
-            if (metaData == null)
+            IDataViewMetaData metaData = cache.Get(MetaDataType.FullName, m =>
             {
                 metaData = Activator.CreateInstance(MetaDataType) as IDataViewMetaData;
                 //HTML标签的多语言
@@ -36,8 +36,8 @@ namespace Easy.Attribute
                 {
                     metaData.HtmlTags[item.Key].DisplayName = item.Value;
                 }
-                cache.Add(MetaDataType.FullName, metaData);
-            }
+                return metaData;
+            });
             this.MetaData = metaData;
         }
         /// <summary>
@@ -135,15 +135,14 @@ namespace Easy.Attribute
         public static DataConfigureAttribute GetAttribute<T>()
         {
             Type targetType = Easy.Loader.GetType<T>();
-            Easy.Cache.StaticCache<DataConfigureAttribute> cache = new Cache.StaticCache<DataConfigureAttribute>();
+            StaticCache cache = new StaticCache();
             string typeName = typeof(T).FullName;
-            DataConfigureAttribute attribute = cache.Get(typeName);
-            if (attribute == null)
-            {
-                attribute = System.Attribute.GetCustomAttribute(targetType, typeof(DataConfigureAttribute)) as DataConfigureAttribute;
-                cache.Add(typeName, attribute);
-            }
-            return attribute;
+            return cache.Get(typeName, m =>
+              {
+                  return
+                      System.Attribute.GetCustomAttribute(targetType, typeof(DataConfigureAttribute)) as
+                          DataConfigureAttribute;
+              });
         }
     }
 }

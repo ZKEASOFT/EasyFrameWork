@@ -20,3 +20,13 @@ E:\产品\MyFrameWork\EasyFrameWork\Test\bin\Debug\Newtonsoft.Json.xml
 E:\OtherProjects\MyFrameWork\EasyFrameWork\Test\bin\Debug\Test.exe.config
 E:\OtherProjects\MyFrameWork\EasyFrameWork\Test\obj\Debug\Test.exe
 E:\OtherProjects\MyFrameWork\EasyFrameWork\Test\obj\Debug\Test.pdb
+E:\OtherProjects\MyFrameWork\EasyFrameWork\Test\bin\Debug\Test.exe
+E:\OtherProjects\MyFrameWork\EasyFrameWork\Test\bin\Debug\Test.pdb
+E:\OtherProjects\MyFrameWork\EasyFrameWork\Test\bin\Debug\Easy.dll
+E:\OtherProjects\MyFrameWork\EasyFrameWork\Test\bin\Debug\Easy.Modules.dll
+E:\OtherProjects\MyFrameWork\EasyFrameWork\Test\bin\Debug\Easy.Web.dll
+E:\OtherProjects\MyFrameWork\EasyFrameWork\Test\bin\Debug\Newtonsoft.Json.dll
+E:\OtherProjects\MyFrameWork\EasyFrameWork\Test\bin\Debug\Easy.Modules.pdb
+E:\OtherProjects\MyFrameWork\EasyFrameWork\Test\bin\Debug\Easy.Web.pdb
+E:\OtherProjects\MyFrameWork\EasyFrameWork\Test\bin\Debug\Easy.pdb
+E:\OtherProjects\MyFrameWork\EasyFrameWork\Test\obj\Debug\Test.csprojResolveAssemblyReference.cache

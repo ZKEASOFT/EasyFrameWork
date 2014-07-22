@@ -8,7 +8,7 @@ using Easy.Attribute;
 namespace Easy.Modules.File
 {
     [DataConfigure(typeof(FileEntityMetaData))]
-    public class FileEntity : BasicEntity
+    public class FileEntity : IBasicEntity<long>
     {
         public int RelationType { get; set; }
         public long RelationID { get; set; }
@@ -16,18 +16,25 @@ namespace Easy.Modules.File
         public string Url { get; set; }
 
         public string Target { get; set; }
+
+        public long ID { get; set; }
+
+        public string Title { get; set; }
+
+        public string Description { get; set; }
+
+        public bool IsPassed { get; set; }
     }
 
     class FileEntityMetaData : DataViewMetaData<FileEntity>
     {
-        public override void DataConfigure()
+        protected override void DataConfigure()
         {
             DataTable("Files");
-            DataPrimarykey("ID");
-            DataConfig(m => m.ID).Update(false).Insert(false);
+            DataConfig(m => m.ID).AsIncreasePrimaryKey();
         }
 
-        public override void ViewConfigure()
+        protected override void ViewConfigure()
         {
             ViewConfig(m => m.ID).AsHidden();
             ViewConfig(m => m.RelationType).AsHidden();

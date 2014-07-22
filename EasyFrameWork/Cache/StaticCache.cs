@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Easy.Extend;
 
 namespace Easy.Cache
 {
@@ -28,20 +29,20 @@ namespace Easy.Cache
             }
         }
 
-        static Dictionary<string, CacheObject> cache;
+        internal static Dictionary<string, CacheObject> Cache;
 
         static StaticCache()
         {
-            cache = new Dictionary<string, CacheObject>();
+            Cache = new Dictionary<string, CacheObject>();
             System.Threading.Thread thr = new System.Threading.Thread(new System.Threading.ThreadStart(() =>
             {
                 while (true)
                 {
                     System.Threading.Thread.Sleep(new TimeSpan(0, 20, 1));
-                    lock (cache)
+                    lock (Cache)
                     {
                         List<string> needRemove = new List<string>();
-                        foreach (var item in cache)
+                        foreach (var item in Cache)
                         {
                             if (item.Value.AutoRemove && (DateTime.Now - item.Value.LastVisit).TotalMinutes > 20)
                             {
@@ -50,7 +51,7 @@ namespace Easy.Cache
                         }
                         foreach (var item in needRemove)
                         {
-                            cache.Remove(item);
+                            Cache.Remove(item);
                         }
                     }
                 }
@@ -59,121 +60,94 @@ namespace Easy.Cache
             thr.Start();
         }
 
-        public void Add(string key, object obj)
+
+        public T Get<T>(string key, Func<Signal, T> source)
         {
-            lock (cache)
+            lock (Cache)
             {
-                if (cache.ContainsKey(key))
+                if (Cache.ContainsKey(key))
                 {
-                    cache[key] = new CacheObject(obj, true);
+                    return (T)Cache[key].Get();
                 }
                 else
                 {
-                    cache.Add(key, new CacheObject(obj, true));
-                }
-            }
-        }
-        public void Add(string key, object obj, bool autoRemove)
-        {
-            lock (cache)
-            {
-                if (cache.ContainsKey(key))
-                {
-                    cache[key] = new CacheObject(obj, autoRemove);
-                }
-                else
-                {
-                    cache.Add(key, new CacheObject(obj, autoRemove));
-                }
-            }
-        }
-        public object Get(string key)
-        {
-            lock (cache)
-            {
-                if (cache.ContainsKey(key))
-                {
-                    return cache[key].Get();
-                }
-                else
-                {
-                    return null;
+                    var signal = new Signal(key);
+                    T result = source(signal);
+                    Cache.Add(key, new CacheObject(result, signal.AutoRemove));
+                    return result;
                 }
             }
         }
 
-        public void Remove(string key)
-        {
-            lock (cache)
-            {
-                if (cache.ContainsKey(key))
-                {
-                    cache.Remove(key);
-                }
-            }
-        }
-        public List<string> GetKeys()
-        {
-            List<string> keys = new List<string>();
-            foreach (string item in cache.Keys)
-            {
-                keys.Add(item);
-            }
-            return keys;
-        }
+
         public static int Count
         {
-            get { return cache.Keys.Count; }
+            get { return Cache.Keys.Count; }
         }
         public void Clear()
         {
-            lock (cache)
+            lock (Cache)
             {
-                cache.Clear();
+                Cache.Clear();
             }
         }
     }
-    /// <summary>
-    /// 静态缓存，自动移除20分钟没有访问的对象
-    /// </summary>
-    /// <typeparam name="T"></typeparam>
-    public class StaticCache<T> : StaticCache where T : class
+
+    public class Signal
     {
-        string _key = string.Empty;
-        public StaticCache()
+        private static readonly Dictionary<string, List<string>> SignalRela;
+        public string CacheKey { get; private set; }
+
+        public Signal()
         {
+
         }
-        public StaticCache(string key)
+
+        public Signal(string cacheKey)
         {
-            this._key = key;
+            this.CacheKey = cacheKey;
         }
-        public void Add(T obj)
+
+        static Signal()
         {
-            base.Add(typeof(T).FullName + _key, obj);
+            SignalRela = new Dictionary<string, List<string>>();
         }
-        public void Add(T obj, bool autoRemove)
+        public bool AutoRemove { get; set; }
+        public void When(string signal)
         {
-            base.Add(typeof(T).FullName, obj, autoRemove);
+            lock (SignalRela)
+            {
+                if (SignalRela.ContainsKey(signal))
+                {
+                    List<string> cacheKeys = SignalRela[signal];
+                    if (!cacheKeys.Contains(CacheKey))
+                    {
+                        cacheKeys.Add(CacheKey);
+                    }
+                }
+            }
         }
-        public void Add(string key, T obj)
+
+        public void Do(string signal)
         {
-            base.Add(typeof(T).FullName + "_" + key, obj);
-        }
-        public void Add(string key, T obj, bool autoRemove)
-        {
-            base.Add(typeof(T).FullName + "_" + key, obj, autoRemove);
-        }
-        public T Get()
-        {
-            return base.Get(typeof(T).FullName + _key) as T;
-        }
-        public new T Get(string key)
-        {
-            return base.Get(typeof(T).FullName + "_" + key) as T;
-        }
-        public void Remove()
-        {
-            base.Remove(typeof(T).FullName + _key);
+            lock (SignalRela)
+            {
+                if (SignalRela.ContainsKey(signal))
+                {
+                    lock (StaticCache.Cache)
+                    {
+                        List<string> cacheKeys = SignalRela[signal];
+                        cacheKeys.Each(m =>
+                        {
+                            if (StaticCache.Cache.ContainsKey(m))
+                            {
+                                StaticCache.Cache.Remove(m);
+                            }
+
+                        });
+                    }
+                }
+            }
         }
     }
 }

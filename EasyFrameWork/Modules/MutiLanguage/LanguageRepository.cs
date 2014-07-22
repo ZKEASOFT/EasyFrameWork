@@ -6,11 +6,11 @@ using System.Text;
 
 namespace Easy.Modules.MutiLanguage
 {
-    class LanguageRepository : RepositoryBase<ILanguageEntity>
+    class LanguageRepository : RepositoryBase<LanguageEntity>
     {
-        public List<ILanguageEntity> GetAllTypes()
+        public IEnumerable<LanguageEntity> GetAllTypes()
         {
-            return DB.CustomerSql("SELECT [Module] FROM [Language] group by [Module]").ToList<ILanguageEntity>();
+            return DB.CustomerSql("SELECT [Module] FROM [Language] group by [Module]").ToList<LanguageEntity>();
         }
         public Dictionary<string, string> InitLan(Dictionary<string, string> source)
         {
