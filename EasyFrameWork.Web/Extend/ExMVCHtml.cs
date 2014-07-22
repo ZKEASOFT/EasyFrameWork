@@ -27,22 +27,7 @@ namespace Easy.Web.Extend
         }
         public static MvcHtmlString EasyTags<TModel>(this HtmlHelper<TModel> htmlHelper)
         {
-            ViewModelDecode<TModel> de = new ViewModelDecode<TModel>(htmlHelper.ViewData.Model);
-            List<string> tagsStr = de.GetViewModelPropertyHtmlTag(true);
-            List<string> hidenTagsStr = de.GetViewModelHiddenTargets();
-
-            StringBuilder builder = new StringBuilder();
-            foreach (var item in tagsStr)
-            {
-                builder.AppendFormat("<div class='input-group'>{0}</div>", item);
-            }
-            builder.Append("<div id='Hiddens'>");
-            foreach (var item in hidenTagsStr)
-            {
-                builder.Append(item);
-            }
-            builder.Append("</div> <div style='clear:both'></div>");
-            return new MvcHtmlString(builder.ToString());
+            return EasyTags<TModel>(htmlHelper, 1);
         }
         public static MvcHtmlString EasyTags<TModel>(this HtmlHelper<TModel> htmlHelper, int cols)
         {
@@ -51,25 +36,19 @@ namespace Easy.Web.Extend
             List<string> hidenTagsStr = de.GetViewModelHiddenTargets();
 
             StringBuilder builder = new StringBuilder();
+            builder.AppendLine("<div class=\"container-fluid\">");
+            builder.AppendLine("<div class=\"row\">");
             for (int i = 0; i < tagsStr.Count; i++)
             {
-                if (i % cols == 0)
-                {
-                    if (builder.Length != 0)
-                    {
-                        builder.Append("<div style='clear:both'></div></div>");
-                    }
-                    builder.Append("<div class='EasyModelTag' style='width:100%'>");
-                }
-                builder.AppendFormat("<div class='TagCol' style='width:{0}%;'><div>{1}</div></div>", 100 / cols, tagsStr[i]);
+                builder.AppendFormat("<div class='col-md-{0}'><div class='input-group'>{1}</div></div>", 12 / cols, tagsStr[i]);
             }
-            builder.Append("<div style='clear:both'></div></div>");
+            builder.Append("</div></div>");
             builder.Append("<div id='Hiddens'>");
             foreach (var item in hidenTagsStr)
             {
                 builder.Append(item);
             }
-            builder.Append("</div> <div style='clear:both'></div>");
+            builder.Append("</div>");
             return new MvcHtmlString(builder.ToString());
         }
         public static MvcHtmlString EasyTagsForDisplay<TModel>(this HtmlHelper<TModel> htmlHelper)
@@ -79,9 +58,8 @@ namespace Easy.Web.Extend
             StringBuilder builder = new StringBuilder();
             foreach (var item in tags)
             {
-                builder.AppendFormat("<div class='EasyModelTag'><div class='TagCol'><label>{0}</label><span>{1}</span></div></div>", item.DisplayName, item.Value);
+                builder.AppendFormat("<div class='input-group'><span class=\"input-group-addon\">{0}</span>{1}</div></div>", item.DisplayName, item.Value);
             }
-            builder.Append("<div style='clear:both'></div>");
             return new MvcHtmlString(builder.ToString());
         }
 

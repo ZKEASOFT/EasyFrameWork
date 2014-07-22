@@ -144,7 +144,7 @@ namespace Easy.HTML.Tags
                 }
                 else
                 {
-                    builder.AppendFormat("<label>{0}</label>", this.DisplayName);
+                    builder.AppendFormat("<span class=\"input-group-addon\">{0}</span>", this.DisplayName);
                 }
             }
             if (this.TagType == HTMLEnumerate.HTMLTagTypes.File)
