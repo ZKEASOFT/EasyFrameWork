@@ -34,7 +34,7 @@ namespace Easy.Web.Extend
             StringBuilder builder = new StringBuilder();
             foreach (var item in tagsStr)
             {
-                builder.AppendFormat("<div class='EasyModelTag'><div class='TagCol'>{0}</div></div>", item);
+                builder.AppendFormat("<div class='input-group'>{0}</div>", item);
             }
             builder.Append("<div id='Hiddens'>");
             foreach (var item in hidenTagsStr)

@@ -17,6 +17,7 @@ namespace Easy.HTML.Tags
             this.ModelType = modelType;
             this.Name = property;
             this.OrderIndex = 100;
+            this.AddClass("form-control");
         }
         #region Private
         Dictionary<string, string> _Properties = new Dictionary<string, string>();
@@ -139,7 +140,7 @@ namespace Easy.HTML.Tags
             {
                 if (!this.IsReadOnly)
                 {
-                    builder.AppendFormat("<label for=\"{0}\">{1}</label>", this.Name, this.DisplayName);
+                    builder.AppendFormat("<span class=\"input-group-addon\">{0}</span>", this.DisplayName);
                 }
                 else
                 {
