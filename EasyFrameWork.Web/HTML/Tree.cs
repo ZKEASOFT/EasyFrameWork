@@ -8,16 +8,24 @@ using System.Web.UI;
 
 namespace Easy.Web.HTML
 {
-    public class Tree<T> : Easy.HTML.zTree.Tree<T> where T : class
+    public class Tree<T> : Easy.HTML.jsTree.Tree<T> where T : class
     {
         ViewContext viewContex;
         public Tree(ViewContext viewContex)
         {
             this.viewContex = viewContex;
         }
-        public override Easy.HTML.zTree.Tree<T> Source(string url)
+        public override Easy.HTML.jsTree.Tree<T> Source(string url)
         {
             return base.Source((viewContex.Controller as System.Web.Mvc.Controller).Url.Content(url));
+        }
+        public Easy.HTML.jsTree.Tree<T> Source(string action, string controller)
+        {
+            return base.Source((viewContex.Controller as System.Web.Mvc.Controller).Url.Action(action,controller));
+        }
+        public Easy.HTML.jsTree.Tree<T> Source(string action, string controller,object routeValues)
+        {
+            return base.Source((viewContex.Controller as System.Web.Mvc.Controller).Url.Action(action, controller, routeValues));
         }
         public override string ToString()
         {

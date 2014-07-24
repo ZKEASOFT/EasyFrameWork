@@ -106,9 +106,9 @@
     <Compile Include="HTML\Validator\RequiredValidator.cs" />
     <Compile Include="HTML\Validator\ValidatorBase.cs" />
     <Compile Include="HTML\ViewModelDecode.cs" />
-    <Compile Include="HTML\zTree\Node.cs" />
-    <Compile Include="HTML\zTree\Setting.cs" />
-    <Compile Include="HTML\zTree\Tree.cs" />
+    <Compile Include="HTML\jsTree\Node.cs" />
+    <Compile Include="HTML\jsTree\Setting.cs" />
+    <Compile Include="HTML\jsTree\Tree.cs" />
     <Compile Include="IApplicationContext.cs" />
     <Compile Include="IOCAdapter\Container.cs" />
     <Compile Include="IOCAdapter\IModule.cs" />
