@@ -7,20 +7,20 @@ namespace Easy.IOCAdapter
 {
     public static class Container
     {
-        static Dictionary<Type, Type> container = new Dictionary<Type, Type>();
-        public static Dictionary<Type, Type> All
+        private static readonly Dictionary<Type, List<Type>> Tank = new Dictionary<Type, List<Type>>();
+        public static Dictionary<Type, List<Type>> All
         {
-            get { return container; }
+            get { return Tank; }
         }
-        public static void Register(Type _interface, Type Impl)
+        public static void Register(Type _interface, Type impl)
         {
-            if (!container.ContainsKey(_interface))
+            if (!Tank.ContainsKey(_interface))
             {
-                container.Add(_interface, Impl);
+                Tank.Add(_interface, new List<Type> { impl });
             }
-            else
+            else if (!Tank[_interface].Contains(impl))
             {
-                container[_interface] = Impl;
+                Tank[_interface].Add(impl);
             }
         }
     }
