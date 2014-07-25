@@ -1,4 +1,5 @@
-﻿using Easy.Extend;
+﻿using System.Reflection;
+using Easy.Extend;
 using Easy.IOCAdapter;
 using Easy.IOCAdapter.Exceptions;
 using System;
@@ -17,7 +18,7 @@ namespace Easy
             {
                 if (Container.All.ContainsKey(ty))
                 {
-                    return (T)System.Activator.CreateInstance(Container.All[ty].First());
+                    return (T)Instance(Container.All[ty].First());
                 }
                 else
                 {
@@ -50,7 +51,7 @@ namespace Easy
                     if (type.IsClass && _interface.IsAssignableFrom(type))
                     {
                         Container.Register(_interface, type);
-                        result.Add(Activator.CreateInstance(type) as T);
+                        result.Add(Instance(type) as T);
                     }
                 }));
             }
@@ -62,8 +63,30 @@ namespace Easy
             {
                 type = Container.All[type].First();
             }
+            return Instance(type);
+        }
+
+        private static object Instance(Type type)
+        {
+            if (type.FullName == "System.String") return null;
+            var constructors = type.GetConstructors();
+            if (constructors.Length > 0)
+            {
+                var paras = constructors[0].GetParameters();
+                if (paras.Length > 0)
+                {
+                    object[] paraObjects = new object[paras.Length];
+                    for (int i = 0; i < paras.Length; i++)
+                    {
+                        paraObjects[i] = Instance(GetType(paras[i].ParameterType));
+                    }
+                    return Activator.CreateInstance(type, paraObjects);
+                }
+                return Activator.CreateInstance(type);
+            }
             return Activator.CreateInstance(type);
         }
+
         public static Type GetType<T>()
         {
             Type ty = typeof(T);
