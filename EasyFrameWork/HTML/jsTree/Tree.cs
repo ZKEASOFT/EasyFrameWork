@@ -19,16 +19,21 @@ namespace Easy.HTML.jsTree
         Dictionary<string, string> _plugs = new Dictionary<string, string>();
         List<Node> nodes;
         string _rootId;
-        string name;
+        string _name;
         public Tree()
         {
-            this.name = Guid.NewGuid().ToString("N");
+            this._name = Guid.NewGuid().ToString("N");
         }
         public Tree(string name)
         {
-            this.name = name;
+            this._name = name;
         }
 
+        public Tree<T> Name(string name)
+        {
+            this._name = name;
+            return this;
+        } 
         #region 公用方法
 
         public Tree<T> Source(IEnumerable<T> source)
@@ -99,7 +104,7 @@ namespace Easy.HTML.jsTree
         {
             InitDode();
             StringBuilder builder = new StringBuilder();
-            builder.AppendFormat("<div id=\"{0}\"></div><script type='text/javascript'>$(function(){{ $('#{0}')", this.name);
+            builder.AppendFormat("<div id=\"{0}\"></div><script type='text/javascript'>$(function(){{ $('#{0}')", this._name);
             foreach (var item in _events)
             {
                 builder.AppendFormat(".on('{0}',{1})", item.Key, item.Value);

@@ -4,16 +4,18 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web.Mvc;
+using System.Web.Routing;
 using System.Web.UI;
+using Easy.HTML.Grid;
 
 namespace Easy.Web.HTML
 {
-    public class Grid<T> : Easy.HTML.Grid.EasyGrid<T> where T : class
+    public class Grid<T> : EasyGrid<T> where T : class
     {
-        ViewContext viewContex;
+        private readonly ViewContext _viewContex;
         public Grid(ViewContext viewContex)
         {
-            this.viewContex = viewContex;
+            this._viewContex = viewContex;
             string controller = viewContex.RouteData.Values["controller"].ToString();
             string area = string.Empty;
             string getList = string.Empty;
@@ -21,35 +23,78 @@ namespace Easy.Web.HTML
             if (viewContex.RouteData.DataTokens.ContainsKey("area"))
             {
                 area = viewContex.RouteData.DataTokens["area"].ToString();
-            }
-            if (string.IsNullOrEmpty(area))
-            {
-                getList = (this.viewContex.Controller as System.Web.Mvc.Controller).Url.Content(string.Format("~/{0}/GetList", controller));
-                delete = (this.viewContex.Controller as System.Web.Mvc.Controller).Url.Content(string.Format("~/{0}/Delete", controller));
+                var controller1 = this._viewContex.Controller as System.Web.Mvc.Controller;
+                if (controller1 != null)
+                {
+                    getList = controller1.Url.Action("GetList", controller, new { area = area });
+                    delete = controller1.Url.Action("Delete", controller, new { area = area });
+
+                }
             }
             else
             {
-                getList = (this.viewContex.Controller as System.Web.Mvc.Controller).Url.Content(string.Format("~/{0}/{1}/GetList", area, controller));
-                delete = (this.viewContex.Controller as System.Web.Mvc.Controller).Url.Content(string.Format("~/{0}/{1}/Delete", area, controller));
+                var controller1 = this._viewContex.Controller as System.Web.Mvc.Controller;
+                if (controller1 != null)
+                {
+                    getList = controller1.Url.Action("GetList", controller);
+                    delete = controller1.Url.Action("Delete", controller);
+                }
             }
             base.DataSource(getList);
             base.DeleteUrl(delete);
         }
-        public override Easy.HTML.Grid.EasyGrid<T> DataSource(string url)
+        public override EasyGrid<T> DataSource(string url)
         {
-            return base.DataSource((this.viewContex.Controller as System.Web.Mvc.Controller).Url.Content(url));
+            var controller = this._viewContex.Controller as System.Web.Mvc.Controller;
+            if (controller != null)
+                return base.DataSource(controller.Url.Content(url));
+            return this;
         }
-        public override Easy.HTML.Grid.EasyGrid<T> DeleteUrl(string url)
+
+        public EasyGrid<T> DataSource(string action, string controller)
         {
-            return base.DeleteUrl((this.viewContex.Controller as System.Web.Mvc.Controller).Url.Content(url));
+            var contro = this._viewContex.Controller as System.Web.Mvc.Controller;
+            if (contro != null)
+                return base.DataSource(contro.Url.Action(action, controller));
+            return this;
         }
+        public EasyGrid<T> DataSource(string action, string controller, object routeValues)
+        {
+            var contro = this._viewContex.Controller as System.Web.Mvc.Controller;
+            if (contro != null)
+                return base.DataSource(contro.Url.Action(action, controller, routeValues));
+            return this;
+        }
+        public override EasyGrid<T> DeleteUrl(string url)
+        {
+            var controller = this._viewContex.Controller as System.Web.Mvc.Controller;
+            if (controller != null)
+                return base.DeleteUrl(controller.Url.Content(url));
+            return this;
+        }
+
+        public EasyGrid<T> DeleteUrl(string action, string controller)
+        {
+            var contro = this._viewContex.Controller as System.Web.Mvc.Controller;
+            if (contro != null)
+                return base.DeleteUrl(contro.Url.Action(action, controller));
+            return this;
+        }
+        public EasyGrid<T> DeleteUrl(string action, string controller, object routeValues)
+        {
+            var contro = this._viewContex.Controller as System.Web.Mvc.Controller;
+            if (contro != null)
+                return base.DeleteUrl(contro.Url.Action(action, controller, routeValues));
+            return this;
+        }
+
         public override string ToString()
         {
-            using (HtmlTextWriter writer = new HtmlTextWriter(viewContex.Writer))
+            using (var writer = new HtmlTextWriter(_viewContex.Writer))
             {
                 writer.Write(base.ToString());
             }
-            return null;
+            return string.Empty;
         }
         public MvcHtmlString ToHtmlString()
         {
