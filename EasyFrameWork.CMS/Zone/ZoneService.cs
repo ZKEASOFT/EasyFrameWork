@@ -11,9 +11,9 @@ namespace Easy.CMS.Zone
     {
         public override void Add(ZoneEntity item)
         {
-            if (item.ZoneId.IsNullOrEmpty())
+            if (item.ID.IsNullOrEmpty())
             {
-                item.ZoneId = Guid.NewGuid().ToString("N");
+                item.ID = Guid.NewGuid().ToString("N");
             }
             base.Add(item);
         }

@@ -26,13 +26,13 @@ namespace Easy.CMS.Zone
                 else if (item == ZoneEntity.ZoneEndTag)
                 {
                     initZoneStart = false;
-                    if (zone.ZoneId.IsNullOrEmpty())
+                    if (zone.ID.IsNullOrEmpty())
                     {
-                        zone.ZoneId = Guid.NewGuid().ToString("N");
+                        zone.ID = Guid.NewGuid().ToString("N");
                     }
                     zones.Add(zone);
                     result.Add(new LayoutHtml { Html = ZoneEntity.ZoneTag });
-                    result.Add(new LayoutHtml { Html = zone.ZoneId });
+                    result.Add(new LayoutHtml { Html = zone.ID });
                     result.Add(new LayoutHtml { Html = ZoneEntity.ZoneEndTag });
                     continue;
                 }
@@ -52,9 +52,9 @@ namespace Easy.CMS.Zone
                             {
                                 zone.ZoneName = zonePart.GetInnerContent("value=\"", "\"", 0);
                             }
-                            else if (zonePart.Contains("name=\"ZoneId\""))
+                            else if (zonePart.Contains("name=\"ID\""))
                             {
-                                zone.ZoneId = zonePart.GetInnerContent("value=\"", "\"", 0);
+                                zone.ID = zonePart.GetInnerContent("value=\"", "\"", 0);
                             }
                             else if (zonePart.Contains("name=\"LayoutId\""))
                             {

@@ -153,7 +153,7 @@ namespace Easy.HTML.Tags
                 {
                     foreach (DataDictionaryEntity item in dicService.GetDictionaryByType(dictionaryType))
                     {
-                        this.Data.Add(item.Value.ToString(), item.Name);
+                        this.Data.Add(item.Value.ToString(), item.DicName);
                     }
                 }
             }
@@ -174,7 +174,7 @@ namespace Easy.HTML.Tags
                 {
                     foreach (DataDictionaryEntity item in dicService.GetDictionaryByType(dictionaryType))
                     {
-                        this.Data.Add(item.Value.ToString(), item.Name);
+                        this.Data.Add(item.Value.ToString(), item.DicName);
                     }
                 }
             }

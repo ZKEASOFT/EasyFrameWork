@@ -16,7 +16,8 @@ namespace Easy.HTML.jsTree
         Func<T, string> parentProperty;
         Func<T, string> textProperty;
         Dictionary<string, string> _events = new Dictionary<string, string>();
-        Dictionary<string, string> _plugs = new Dictionary<string, string>();
+        List<string> _plugins = new List<string>();
+        Contextmenu contextMenu = new Contextmenu();
         List<Node> nodes;
         string _rootId;
         string _name;
@@ -33,7 +34,7 @@ namespace Easy.HTML.jsTree
         {
             this._name = name;
             return this;
-        } 
+        }
         #region 公用方法
 
         public Tree<T> Source(IEnumerable<T> source)
@@ -84,6 +85,23 @@ namespace Easy.HTML.jsTree
             return this;
         }
 
+        public Tree<T> AddPlugin(string plugin)
+        {
+            if (!_plugins.Contains(plugin))
+            {
+                _plugins.Add(plugin);
+            }
+            return this;
+        }
+        public Tree<T> AddContextMenuItem(ContextmenuItem item)
+        {
+            if (!_plugins.Contains(Plugins.ContextMenu))
+            {
+                AddPlugin(Plugins.ContextMenu);
+            }
+            contextMenu.Add(item);
+            return this;
+        }
         public Tree<T> RootId(string rootId)
         {
             _rootId = rootId;
@@ -114,8 +132,24 @@ namespace Easy.HTML.jsTree
             {
                 source = Newtonsoft.Json.JsonConvert.SerializeObject(nodes);
             }
-            builder.AppendFormat(".jstree({{'core':{{data:{0}}}}});", source);
-            builder.Append("});</script>");
+            builder.AppendFormat(".jstree({{'core':{{data:{0}}}", source);
+            if (_plugins.Count > 0)
+            {
+                builder.AppendFormat(",'plugins':{0}", Newtonsoft.Json.JsonConvert.SerializeObject(_plugins));
+            }
+            if (contextMenu.Count > 0)
+            {
+                StringBuilder menuBuilder = new StringBuilder();
+                int index = 0;
+                contextMenu.Each(m =>
+                {
+                    menuBuilder.AppendFormat("\"{0}\": {{ \"separator_before\": {1}, \"separator_after\": {2}, \"_disabled\": {3}, \"label\": \"{4}\", \"action\": {5}, \"icon\": \"{6}\", \"shortcut\": {7}, \"shortcut_label\": \"{8}\" }},",
+                        index, m.SeparatorBefore.ToString().ToLower(), m.SeparatorAfter.ToString().ToLower(), m.Disabled.ToString().ToLower(), m.Label, m.Action, m.Icon, m.Shortcut, m.ShortcutLabel);
+                    index++;
+                });
+                builder.AppendFormat(",'contextmenu':{{ \"items\": function () {{ return {{ {0} }} }} }}", menuBuilder.ToString().Trim(','));
+            }
+            builder.Append("});});</script>");
             return builder.ToString();
         }
         private void InitDode()

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Easy.HTML.jsTree.Setting
+namespace Easy.HTML.jsTree
 {
     public class Events
     {
@@ -202,6 +202,19 @@ namespace Easy.HTML.jsTree.Setting
         /// function(nodes,str,res)
         /// </summary>
         public const string ClearSearch = "clear_search.jstree";
+    }
+
+    public class Plugins
+    {
+        public const string CheckBox = "checkbox";
+        public const string ContextMenu = "contextmenu";
+        public const string DragAndDrop = "dnd";
+        public const string Search = "search";
+        public const string Sort = "sort";
+        public const string State = "state";
+        public const string Types = "types";
+        public const string Unique = "unique";
+        public const string Wholerow = "wholerow";
     }
 
 }

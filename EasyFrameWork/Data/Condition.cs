@@ -17,20 +17,20 @@ namespace Easy.Data
         readonly string _valueKey;
         public Condition()
         {
-            this.ConditionType = DataEnumerate.ConditionType.And;
+            this.ConditionType = Constant.ConditionType.And;
             this._valueKey = Guid.NewGuid().ToString("N");
         }
 
-        public Condition(string property, DataEnumerate.OperatorType operatorType, object value)
+        public Condition(string property, OperatorType operatorType, object value)
         {
             this.Property = property;
             this.OperatorType = operatorType;
             this.Value = value;
-            this.ConditionType = DataEnumerate.ConditionType.And;
+            this.ConditionType = Constant.ConditionType.And;
             this._valueKey = Guid.NewGuid().ToString("N");
         }
 
-        public Condition(string condition, DataEnumerate.ConditionType conditionTyep)
+        public Condition(string condition, Constant.ConditionType conditionTyep)
         {
             this.ConditionString = condition;
             this.ConditionType = conditionTyep;
@@ -46,12 +46,12 @@ namespace Easy.Data
         /// <summary>
         /// 运算符
         /// </summary>
-        public DataEnumerate.OperatorType OperatorType { get; set; }
+        public Constant.OperatorType OperatorType { get; set; }
 
         /// <summary>
         /// 条件类型
         /// </summary>
-        public DataEnumerate.ConditionType ConditionType
+        public Constant.ConditionType ConditionType
         {
             get;
             set;
@@ -81,7 +81,7 @@ namespace Easy.Data
                 if (string.IsNullOrEmpty(this.Property)) return string.Empty;
                 switch (this.OperatorType)
                 {
-                    case DataEnumerate.OperatorType.Equal:
+                    case Constant.OperatorType.Equal:
                         {
                             if (this.Property.Contains("["))
                             {
@@ -93,7 +93,7 @@ namespace Easy.Data
                             }
                             break;
                         }
-                    case DataEnumerate.OperatorType.GreaterThan:
+                    case Constant.OperatorType.GreaterThan:
                         {
                             if (this.Property.Contains("["))
                             {
@@ -105,7 +105,7 @@ namespace Easy.Data
                             }
                             break;
                         }
-                    case DataEnumerate.OperatorType.GreaterThanOrEqualTo:
+                    case Constant.OperatorType.GreaterThanOrEqualTo:
                         {
                             if (this.Property.Contains("["))
                             {
@@ -117,7 +117,7 @@ namespace Easy.Data
                             }
                             break;
                         }
-                    case DataEnumerate.OperatorType.LessThan:
+                    case Constant.OperatorType.LessThan:
                         {
                             if (this.Property.Contains("["))
                             {
@@ -129,7 +129,7 @@ namespace Easy.Data
                             }
                             break;
                         }
-                    case DataEnumerate.OperatorType.LessThanOrEqualTo:
+                    case Constant.OperatorType.LessThanOrEqualTo:
                         {
                             if (this.Property.Contains("["))
                             {
@@ -141,7 +141,7 @@ namespace Easy.Data
                             }
                             break;
                         }
-                    case DataEnumerate.OperatorType.NotEqual:
+                    case Constant.OperatorType.NotEqual:
                         {
                             if (this.Property.Contains("["))
                             {
@@ -153,9 +153,9 @@ namespace Easy.Data
                             }
                             break;
                         }
-                    case DataEnumerate.OperatorType.StartWith:
-                    case DataEnumerate.OperatorType.EndWith:
-                    case DataEnumerate.OperatorType.Contains:
+                    case Constant.OperatorType.StartWith:
+                    case Constant.OperatorType.EndWith:
+                    case Constant.OperatorType.Contains:
                         {
                             if (this.Property.Contains("["))
                             {
@@ -167,7 +167,7 @@ namespace Easy.Data
                             }
                             break;
                         }
-                    case DataEnumerate.OperatorType.In:
+                    case Constant.OperatorType.In:
                         {
                             var valuesBuilder = new StringBuilder();
                             if (this.Value is IEnumerable)
@@ -202,7 +202,7 @@ namespace Easy.Data
                             }
                             break;
                         }
-                    case DataEnumerate.OperatorType.NotIn:
+                    case Constant.OperatorType.NotIn:
                         {
                             var valuesBuilder = new StringBuilder();
                             if (this.Value is IEnumerable)
@@ -259,8 +259,8 @@ namespace Easy.Data
             {
                 switch (this.ConditionType)
                 {
-                    case DataEnumerate.ConditionType.And: return " AND " + ToString();
-                    case DataEnumerate.ConditionType.Or: return " OR " + ToString();
+                    case Constant.ConditionType.And: return " AND " + ToString();
+                    case Constant.ConditionType.Or: return " OR " + ToString();
                     default: return " AND " + ToString();
                 }
             }
@@ -273,11 +273,11 @@ namespace Easy.Data
         {
             switch (this.OperatorType)
             {
-                case DataEnumerate.OperatorType.StartWith: return new KeyValuePair<string, object>(_valueKey, Value + "%");
-                case DataEnumerate.OperatorType.EndWith: return new KeyValuePair<string, object>(_valueKey, "%" + Value + "%");
-                case DataEnumerate.OperatorType.Contains: return new KeyValuePair<string, object>(_valueKey, "%" + Value + "%");
-                case DataEnumerate.OperatorType.In:
-                case DataEnumerate.OperatorType.NotIn: return new KeyValuePair<string, object>();
+                case Constant.OperatorType.StartWith: return new KeyValuePair<string, object>(_valueKey, Value + "%");
+                case Constant.OperatorType.EndWith: return new KeyValuePair<string, object>(_valueKey, "%" + Value + "%");
+                case Constant.OperatorType.Contains: return new KeyValuePair<string, object>(_valueKey, "%" + Value + "%");
+                case Constant.OperatorType.In:
+                case Constant.OperatorType.NotIn: return new KeyValuePair<string, object>();
                 default: return new KeyValuePair<string, object>(_valueKey, Value);
             }
 
@@ -299,7 +299,7 @@ namespace Easy.Data
         /// <summary>
         /// 条件类型
         /// </summary>
-        public DataEnumerate.ConditionType ConditionType
+        public Constant.ConditionType ConditionType
         {
             get;
             set;
@@ -328,8 +328,8 @@ namespace Easy.Data
             {
                 switch (this.ConditionType)
                 {
-                    case DataEnumerate.ConditionType.And: return " AND " + ToString();
-                    case DataEnumerate.ConditionType.Or: return " OR " + ToString();
+                    case Constant.ConditionType.And: return " AND " + ToString();
+                    case Constant.ConditionType.Or: return " OR " + ToString();
                     default: return " AND " + ToString();
                 }
             }
@@ -362,13 +362,13 @@ namespace Easy.Data
         {
 
         }
-        public Order(string property, DataEnumerate.OrderType order)
+        public Order(string property, OrderType order)
         {
             this.Property = property;
             this.OrderType = order;
         }
         public string Property { get; set; }
-        public DataEnumerate.OrderType OrderType { get; set; }
+        public OrderType OrderType { get; set; }
         public override string ToString()
         {
             if (!Property.Contains("["))
@@ -377,8 +377,8 @@ namespace Easy.Data
             }
             switch (OrderType)
             {
-                case DataEnumerate.OrderType.Ascending: return string.Format(" {0} Asc", Property);
-                case DataEnumerate.OrderType.Descending: return string.Format(" {0} Desc", Property);
+                case OrderType.Ascending: return string.Format(" {0} Asc", Property);
+                case OrderType.Descending: return string.Format(" {0} Desc", Property);
                 default: return string.Format(" {0} Asc", Property);
             }
         }
@@ -392,8 +392,8 @@ namespace Easy.Data
                 }
                 switch (OrderType)
                 {
-                    case DataEnumerate.OrderType.Descending: return string.Format(" {0} Asc", Property);
-                    case DataEnumerate.OrderType.Ascending: return string.Format(" {0} Desc", Property);
+                    case OrderType.Descending: return string.Format(" {0} Asc", Property);
+                    case OrderType.Ascending: return string.Format(" {0} Desc", Property);
                     default: return string.Format(" {0} Asc", Property);
                 }
             }

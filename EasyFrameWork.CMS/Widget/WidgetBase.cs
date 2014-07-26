@@ -8,10 +8,11 @@ using Easy.Models;
 namespace Easy.CMS.Widget
 {
     [DataConfigure(typeof(WidgetBaseMetaData))]
-    public class WidgetBase : EditorEntity
+    public class WidgetBase : EditorEntity,IBasicEntity<string>
     {
-        public string WidgetId { get; set; }
+        public string ID { get; set; }
         public string WidgetName { get; set; }
+        public string Title { get; set; }
         public int Position { get; set; }
         public string LayouId { get; set; }
         public string PageId { get; set; }
@@ -26,7 +27,7 @@ namespace Easy.CMS.Widget
                 PartialView = PartialView,
                 Position = Position,
                 ViewModel = this,
-                WidgetId = WidgetId,
+                WidgetId = ID,
                 WidgetName = WidgetName,
                 ZoneId = ZoneId
             };
@@ -37,19 +38,24 @@ namespace Easy.CMS.Widget
             {
                 PartialView = PartialView,
                 Position = Position,
-                WidgetId = WidgetId,
+                WidgetId = ID,
                 ViewModel = viewModel,
                 WidgetName = WidgetName,
                 ZoneId = ZoneId
             };
         }
+
+
+        public string Description { get; set; }
+
+        public int Status { get; set; }
     }
     public class WidgetBaseMetaData : DataViewMetaData<WidgetBase>
     {
         protected override void DataConfigure()
         {
             DataTable("CMS_WidgetBase");
-            DataConfig(m => m.WidgetId).AsPrimaryKey();
+            DataConfig(m => m.ID).AsPrimaryKey();
         }
 
         protected override void ViewConfigure()

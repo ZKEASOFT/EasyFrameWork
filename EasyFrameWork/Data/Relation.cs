@@ -15,7 +15,7 @@ namespace Easy.Data
         /// <summary>
         /// 关联关系
         /// </summary>
-        public DataEnumerate.RelationType RelationType { get; set; }
+        public RelationType RelationType { get; set; }
         /// <summary>
         /// 表别名
         /// </summary>
@@ -30,25 +30,25 @@ namespace Easy.Data
             builder.Append(" ");
             switch (RelationType)
             {
-                case DataEnumerate.RelationType.InnerJoin:
+                case RelationType.InnerJoin:
                     builder.Append("INNER JOIN");
                     break;
-                case DataEnumerate.RelationType.LeftJoin:
+                case RelationType.LeftJoin:
                     builder.Append("LEFT JOIN");
                     break;
-                case DataEnumerate.RelationType.RightJoin:
+                case RelationType.RightJoin:
                     builder.Append("RIGHT JOIN");
                     break;
-                case DataEnumerate.RelationType.LeftOuterJoin:
+                case RelationType.LeftOuterJoin:
                     builder.Append("LEFT OUTER JOIN");
                     break;
-                case DataEnumerate.RelationType.RightOuterJoin:
+                case RelationType.RightOuterJoin:
                     builder.Append("RIGHT OUTER JOIN");
                     break;
-                case DataEnumerate.RelationType.FullJoin:
+                case RelationType.FullJoin:
                     builder.Append("FULL JOIN");
                     break;
-                case DataEnumerate.RelationType.FullOuterJoin:
+                case RelationType.FullOuterJoin:
                     builder.Append("FULL OUTER JOIN");
                     break;
                 default:
@@ -78,7 +78,7 @@ namespace Easy.Data
             relations.Add(new Relation()
             {
                 RelationTable = table,
-                RelationType = DataEnumerate.RelationType.InnerJoin,
+                RelationType = RelationType.InnerJoin,
                 Conditions = condition,
                 Alias = alias
             });
@@ -90,7 +90,7 @@ namespace Easy.Data
             relations.Add(new Relation()
             {
                 RelationTable = table,
-                RelationType = DataEnumerate.RelationType.LeftJoin,
+                RelationType = RelationType.LeftJoin,
                 Conditions = condition,
                 Alias = alias
             });
@@ -101,7 +101,7 @@ namespace Easy.Data
             relations.Add(new Relation()
             {
                 RelationTable = table,
-                RelationType = DataEnumerate.RelationType.RightJoin,
+                RelationType = RelationType.RightJoin,
                 Conditions = condition,
                 Alias = alias
             });
@@ -112,7 +112,7 @@ namespace Easy.Data
             relations.Add(new Relation()
             {
                 RelationTable = table,
-                RelationType = DataEnumerate.RelationType.LeftOuterJoin,
+                RelationType = RelationType.LeftOuterJoin,
                 Conditions = condition,
                 Alias = alias
             });
@@ -123,7 +123,7 @@ namespace Easy.Data
             relations.Add(new Relation()
             {
                 RelationTable = table,
-                RelationType = DataEnumerate.RelationType.RightOuterJoin,
+                RelationType = RelationType.RightOuterJoin,
                 Conditions = condition,
                 Alias = alias
             });
@@ -134,7 +134,7 @@ namespace Easy.Data
             relations.Add(new Relation()
             {
                 RelationTable = table,
-                RelationType = DataEnumerate.RelationType.FullJoin,
+                RelationType = RelationType.FullJoin,
                 Conditions = condition,
                 Alias = alias
             });
@@ -145,7 +145,7 @@ namespace Easy.Data
             relations.Add(new Relation()
             {
                 RelationTable = table,
-                RelationType = DataEnumerate.RelationType.FullOuterJoin,
+                RelationType = RelationType.FullOuterJoin,
                 Conditions = condition,
                 Alias = alias
             });

@@ -8,31 +8,36 @@ using Easy.Attribute;
 namespace Easy.CMS.Page
 {
     [DataConfigure(typeof(PageBaseMetaData))]
-    public class PageEntity : EditorEntity
+    public class PageEntity : EditorEntity, IBasicEntity<string>
     {
-        public string PageId { get; set; }
-        public string PageName { get; set; }
         public string ParentId { get; set; }
         public string Url { get; set; }
         public string LayoutId { get; set; }
+        public string PageName { get; set; }
         public string Title { get; set; }
         public string Content { get; set; }
         public string MetaKeyWorlds { get; set; }
         public string MetaDescription { get; set; }
-        public string IncludeScript { get; set; }
-        public string IncludeStyle { get; set; }
+        public string Script { get; set; }
+        public string Style { get; set; }
+
+        public string ID { get; set; }
+
+        public string Description { get; set; }
+
+        public int Status { get; set; }
     }
     public class PageBaseMetaData : DataViewMetaData<PageEntity>
     {
         protected override void DataConfigure()
         {
             DataTable("CMS_Page");
-            DataConfig(m => m.PageId).AsPrimaryKey();
+            DataConfig(m => m.ID).AsPrimaryKey();
         }
 
         protected override void ViewConfigure()
         {
-            
+
         }
     }
 

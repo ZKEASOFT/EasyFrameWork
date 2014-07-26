@@ -34,13 +34,14 @@ namespace Easy.Modules.User.Models
 
         public string ID { get; set; }
 
+        public string UserName { get; set; }
         public string Title { get; set; }
 
         public string Description { get; set; }
 
-        public bool IsPassed { get; set; }
-
         public string ApiLoginToken { get; set; }
+
+        public int Status { get; set; }
     }
     public class UserMetaData : DataViewMetaData<UserEntity>
     {

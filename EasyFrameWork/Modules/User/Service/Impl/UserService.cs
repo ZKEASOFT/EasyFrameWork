@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using Easy.RepositoryPattern;
 using Easy.Modules.User.Models;
+using Easy.Constant;
 
 namespace Easy.Modules.User.Service
 {
@@ -17,8 +18,8 @@ namespace Easy.Modules.User.Service
         public UserEntity Login(string userID, string passWord)
         {
             passWord = Easy.EncryptionTool.Encryption(passWord);
-            var result = this.Get(new Data.DataFilter().Where("UserID", Easy.Constant.DataEnumerate.OperatorType.Equal, userID)
-                .Where("PassWord", Easy.Constant.DataEnumerate.OperatorType.Equal, passWord).Where("IsPassed=true"));
+            var result = this.Get(new Data.DataFilter().Where("UserID", OperatorType.Equal, userID)
+                .Where("PassWord", OperatorType.Equal, passWord));
             if (result.Count == 1)
             {
                 var user = result.First();

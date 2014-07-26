@@ -81,10 +81,40 @@ namespace Easy.Web.ViewEngine
         }
         public override ViewEngineResult FindPartialView(ControllerContext controllerContext, string partialViewName, bool useCache)
         {
+            if (controllerContext.RouteData.Values.ContainsKey("module"))
+            {
+                string virtualPath = string.Format("~/Modules/{0}/Views/{1}.cshtml",
+                    controllerContext.RouteData.Values["module"], partialViewName);
+
+                if (!FileExists(controllerContext, virtualPath))
+                {
+                    virtualPath = string.Format("~/Modules/{0}/Views/{1}/{2}.cshtml",
+                     controllerContext.RouteData.Values["module"],
+                     controllerContext.RouteData.Values["controller"], partialViewName);
+                    if (!FileExists(controllerContext, virtualPath))
+                    {
+                        return base.FindPartialView(controllerContext, partialViewName, useCache);
+                    }
+                }
+                ViewEngineResult result = new ViewEngineResult(CreatePartialView(controllerContext, virtualPath), this);
+                return result;
+            }
             return base.FindPartialView(controllerContext, partialViewName, useCache);
         }
         public override ViewEngineResult FindView(ControllerContext controllerContext, string viewName, string masterName, bool useCache)
         {
+            if (controllerContext.RouteData.Values.ContainsKey("module"))
+            {
+                string virtualPath = string.Format("~/Modules/{0}/Views/{1}/{2}.cshtml",
+                    controllerContext.RouteData.Values["module"],
+                controllerContext.RouteData.Values["controller"], viewName);
+
+                if (FileExists(controllerContext, virtualPath))
+                {
+                    ViewEngineResult result = new ViewEngineResult(CreateView(controllerContext, virtualPath, masterName), this);
+                    return result;
+                }
+            }
             return base.FindView(controllerContext, viewName, masterName, useCache);
         }
         public override void ReleaseView(ControllerContext controllerContext, IView view)

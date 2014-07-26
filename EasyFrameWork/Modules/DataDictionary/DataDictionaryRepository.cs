@@ -6,7 +6,7 @@ using System.Text;
 
 namespace Easy.Modules.DataDictionary
 {
-    class DataDictionaryRepository : RepositoryBase<IDataDictionaryEntity>
+    class DataDictionaryRepository : RepositoryBase<DataDictionaryEntity>
     {
         public List<string> GetDictionaryType()
         {

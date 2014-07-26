@@ -6,10 +6,10 @@ using System.Text;
 
 namespace Easy.Modules.DataDictionary
 {
-    public class DataDictionaryService : ServiceBase<IDataDictionaryEntity>, IDataDictionaryService
+    public class DataDictionaryService : ServiceBase<DataDictionaryEntity>, IDataDictionaryService
     {
         DataDictionaryRepository rep = new DataDictionaryRepository();
-        public List<IDataDictionaryEntity> GetDictionaryByType(string dicType)
+        public List<DataDictionaryEntity> GetDictionaryByType(string dicType)
         {
             return Get(new Data.DataFilter().Where(string.Format("T0.DicValue<>'0' and T0.DicType='{0}'", dicType)));
         }
@@ -17,7 +17,7 @@ namespace Easy.Modules.DataDictionary
         {
             return rep.GetDictionaryType();
         }
-        public override void Add(IDataDictionaryEntity item)
+        public override void Add(DataDictionaryEntity item)
         {
             var parent = this.Get(item.Pid);
             item.TypeName = parent.TypeName;

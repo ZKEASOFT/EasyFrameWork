@@ -114,7 +114,7 @@ namespace Easy.Data.DataBase
             DataFilter filter = new DataFilter();
             for (int i = 0; i < primaryKey.Count; i++)
             {
-                filter.Where(primaryKey[i], DataEnumerate.OperatorType.Equal, primaryKeys[i]);
+                filter.Where(primaryKey[i], OperatorType.Equal, primaryKeys[i]);
             }
             return Delete<T>(filter);
         }
@@ -134,7 +134,7 @@ namespace Easy.Data.DataBase
             DataFilter filter = new DataFilter();
             for (int i = 0; i < primaryKey.Count; i++)
             {
-                filter.Where(primaryKey[i], DataEnumerate.OperatorType.Equal, primaryKeys[i]);
+                filter.Where(primaryKey[i], OperatorType.Equal, primaryKeys[i]);
             }
             List<T> list = this.Get<T>(filter);
             if (list.Count == 1)
@@ -224,7 +224,7 @@ namespace Easy.Data.DataBase
             }
             foreach (int item in primaryKey.Keys)
             {
-                filter.OrderBy(primaryKey[item], DataEnumerate.OrderType.Ascending);
+                filter.OrderBy(primaryKey[item], OrderType.Ascending);
             }
             string orderby = filter.GetOrderString();
             string orderByContrary = filter.GetContraryOrderString();
@@ -414,7 +414,7 @@ namespace Easy.Data.DataBase
             {
                 for (int i = 0; i < primaryKey.Count; i++)
                 {
-                    filter.Where(primaryKey[i], DataEnumerate.OperatorType.Equal, primaryKeys[i]);
+                    filter.Where(primaryKey[i], OperatorType.Equal, primaryKeys[i]);
                 }
             }
             else
@@ -439,7 +439,7 @@ namespace Easy.Data.DataBase
                         proper = entityType.GetProperty(proPerty);
                     if (proper != null && proper.CanRead)
                     {
-                        filter.Where(proPerty, DataEnumerate.OperatorType.Equal, proper.GetValue(item, null));
+                        filter.Where(proPerty, OperatorType.Equal, proper.GetValue(item, null));
                     }
                 }
             }

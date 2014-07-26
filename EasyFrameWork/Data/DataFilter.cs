@@ -52,12 +52,12 @@ namespace Easy.Data
             _Conditions.Add(condition);
             return this;
         }
-        public DataFilter Where(string property, DataEnumerate.OperatorType operatorType, object value)
+        public DataFilter Where(string property, OperatorType operatorType, object value)
         {
             _Conditions.Add(new Condition(property, operatorType, value));
             return this;
         }
-        public DataFilter Where<T>(Expression<Func<T, object>> expression, DataEnumerate.OperatorType operatorType, object value)
+        public DataFilter Where<T>(Expression<Func<T, object>> expression, OperatorType operatorType, object value)
         {
             string property = Common.GetLinqExpressionText(expression);
             Attribute.DataConfigureAttribute attribute = System.Attribute.GetCustomAttribute(typeof(T), typeof(Attribute.DataConfigureAttribute)) as Attribute.DataConfigureAttribute;
@@ -72,11 +72,11 @@ namespace Easy.Data
         }
         public DataFilter Where(string condition)
         {
-            Condition con = new Condition(condition, DataEnumerate.ConditionType.And);
+            Condition con = new Condition(condition, ConditionType.And);
             _Conditions.Add(con);
             return this;
         }
-        public DataFilter Where(string condition, DataEnumerate.ConditionType conditionType)
+        public DataFilter Where(string condition, Constant.ConditionType conditionType)
         {
             Condition con = new Condition(condition, conditionType);
             _Conditions.Add(con);
@@ -96,7 +96,7 @@ namespace Easy.Data
             return this;
         }
 
-        public DataFilter OrderBy(string property, DataEnumerate.OrderType order)
+        public DataFilter OrderBy(string property, OrderType order)
         {
             _Orders.Add(new Order(property, order));
             return this;

@@ -22,14 +22,6 @@ namespace Easy.Web.Controller
         where S : IService<T>
     {
         /// <summary>
-        /// Dialog宽
-        /// </summary>
-        public int? Width { get; set; }
-        /// <summary>
-        /// Dialog高
-        /// </summary>
-        public int? Height { get; set; }
-        /// <summary>
         /// 缩略图宽
         /// </summary>
         public int? ImageThumbWidth { get; set; }
@@ -76,10 +68,8 @@ namespace Easy.Web.Controller
         public virtual ActionResult Create()
         {
             T entity = Activator.CreateInstance<T>();
-            entity.IsPassed = true;
+            entity.Status = (int)RecordStatus.Active;
             ViewBag.Title = "添加";
-            ViewBag.Width = Width;
-            ViewBag.Height = Height;
             return View(entity);
         }
 
@@ -102,8 +92,6 @@ namespace Easy.Web.Controller
         {
             T entity = Service.Get(id);
             ViewBag.Title = entity.Title;
-            ViewBag.Width = Width;
-            ViewBag.Height = Height;
             return View(entity);
         }
 
@@ -143,7 +131,7 @@ namespace Easy.Web.Controller
                     }
                 }
                 string primary = Easy.Attribute.DataConfigureAttribute.GetAttribute<T>().MetaData.Primarykey[0];
-                int result = Service.Delete(new Easy.Data.DataFilter().Where(primary, DataEnumerate.OperatorType.In, listIds));
+                int result = Service.Delete(new Easy.Data.DataFilter().Where(primary, OperatorType.In, listIds));
                 if (result > 0)
                 {
                     return Json(new AjaxResult() { Status = AjaxStatus.Normal, Message = ids });

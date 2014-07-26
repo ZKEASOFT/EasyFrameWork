@@ -58,6 +58,7 @@
   <ItemGroup>
     <Compile Include="Extend\ExtDate.cs" />
     <Compile Include="Extend\ExtIEnumerable.cs" />
+    <Compile Include="HTML\jsTree\ContextmenuItem.cs" />
     <Compile Include="IOCAdapter\Exceptions\UnregisteredException.cs" />
     <Compile Include="Models\AutoComplete.cs" />
     <Compile Include="Models\EditorEntity.cs" />
@@ -65,7 +66,6 @@
     <Compile Include="Models\IImage.cs" />
     <Compile Include="Models\IUser.cs" />
     <Compile Include="Cache\StaticCache.cs" />
-    <Compile Include="Constant\DictionaryType.cs" />
     <Compile Include="Constant\FormatStyle.cs" />
     <Compile Include="Constant\RegularExpression.cs" />
     <Compile Include="Logger.cs" />
@@ -74,7 +74,6 @@
     <Compile Include="Modules\DataDictionary\DataDictionaryService.cs" />
     <Compile Include="Data\DataBase\CustomerSqlHelper.cs" />
     <Compile Include="Data\DataBase\ExcelReader.cs" />
-    <Compile Include="Constant\EnumData.cs" />
     <Compile Include="Data\Relation.cs" />
     <Compile Include="Module.cs" />
     <Compile Include="Encryption.cs" />
@@ -115,7 +114,6 @@
     <Compile Include="IOCAdapter\Loader.cs" />
     <Compile Include="Localization.cs" />
     <Compile Include="Modules\DataDictionary\DataDicttionaryModule.cs" />
-    <Compile Include="Modules\DataDictionary\IDataDictionaryEntity.cs" />
     <Compile Include="Modules\DataDictionary\IDataDictionaryService.cs" />
     <Compile Include="Modules\Manager.cs" />
     <Compile Include="Modules\MutiLanguage\ILanguageService.cs" />
@@ -123,9 +121,6 @@
     <Compile Include="Modules\MutiLanguage\LanguageRepository.cs" />
     <Compile Include="Modules\MutiLanguage\LanguageService.cs" />
     <Compile Include="Modules\MutiLanguage\MutiLanguageModule.cs" />
-    <Compile Include="Modules\SEO\ISEOEntity.cs" />
-    <Compile Include="Modules\SEO\SEOEntity.cs" />
-    <Compile Include="Modules\SEO\SEOService.cs" />
     <Compile Include="Modules\SystemSetting\SystemSetting.cs" />
     <Compile Include="Modules\SystemSetting\SystemSettingBase.cs" />
     <Compile Include="Modules\SystemSetting\SystemSettingRepository.cs" />

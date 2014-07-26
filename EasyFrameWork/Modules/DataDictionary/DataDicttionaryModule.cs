@@ -10,7 +10,6 @@ namespace Easy.Modules.DataDictionary
     {
         public void Load()
         {
-            Container.Register(typeof(IDataDictionaryEntity), typeof(DataDictionaryEntity));
             Container.Register(typeof(IDataDictionaryService), typeof(DataDictionaryService));
         }
     }

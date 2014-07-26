@@ -1,4 +1,5 @@
-﻿using Easy.Data;
+﻿using Easy.Constant;
+using Easy.Data;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -155,7 +156,7 @@ namespace Easy.HTML.Grid
         /// <param name="expresstion"></param>
         /// <param name="orderType"></param>
         /// <returns></returns>
-        public EasyGrid<T> OrderBy(Expression<Func<T, object>> expresstion, Easy.Constant.DataEnumerate.OrderType orderType)
+        public EasyGrid<T> OrderBy(Expression<Func<T, object>> expresstion, OrderType orderType)
         {
             string property = Common.GetLinqExpressionText(expresstion);
             if (orderBy.ContainsKey(property))

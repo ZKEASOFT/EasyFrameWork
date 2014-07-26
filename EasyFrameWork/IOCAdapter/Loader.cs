@@ -13,12 +13,12 @@ namespace Easy
     {
         public static T CreateInstance<T>()
         {
-            Type ty = typeof(T);
-            if ((ty.IsInterface || ty.IsAbstract))
+            Type type = typeof(T);
+            if ((type.IsInterface || type.IsAbstract))
             {
-                if (Container.All.ContainsKey(ty))
+                if (Container.All.ContainsKey(type))
                 {
-                    return (T)Instance(Container.All[ty].First());
+                    return (T)BuildInstance(Container.All[type].First());
                 }
                 else
                 {
@@ -26,9 +26,9 @@ namespace Easy
                     //throw new UnregisteredException(ty);
                 }
             }
-            else if (!ty.IsInterface)
+            else if (!type.IsInterface)
             {
-                return System.Activator.CreateInstance<T>();
+                return (T)BuildInstance(type);
             }
             return default(T);
         }
@@ -37,21 +37,22 @@ namespace Easy
             return System.Activator.CreateInstance(assemblyName, fullClassName).Unwrap() as T;
         }
 
-        public static List<T> ResolveAll<T>(Type _interface) where T : class
+        public static List<T> ResolveAll<T>() where T : class
         {
             var result = new List<T>();
-            if (Container.All.ContainsKey(_interface))
+            Type type = typeof(T);
+            if (Container.All.ContainsKey(type))
             {
-                Container.All[_interface].ForEach(m => result.Add(Activator.CreateInstance(m) as T));
+                Container.All[type].ForEach(m => result.Add(Activator.CreateInstance(m) as T));
             }
             else
             {
-                AppDomain.CurrentDomain.GetAssemblies().Each(m => m.GetTypes().Each(type =>
+                AppDomain.CurrentDomain.GetAssemblies().Each(m => m.GetTypes().Each(t =>
                 {
-                    if (type.IsClass && _interface.IsAssignableFrom(type))
+                    if (t.IsClass && type.IsAssignableFrom(t) && !t.IsAbstract && !t.IsInterface)
                     {
-                        Container.Register(_interface, type);
-                        result.Add(Instance(type) as T);
+                        Container.Register(type, t);
+                        result.Add(BuildInstance(t) as T);
                     }
                 }));
             }
@@ -63,10 +64,10 @@ namespace Easy
             {
                 type = Container.All[type].First();
             }
-            return Instance(type);
+            return BuildInstance(type);
         }
 
-        private static object Instance(Type type)
+        private static object BuildInstance(Type type)
         {
             if (type.FullName == "System.String") return null;
             var constructors = type.GetConstructors();
@@ -78,7 +79,7 @@ namespace Easy
                     object[] paraObjects = new object[paras.Length];
                     for (int i = 0; i < paras.Length; i++)
                     {
-                        paraObjects[i] = Instance(GetType(paras[i].ParameterType));
+                        paraObjects[i] = BuildInstance(GetType(paras[i].ParameterType));
                     }
                     return Activator.CreateInstance(type, paraObjects);
                 }
@@ -89,27 +90,20 @@ namespace Easy
 
         public static Type GetType<T>()
         {
-            Type ty = typeof(T);
-            if (Container.All.ContainsKey(ty))
+            Type type = typeof(T);
+            if (Container.All.ContainsKey(type))
             {
-                return Container.All[ty].First();
+                return Container.All[type].First();
             }
-            else
-            {
-                return ty;
-            }
+            return type;
         }
-        public static Type GetType(Type t)
+        public static Type GetType(Type type)
         {
-            if (Container.All.ContainsKey(t))
+            if (Container.All.ContainsKey(type))
             {
-                return Container.All[t].First();
+                return Container.All[type].First();
             }
-            else
-            {
-                return t;
-            }
-
+            return type;
         }
     }
 }

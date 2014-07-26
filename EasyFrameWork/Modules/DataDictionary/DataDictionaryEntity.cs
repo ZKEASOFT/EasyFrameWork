@@ -8,11 +8,12 @@ using Easy.Models;
 namespace Easy.Modules.DataDictionary
 {
     [DataConfigure(typeof(DataDictionaryEntityMetaData))]
-    public class DataDictionaryEntity : EditorEntity, IImage, IDataDictionaryEntity
+    public class DataDictionaryEntity : EditorEntity, IImage, IBasicEntity<long>
     {
         public string TypeName { get; set; }
 
-        public string Name { get; set; }
+        public string DicName { get; set; }
+        public string Title { get; set; }
 
         public string Value { get; set; }
 
@@ -34,11 +35,9 @@ namespace Easy.Modules.DataDictionary
 
         public long ID { get; set; }
 
-        public string Title { get; set; }
-
         public string Description { get; set; }
 
-        public bool IsPassed { get; set; }
+        public int Status { get; set; }
     }
     class DataDictionaryEntityMetaData : DataViewMetaData<DataDictionaryEntity>
     {
@@ -47,7 +46,7 @@ namespace Easy.Modules.DataDictionary
             DataTable("DataDictionary");
             DataConfig(m => m.ID).AsIncreasePrimaryKey();
             DataConfig(m => m.TypeName).Mapper("DicType");
-            DataConfig(m => m.Name).Mapper("DicName");
+            DataConfig(m => m.DicName).Mapper("DicName");
             DataConfig(m => m.Value).Mapper("DicValue");
             DataConfig(m => m.Pid).Mapper("DicPid");
 
@@ -59,8 +58,7 @@ namespace Easy.Modules.DataDictionary
         {
             ViewConfig(m => m.ID).AsHidden();
             ViewConfig(m => m.TypeName).AsHidden();
-            ViewConfig(m => m.Name).AsTextBox().Required().MaxLength(25);
-            ViewConfig(m => m.IsPassed).AsCheckBox().SetColumnWidth(60);
+            ViewConfig(m => m.DicName).AsTextBox().Required().MaxLength(25);
             ViewConfig(m => m.IsSystem).AsCheckBox().ReadOnly();
             ViewConfig(m => m.UpImage).AsFileUp().HideInGrid();
             ViewConfig(m => m.Value).AsTextBox();

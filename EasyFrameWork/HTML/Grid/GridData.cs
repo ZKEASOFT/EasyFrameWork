@@ -257,8 +257,8 @@ namespace Easy.HTML.Grid
                         {
                             condition.Property = custAttribute.GetPropertyMapper(condition.Property);
                         }
-                        condition.OperatorType = (DataEnumerate.OperatorType)int.Parse(_form[string.Format("Conditions[{0}][OperatorType]", tempIndex)]);
-                        condition.ConditionType = (DataEnumerate.ConditionType)int.Parse(_form[string.Format("Conditions[{0}][ConditionType]", tempIndex)]);
+                        condition.OperatorType = (OperatorType)int.Parse(_form[string.Format("Conditions[{0}][OperatorType]", tempIndex)]);
+                        condition.ConditionType = (ConditionType)int.Parse(_form[string.Format("Conditions[{0}][ConditionType]", tempIndex)]);
                         condition.Value = ConvertValue(_form[string.Format("Conditions[{0}][DataType]", tempIndex)], value);
                         filter.Where(condition);
                     }
@@ -290,8 +290,8 @@ namespace Easy.HTML.Grid
                             {
                                 condition.Property = custAttribute.GetPropertyMapper(condition.Property);
                             }
-                            condition.OperatorType = (DataEnumerate.OperatorType)int.Parse(_form[string.Format("ConditionGroups[{0}][Conditions][{1}][OperatorType]", tempGroupIndex, tempGroupConditionIndex)]);
-                            condition.ConditionType = (DataEnumerate.ConditionType)int.Parse(_form[string.Format("ConditionGroups[{0}][Conditions][{1}][ConditionType]", tempGroupIndex, tempGroupConditionIndex)]);
+                            condition.OperatorType = (OperatorType)int.Parse(_form[string.Format("ConditionGroups[{0}][Conditions][{1}][OperatorType]", tempGroupIndex, tempGroupConditionIndex)]);
+                            condition.ConditionType = (ConditionType)int.Parse(_form[string.Format("ConditionGroups[{0}][Conditions][{1}][ConditionType]", tempGroupIndex, tempGroupConditionIndex)]);
                             condition.Value = ConvertValue(_form[string.Format("ConditionGroups[{0}][Conditions][{1}][ConditionType]", tempGroupIndex, tempGroupConditionIndex)], value);
                             if (custAttribute != null)
                             {
@@ -323,7 +323,7 @@ namespace Easy.HTML.Grid
                 {
                     order.Property = custAttribute.GetPropertyMapper(order.Property);
                 }
-                order.OrderType = (DataEnumerate.OrderType)int.Parse(orderType);
+                order.OrderType = (OrderType)int.Parse(orderType);
                 filter.OrderBy(order);
             }
 

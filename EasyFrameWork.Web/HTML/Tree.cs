@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Easy.HTML.jsTree;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -46,7 +47,16 @@ namespace Easy.Web.HTML
                 _tree.Source(controller1.Url.Action(action, controller, routeValues));
             return this;
         }
-
+        public Tree<T> AddPlugin(string plugin)
+        {
+            _tree.AddPlugin(plugin);
+            return this;
+        }
+        public Tree<T> AddContextMenuItem(ContextmenuItem item)
+        {
+            _tree.AddContextMenuItem(item);
+            return this;
+        }
         public override string ToString()
         {
             using (var writer = new HtmlTextWriter(_viewContex.Writer))
