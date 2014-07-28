@@ -18,7 +18,8 @@ namespace Easy
             {
                 if (Container.All.ContainsKey(type))
                 {
-                    return (T)BuildInstance(Container.All[type].First());
+                    var implType = Container.All[type].First();
+                    return (T)implType.Instance;
                 }
                 else
                 {
@@ -43,7 +44,7 @@ namespace Easy
             Type type = typeof(T);
             if (Container.All.ContainsKey(type))
             {
-                Container.All[type].ForEach(m => result.Add(Activator.CreateInstance(m) as T));
+                Container.All[type].Each(m => result.Add((T)m.Instance));
             }
             else
             {
@@ -62,12 +63,13 @@ namespace Easy
         {
             if (Container.All.ContainsKey(type))
             {
-                type = Container.All[type].First();
+                var implType = Container.All[type].First();
+                return implType.Instance;
             }
             return BuildInstance(type);
         }
 
-        private static object BuildInstance(Type type)
+        public static object BuildInstance(Type type)
         {
             if (type.FullName == "System.String") return null;
             var constructors = type.GetConstructors();
@@ -93,7 +95,7 @@ namespace Easy
             Type type = typeof(T);
             if (Container.All.ContainsKey(type))
             {
-                return Container.All[type].First();
+                return Container.All[type].First().TargeType;
             }
             return type;
         }
@@ -101,7 +103,7 @@ namespace Easy
         {
             if (Container.All.ContainsKey(type))
             {
-                return Container.All[type].First();
+                return Container.All[type].First().TargeType;
             }
             return type;
         }

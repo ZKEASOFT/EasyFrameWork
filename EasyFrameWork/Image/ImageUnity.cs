@@ -10,11 +10,7 @@ namespace Easy
     {
         private static string GetAbsuPath(string Path)
         {
-            bool isAbsu = false;
-            if (Path.Contains(@":\"))
-            {
-                isAbsu = true;
-            }
+            bool isAbsu = Path.Contains(@":\");
             if (!isAbsu)
             {
                 Path = AppDomain.CurrentDomain.BaseDirectory + Path;

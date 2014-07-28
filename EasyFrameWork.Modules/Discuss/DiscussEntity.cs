@@ -24,6 +24,9 @@ namespace Easy.Modules.Discuss
         public string Description { get; set; }
 
         public bool IsPassed { get; set; }
+
+
+        public int Status { get; set; }
     }
     class DiscussEntityMetaData : DataViewMetaData<DiscussEntity>
     {
