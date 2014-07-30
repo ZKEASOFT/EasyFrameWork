@@ -7,9 +7,9 @@ using System.Web.Mvc;
 
 namespace Easy.Web.Attribute
 {
-    public class AdminAttribute : ActionFilterAttribute, IActionFilter
+    public class AdminThemeAttribute : ActionFilterAttribute, IActionFilter
     {
-        public void OnActionExecuted(ActionExecutedContext filterContext)
+        public override void OnActionExecuted(ActionExecutedContext filterContext)
         {
             ViewResult viewResult = (filterContext.Result as ViewResult);
             if (viewResult != null)
@@ -18,7 +18,7 @@ namespace Easy.Web.Attribute
             }
         }
 
-        public void OnActionExecuting(ActionExecutingContext filterContext)
+        public override void OnActionExecuting(ActionExecutingContext filterContext)
         {
 
         }

@@ -20,6 +20,10 @@ namespace Easy.RepositoryPattern
         {
             return repBase.Get(primaryKeys);
         }
+        public virtual List<T> Get()
+        {
+            return repBase.Get(new DataFilter());
+        }
         public virtual List<T> Get(DataFilter filter)
         {
             return repBase.Get(filter);

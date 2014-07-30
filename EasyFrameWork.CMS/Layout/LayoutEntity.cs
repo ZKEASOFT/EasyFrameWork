@@ -11,7 +11,7 @@ using Easy.CMS.Widget;
 namespace Easy.CMS.Layout
 {
     [DataConfigure(typeof(LayoutEntityMetaData))]
-    public class LayoutEntity : EditorEntity,IBasicEntity<string>
+    public class LayoutEntity : EditorEntity, IBasicEntity<string>
     {
         public const string LayoutKey = "ViewDataKey_Layout";
         public string ID { get; set; }
@@ -19,7 +19,6 @@ namespace Easy.CMS.Layout
         public string LayoutName { get; set; }
         public string Title { get; set; }
         public string ContainerClass { get; set; }
-        public string StylePath { get; set; }
         public string Script { get; set; }
         public string Style { get; set; }
         public ZoneCollection Zones { get; set; }
@@ -44,7 +43,9 @@ namespace Easy.CMS.Layout
 
         protected override void ViewConfigure()
         {
-
+            ViewConfig(m => m.ID).AsHidden();
+            ViewConfig(m => m.ContainerClass).AsHidden();
+            ViewConfig(m => m.Status).AsDropDownList().DataSource(Constant.DicKeys.RecordStatus, Constant.SourceType.Dictionary);
         }
     }
 

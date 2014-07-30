@@ -22,6 +22,7 @@ namespace Easy.RepositoryPattern
         /// <param name="primaryKeys"></param>
         /// <returns></returns>
         int Delete(params object[] primaryKeys);
+        List<T> Get();
         /// <summary>
         /// 获取列表
         /// </summary>

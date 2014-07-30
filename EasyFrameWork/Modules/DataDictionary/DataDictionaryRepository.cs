@@ -10,7 +10,7 @@ namespace Easy.Modules.DataDictionary
     {
         public List<string> GetDictionaryType()
         {
-            return DB.CustomerSql("select DicType from DataDictionary group by DicType order by DicType").ToList<string>();
+            return DB.CustomerSql("select DicName from DataDictionary group by DicName order by DicName").ToList<string>();
         }
     }
 }

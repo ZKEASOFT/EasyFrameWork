@@ -34,9 +34,10 @@ namespace Easy.CMS.Layout
                 });
             }
         }
-        public override bool Update(LayoutEntity item, params object[] primaryKeys)
+
+        public void UpdateDesign(LayoutEntity item)
         {
-            bool updated = base.Update(item, primaryKeys);
+            this.Update(item, new Data.DataFilter(new List<string> { "ContainerClass" }).Where("ID", OperatorType.Equal, item.ID));
             if (item.Zones != null)
             {
                 ZoneService zoneService = new ZoneService();
@@ -58,7 +59,7 @@ namespace Easy.CMS.Layout
                     layoutHtmlService.Add(m);
                 });
             }
-            return updated;
+
         }
         public override LayoutEntity Get(params object[] primaryKeys)
         {

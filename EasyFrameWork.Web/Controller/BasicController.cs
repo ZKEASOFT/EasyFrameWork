@@ -91,7 +91,6 @@ namespace Easy.Web.Controller
         public virtual ActionResult Edit(P id)
         {
             T entity = Service.Get(id);
-            ViewBag.Title = entity.Title;
             return View(entity);
         }
 

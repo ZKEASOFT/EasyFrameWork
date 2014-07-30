@@ -11,7 +11,7 @@ namespace Easy.Modules.DataDictionary
         DataDictionaryRepository rep = new DataDictionaryRepository();
         public List<DataDictionaryEntity> GetDictionaryByType(string dicType)
         {
-            return Get(new Data.DataFilter().Where(string.Format("T0.DicValue<>'0' and T0.DicType='{0}'", dicType)));
+            return Get(new Data.DataFilter().Where(string.Format("T0.DicValue<>'0' and T0.DicName='{0}'", dicType)));
         }
         public List<string> GetDictionaryType()
         {
@@ -20,7 +20,7 @@ namespace Easy.Modules.DataDictionary
         public override void Add(DataDictionaryEntity item)
         {
             var parent = this.Get(item.Pid);
-            item.TypeName = parent.TypeName;
+            item.DicName = parent.DicName;
             base.Add(item);
         }
     }

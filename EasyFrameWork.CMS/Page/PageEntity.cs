@@ -37,7 +37,8 @@ namespace Easy.CMS.Page
 
         protected override void ViewConfigure()
         {
-
+            ViewConfig(m => m.Status).AsDropDownList().DataSource(Constant.DicKeys.RecordStatus, Constant.SourceType.Dictionary);
+            ViewConfig(m => m.LayoutId).AsDropDownList().DataSource(new Layout.LayoutService().Get().ToDictionary(m => m.ID, m => m.LayoutName));
         }
     }
 
