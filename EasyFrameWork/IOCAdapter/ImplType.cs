@@ -44,6 +44,10 @@ namespace Easy.IOCAdapter
             }
             return targetObj.TargeType.FullName == this.TargeType.FullName;
         }
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
+        }
     }
 
     public class ImplTypeCollection : Collection<ImplType>

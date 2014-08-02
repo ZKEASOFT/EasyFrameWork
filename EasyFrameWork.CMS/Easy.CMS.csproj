@@ -68,6 +68,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Constant.cs" />
     <Compile Include="Filter\EditWidgetAttribute.cs" />
     <Compile Include="Filter\WidgetAttribute.cs" />
     <Compile Include="Layout\LayoutEntity.cs" />
@@ -78,6 +79,11 @@
     <Compile Include="Page\PageService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Route\UrlRoute.cs" />
+    <Compile Include="WidgetTemplate\WidgetTemplateEntity.cs" />
+    <Compile Include="WidgetTemplate\WidgetTemplateService.cs" />
+    <Compile Include="WidgetTemplate\WidgetTemplateViewModel.cs" />
+    <Compile Include="Widget\HtmlWidget.cs" />
+    <Compile Include="Widget\HtmlWidgetService.cs" />
     <Compile Include="Widget\WidgetPartDriver.cs" />
     <Compile Include="Widget\WidgetBase.cs" />
     <Compile Include="Widget\WidgetCollection.cs" />

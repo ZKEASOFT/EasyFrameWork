@@ -20,6 +20,8 @@ namespace Easy.HTML.Tags
             this.EndStr = "></select>";
         }
         public Dictionary<string, string> OptionItems { get { return Data; } }
+        public SourceType SourceType { get; set; }
+        public string SourceKey { get; set; }
         public override string ToString()
         {
             return ToString(false);
@@ -144,9 +146,11 @@ namespace Easy.HTML.Tags
         /// <param name="dictionaryType"></param>
         /// <param name="type"></param>
         /// <returns></returns>
-        public DropDownListHtmlTag DataSource(string dictionaryType, SourceType type)
+        public DropDownListHtmlTag DataSource(string dictionaryType, SourceType sourceType)
         {
-            if (type == SourceType.Dictionary)
+            this.SourceKey = dictionaryType;
+            this.SourceType = sourceType;
+            if (sourceType == SourceType.Dictionary)
             {
                 IDataDictionaryService dicService = Easy.Loader.CreateInstance<IDataDictionaryService>();
                 if (dicService != null)

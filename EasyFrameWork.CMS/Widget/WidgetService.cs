@@ -9,7 +9,7 @@ namespace Easy.CMS.Widget
 {
     public class WidgetService : ServiceBase<WidgetBase>
     {
-
+     
     }
     public class WidgetService<T> : ServiceBase<T>, IWidgetPartDriver where T : WidgetBase
     {

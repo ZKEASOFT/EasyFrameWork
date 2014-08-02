@@ -4,11 +4,12 @@ using System.Linq;
 using System.Text;
 using Easy.Attribute;
 using Easy.Models;
+using Easy.RepositoryPattern;
 
 namespace Easy.CMS.Widget
 {
     [DataConfigure(typeof(WidgetBaseMetaData))]
-    public class WidgetBase : EditorEntity,IBasicEntity<string>
+    public class WidgetBase : EditorEntity, IBasicEntity<string>
     {
         public string ID { get; set; }
         public string WidgetName { get; set; }
@@ -19,7 +20,8 @@ namespace Easy.CMS.Widget
         public string ZoneId { get; set; }
         public string PartialView { get; set; }
         public string AssemblyName { get; set; }
-        public string FullTypeName { get; set; }
+        public string ServiceTypeName { get; set; }
+        public string ViewModelTypeName { get; set; }
         public WidgetPart ToWidgetPart()
         {
             return new WidgetPart
@@ -49,6 +51,15 @@ namespace Easy.CMS.Widget
         public string Description { get; set; }
 
         public int Status { get; set; }
+
+        public IService CreateServiceInstance()
+        {
+            return Loader.CreateInstance<IService>(this.AssemblyName, this.ServiceTypeName);
+        }
+        public Type GetViewModelType()
+        {
+            return Loader.GetType(this.ViewModelTypeName);
+        }
     }
     public class WidgetBaseMetaData : DataViewMetaData<WidgetBase>
     {

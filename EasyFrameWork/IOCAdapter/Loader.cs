@@ -107,5 +107,21 @@ namespace Easy
             }
             return type;
         }
+        public static Type GetType(string fullClassName)
+        {
+            Cache.StaticCache cache = new Cache.StaticCache();
+            return cache.Get(fullClassName, m =>
+            {
+                Type type = null;
+                AppDomain.CurrentDomain.GetAssemblies().Each(n => n.GetTypes().Each(t =>
+                {
+                    if (type == null && t.FullName == fullClassName)
+                    {
+                        type = t;
+                    }
+                }));
+                return type;
+            });
+        }
     }
 }

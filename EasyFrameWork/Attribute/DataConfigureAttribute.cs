@@ -144,5 +144,16 @@ namespace Easy.Attribute
                           DataConfigureAttribute;
               });
         }
+        public static DataConfigureAttribute GetAttribute(Type type)
+        {
+            StaticCache cache = new StaticCache();
+            string typeName = type.FullName;
+            return cache.Get(typeName, m =>
+            {
+                return
+                    System.Attribute.GetCustomAttribute(type, typeof(DataConfigureAttribute)) as
+                        DataConfigureAttribute;
+            });
+        }
     }
 }

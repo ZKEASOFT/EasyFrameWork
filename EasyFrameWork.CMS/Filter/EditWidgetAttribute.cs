@@ -19,7 +19,7 @@ namespace Easy.CMS.Filter
             ZoneWidgetCollection zones = new ZoneWidgetCollection();
 
             //Page
-            string pageId = filterContext.RequestContext.HttpContext.Request.QueryString["pageId"];
+            string pageId = filterContext.RequestContext.HttpContext.Request.QueryString["ID"];
             PageService pageService = new PageService();
             PageEntity page = pageService.Get(pageId);
             LayoutEntity layout = null;
@@ -33,7 +33,7 @@ namespace Easy.CMS.Filter
 
                 widgets.ForEach(m =>
                 {
-                    IWidgetPartDriver partDriver = Loader.CreateInstance<IWidgetPartDriver>(m.AssemblyName, m.FullTypeName);
+                    IWidgetPartDriver partDriver = Loader.CreateInstance<IWidgetPartDriver>(m.AssemblyName, m.ServiceTypeName);
                     WidgetPart part = partDriver.Display(partDriver.GetWidget(m.ID), filterContext.HttpContext);
                     if (zones.ContainsKey(part.ZoneId))
                     {
@@ -51,7 +51,7 @@ namespace Easy.CMS.Filter
                 ViewResult viewResult = (filterContext.Result as ViewResult);
                 if (viewResult != null)
                 {
-                    viewResult.MasterName = "~/Modules/Easy.CMS.Page/Views/Shared/_DesignPageLayout.cshtml";
+                    viewResult.MasterName = "~/Modules/Page/Views/Shared/_DesignPageLayout.cshtml";
                 }
                 viewResult.ViewData[LayoutEntity.LayoutKey] = layout;
             }

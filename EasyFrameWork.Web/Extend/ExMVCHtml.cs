@@ -32,6 +32,7 @@ namespace Easy.Web.Extend
         public static MvcHtmlString EasyTags<TModel>(this HtmlHelper<TModel> htmlHelper, int cols)
         {
             ViewModelDecode<TModel> de = new ViewModelDecode<TModel>(htmlHelper.ViewData.Model);
+            de.ExtendPropertyValue = htmlHelper.ViewContext.Controller.ViewData;
             List<string> tagsStr = de.GetViewModelPropertyHtmlTag(true);
             List<string> hidenTagsStr = de.GetViewModelHiddenTargets();
 

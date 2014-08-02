@@ -266,6 +266,10 @@ namespace Easy.Attribute
             this.Table = table;
             return new RelationHelper(this._dataRelations);
         }
+        /// <summary>
+        /// 将属于基类的字段全部设为DataConfig(item.Name).Ignore();
+        /// </summary>
+        /// <returns></returns>
         protected virtual bool IsIgnoreBase()
         {
             return false;
@@ -276,6 +280,7 @@ namespace Easy.Attribute
             foreach (PropertyDescriptor item in attrs)
             {
                 DataConfig(item.Name).Ignore();
+                ViewConfig(item.Name).AsHidden();
             }
         }
     }

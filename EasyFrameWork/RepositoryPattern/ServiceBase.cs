@@ -7,32 +7,32 @@ using System.Text;
 
 namespace Easy.RepositoryPattern
 {
-    public abstract class ServiceBase<T> : IService<T> where T : class
+    public abstract class ServiceBase<Entity> : IService where Entity : class
     {
-        RepositoryBase<T> repBase;
+        RepositoryBase<Entity> repBase;
         IApplicationContext applicationContext;
         public ServiceBase()
         {
-            repBase = new RepositoryBase<T>();
+            repBase = new RepositoryBase<Entity>();
             applicationContext = Easy.Loader.CreateInstance<IApplicationContext>();
         }
-        public virtual T Get(params object[] primaryKeys)
+        public virtual Entity Get(params object[] primaryKeys)
         {
             return repBase.Get(primaryKeys);
         }
-        public virtual List<T> Get()
+        public virtual List<Entity> Get()
         {
             return repBase.Get(new DataFilter());
         }
-        public virtual List<T> Get(DataFilter filter)
+        public virtual List<Entity> Get(DataFilter filter)
         {
             return repBase.Get(filter);
         }
-        public virtual List<T> Get(DataFilter filter, Pagination pagin)
+        public virtual List<Entity> Get(DataFilter filter, Pagination pagin)
         {
             return repBase.Get(filter, pagin);
         }
-        public virtual void Add(T item)
+        public virtual void Add(Entity item)
         {
             if (item is EditorEntity)
             {
@@ -61,7 +61,7 @@ namespace Easy.RepositoryPattern
         {
             return repBase.Delete(filter);
         }
-        public virtual bool Update(T item, DataFilter filter)
+        public virtual bool Update(Entity item, DataFilter filter)
         {
             if (item is EditorEntity)
             {
@@ -77,7 +77,7 @@ namespace Easy.RepositoryPattern
             }
             return repBase.Update(item, filter);
         }
-        public virtual bool Update(T item, params object[] primaryKeys)
+        public virtual bool Update(Entity item, params object[] primaryKeys)
         {
             if (item is EditorEntity)
             {
@@ -96,6 +96,48 @@ namespace Easy.RepositoryPattern
         public virtual long Count(DataFilter filter)
         {
             return repBase.Count(filter);
+        }
+
+        public virtual void Add<T>(T item) where T : class
+        {
+            RepositoryBase<T> rep = new RepositoryBase<T>();
+            this.Add(item);
+        }
+
+        public virtual List<T> Get<T>() where T : class
+        {
+            RepositoryBase<T> rep = new RepositoryBase<T>();
+            return rep.Get(new DataFilter());
+        }
+
+        public virtual List<T> Get<T>(DataFilter filter) where T : class
+        {
+            RepositoryBase<T> rep = new RepositoryBase<T>();
+            return rep.Get(filter);
+        }
+
+        public virtual List<T> Get<T>(DataFilter filter, Pagination pagin) where T : class
+        {
+            RepositoryBase<T> rep = new RepositoryBase<T>();
+            return rep.Get(filter, pagin);
+        }
+
+        public virtual T Get<T>(params object[] primaryKeys) where T : class
+        {
+            RepositoryBase<T> rep = new RepositoryBase<T>();
+            return rep.Get(primaryKeys);
+        }
+
+        public virtual bool Update<T>(T item, DataFilter filter) where T : class
+        {
+            RepositoryBase<T> rep = new RepositoryBase<T>();
+            return rep.Update(item, filter);
+        }
+
+        public virtual bool Update<T>(T item, params object[] primaryKeys) where T : class
+        {
+            RepositoryBase<T> rep = new RepositoryBase<T>();
+            return rep.Update(item, primaryKeys);
         }
     }
 }

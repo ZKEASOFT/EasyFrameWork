@@ -48,7 +48,7 @@ namespace Easy.Reflection
             else return null;
         }
 
-        public static object GetPropertyValue(object item, string property)
+        public static object GetObjPropertyValue(object item, string property)
         {
             Type entityType = item.GetType();
             PropertyInfo proper = entityType.GetProperty(property);

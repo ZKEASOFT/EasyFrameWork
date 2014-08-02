@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Easy.RepositoryPattern;
 namespace Easy.Modules.DataDictionary
 {
-    public interface IDataDictionaryService : IService<DataDictionaryEntity>
+    public interface IDataDictionaryService : IService
     {
         /// <summary>
         /// 根据类别获取数据字典

@@ -33,7 +33,7 @@ namespace Easy.CMS.Filter
 
                 widgets.ForEach(m =>
                 {
-                    var partDriver = Loader.CreateInstance<IWidgetPartDriver>(m.AssemblyName, m.FullTypeName);
+                    var partDriver = Loader.CreateInstance<IWidgetPartDriver>(m.AssemblyName, m.ServiceTypeName);
                     WidgetPart part = partDriver.Display(partDriver.GetWidget(m.ID), filterContext.HttpContext);
                     if (zones.ContainsKey(part.ZoneId))
                     {

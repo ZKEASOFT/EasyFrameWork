@@ -21,7 +21,7 @@ namespace Easy.Web
                         IUserService userService = Easy.Loader.CreateInstance<IUserService>();
                         if (userService != null)
                         {
-                            _CurrentUser = userService.Get(System.Web.HttpContext.Current.User.Identity.Name);
+                            _CurrentUser = userService.Get<Easy.Modules.User.Models.UserEntity>(System.Web.HttpContext.Current.User.Identity.Name);
                         }
                     }
                 }

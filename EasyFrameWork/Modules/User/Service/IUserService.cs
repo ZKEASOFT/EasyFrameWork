@@ -7,7 +7,7 @@ using Easy.Modules.User.Models;
 
 namespace Easy.Modules.User.Service
 {
-    public interface IUserService : IService<User.Models.UserEntity>
+    public interface IUserService : IService
     {
         UserEntity Login(string userID, string passWord);
     }
