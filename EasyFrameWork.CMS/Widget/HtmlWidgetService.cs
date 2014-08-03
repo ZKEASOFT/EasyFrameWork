@@ -11,5 +11,7 @@ namespace Easy.CMS.Widget
         {
             return base.Display(widget, httpContext);
         }
+
+        
     }
 }

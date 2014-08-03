@@ -46,6 +46,7 @@ namespace Easy.CMS.Layout
             ViewConfig(m => m.ID).AsHidden();
             ViewConfig(m => m.ContainerClass).AsHidden();
             ViewConfig(m => m.Status).AsDropDownList().DataSource(Constant.DicKeys.RecordStatus, Constant.SourceType.Dictionary);
+            ViewConfig(m => m.Title).AsHidden();
         }
     }
 

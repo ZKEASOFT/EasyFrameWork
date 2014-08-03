@@ -17,5 +17,12 @@ namespace Easy.CMS.Zone
             }
             base.Add(item);
         }
+        public List<ZoneEntity> GetZones(string pageId)
+        {
+            var page = new Easy.CMS.Page.PageService().Get(pageId);
+            var layout = new Easy.CMS.Layout.LayoutService().Get(page.LayoutId);
+            var zones = new Easy.CMS.Zone.ZoneService().Get(new Data.DataFilter().Where("LayoutId", Constant.OperatorType.Equal, layout.ID));
+            return zones;
+        }
     }
 }

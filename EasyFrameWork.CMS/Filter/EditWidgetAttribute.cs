@@ -51,7 +51,7 @@ namespace Easy.CMS.Filter
                 ViewResult viewResult = (filterContext.Result as ViewResult);
                 if (viewResult != null)
                 {
-                    viewResult.MasterName = "~/Modules/Page/Views/Shared/_DesignPageLayout.cshtml";
+                    viewResult.MasterName = "~/Modules/Common/Views/Shared/_DesignPageLayout.cshtml";
                 }
                 viewResult.ViewData[LayoutEntity.LayoutKey] = layout;
             }

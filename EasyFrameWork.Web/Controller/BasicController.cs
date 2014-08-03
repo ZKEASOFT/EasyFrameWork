@@ -106,6 +106,7 @@ namespace Easy.Web.Controller
                     UpLoadImage(entity as IImage);
                 }
                 Service.Update(entity);
+                return RedirectToAction("Index");
             }
             return View(entity);
         }

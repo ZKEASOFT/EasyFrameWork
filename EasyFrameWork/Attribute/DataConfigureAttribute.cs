@@ -21,7 +21,7 @@ namespace Easy.Attribute
         public DataConfigureAttribute(Type MetaDataType)
         {
             Easy.Cache.StaticCache cache = new Easy.Cache.StaticCache();
-            IDataViewMetaData metaData = cache.Get(MetaDataType.FullName, m =>
+            IDataViewMetaData metaData = cache.Get("MetaData_" + MetaDataType.FullName, m =>
             {
                 metaData = Activator.CreateInstance(MetaDataType) as IDataViewMetaData;
                 //HTML标签的多语言
@@ -137,7 +137,7 @@ namespace Easy.Attribute
             Type targetType = Easy.Loader.GetType<T>();
             StaticCache cache = new StaticCache();
             string typeName = typeof(T).FullName;
-            return cache.Get(typeName, m =>
+            return cache.Get("DataConfigureAttribute_" + typeName, m =>
               {
                   return
                       System.Attribute.GetCustomAttribute(targetType, typeof(DataConfigureAttribute)) as
@@ -148,7 +148,7 @@ namespace Easy.Attribute
         {
             StaticCache cache = new StaticCache();
             string typeName = type.FullName;
-            return cache.Get(typeName, m =>
+            return cache.Get("DataConfigureAttribute_" + typeName, m =>
             {
                 return
                     System.Attribute.GetCustomAttribute(type, typeof(DataConfigureAttribute)) as

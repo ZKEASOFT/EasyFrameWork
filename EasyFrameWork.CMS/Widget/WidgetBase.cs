@@ -46,19 +46,50 @@ namespace Easy.CMS.Widget
                 ZoneId = ZoneId
             };
         }
-
-
         public string Description { get; set; }
 
         public int Status { get; set; }
 
-        public IService CreateServiceInstance()
+        public IWidgetPartDriver CreateServiceInstance()
         {
-            return Loader.CreateInstance<IService>(this.AssemblyName, this.ServiceTypeName);
+            return Loader.CreateInstance<IWidgetPartDriver>(this.AssemblyName, this.ServiceTypeName);
+        }
+        public WidgetBase CreateViewModelInstance()
+        {
+            return Loader.CreateInstance<WidgetBase>(this.AssemblyName, this.ViewModelTypeName);
         }
         public Type GetViewModelType()
         {
             return Loader.GetType(this.ViewModelTypeName);
+        }
+        public Type GetServiceType()
+        {
+            return Loader.GetType(this.ServiceTypeName);
+        }
+        public WidgetBase ToWidgetBase()
+        {
+            return new WidgetBase
+            {
+                AssemblyName = this.AssemblyName,
+                CreateBy = this.CreateBy,
+                CreatebyName = this.CreatebyName,
+                CreateDate = this.CreateDate,
+                Description = this.Description,
+                ID = this.ID,
+                LastUpdateBy = this.LastUpdateBy,
+                LastUpdateByName = this.LastUpdateByName,
+                LastUpdateDate = this.LastUpdateDate,
+                LayouId = this.LayouId,
+                PageId = this.PageId,
+                PartialView = this.PartialView,
+                Position = this.Position,
+                ServiceTypeName = this.ServiceTypeName,
+                Status = this.Status,
+                Title = this.Title,
+                ViewModelTypeName = this.ViewModelTypeName,
+                WidgetName = this.WidgetName,
+                ZoneId = this.ZoneId
+            };
         }
     }
     public class WidgetBaseMetaData : DataViewMetaData<WidgetBase>

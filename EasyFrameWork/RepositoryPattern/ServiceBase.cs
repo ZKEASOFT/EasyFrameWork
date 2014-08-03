@@ -98,43 +98,43 @@ namespace Easy.RepositoryPattern
             return repBase.Count(filter);
         }
 
-        public virtual void Add<T>(T item) where T : class
+        public virtual void AddGeneric<T>(T item) where T : class
         {
             RepositoryBase<T> rep = new RepositoryBase<T>();
-            this.Add(item);
+            rep.Add(item);
         }
 
-        public virtual List<T> Get<T>() where T : class
+        public virtual List<T> GetGeneric<T>() where T : class
         {
             RepositoryBase<T> rep = new RepositoryBase<T>();
             return rep.Get(new DataFilter());
         }
 
-        public virtual List<T> Get<T>(DataFilter filter) where T : class
+        public virtual List<T> GetGeneric<T>(DataFilter filter) where T : class
         {
             RepositoryBase<T> rep = new RepositoryBase<T>();
             return rep.Get(filter);
         }
 
-        public virtual List<T> Get<T>(DataFilter filter, Pagination pagin) where T : class
+        public virtual List<T> GetGeneric<T>(DataFilter filter, Pagination pagin) where T : class
         {
             RepositoryBase<T> rep = new RepositoryBase<T>();
             return rep.Get(filter, pagin);
         }
 
-        public virtual T Get<T>(params object[] primaryKeys) where T : class
+        public virtual T GetGeneric<T>(params object[] primaryKeys) where T : class
         {
             RepositoryBase<T> rep = new RepositoryBase<T>();
             return rep.Get(primaryKeys);
         }
 
-        public virtual bool Update<T>(T item, DataFilter filter) where T : class
+        public virtual bool UpdateGeneric<T>(T item, DataFilter filter) where T : class
         {
             RepositoryBase<T> rep = new RepositoryBase<T>();
             return rep.Update(item, filter);
         }
 
-        public virtual bool Update<T>(T item, params object[] primaryKeys) where T : class
+        public virtual bool UpdateGeneric<T>(T item, params object[] primaryKeys) where T : class
         {
             RepositoryBase<T> rep = new RepositoryBase<T>();
             return rep.Update(item, primaryKeys);

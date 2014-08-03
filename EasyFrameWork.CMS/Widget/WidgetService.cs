@@ -9,9 +9,9 @@ namespace Easy.CMS.Widget
 {
     public class WidgetService : ServiceBase<WidgetBase>
     {
-     
+
     }
-    public class WidgetService<T> : ServiceBase<T>, IWidgetPartDriver where T : WidgetBase
+    public abstract class WidgetService<T> : ServiceBase<T>, IWidgetPartDriver where T : WidgetBase
     {
         public WidgetService()
         {
@@ -20,17 +20,18 @@ namespace Easy.CMS.Widget
         public WidgetService WidgetBaseService { get; private set; }
         public override void Add(T item)
         {
-            WidgetBaseService.Add(item);
+            item.ID = Guid.NewGuid().ToString("N");
+            WidgetBaseService.Add(item.ToWidgetBase());
             base.Add(item);
         }
         public override bool Update(T item, params object[] primaryKeys)
         {
-            WidgetBaseService.Update(item);
+            WidgetBaseService.Update(item.ToWidgetBase(), primaryKeys);
             return base.Update(item, primaryKeys);
         }
         public override bool Update(T item, Data.DataFilter filter)
         {
-            WidgetBaseService.Update(item, filter);
+            WidgetBaseService.Update(item.ToWidgetBase(), filter);
             return base.Update(item, filter);
         }
         public override List<T> Get(Data.DataFilter filter)
@@ -77,6 +78,22 @@ namespace Easy.CMS.Widget
         public virtual WidgetPart Display(WidgetBase widget, HttpContextBase httpContext)
         {
             return widget.ToWidgetPart();
+        }
+
+        public virtual void AddWidget(WidgetBase widget)
+        {
+            this.Add((T)widget);
+        }
+
+
+        public virtual void DeleteWidget(string widgetId)
+        {
+            this.Delete(widgetId);
+        }
+
+        public virtual void UpdateWidget(WidgetBase widget)
+        {
+            this.Update((T)widget);
         }
     }
 }

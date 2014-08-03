@@ -5,13 +5,13 @@ namespace Easy.RepositoryPattern
 {
     public interface IService
     {
-        void Add<T>(T item) where T : class;
-        List<T> Get<T>() where T : class;
-        List<T> Get<T>(DataFilter filter) where T : class;
-        List<T> Get<T>(DataFilter filter, Pagination pagin) where T : class;
-        T Get<T>(params object[] primaryKeys) where T : class;
-        bool Update<T>(T item, DataFilter filter) where T : class;
-        bool Update<T>(T item, params object[] primaryKeys) where T : class;
+        void AddGeneric<T>(T item) where T : class;
+        List<T> GetGeneric<T>() where T : class;
+        List<T> GetGeneric<T>(DataFilter filter) where T : class;
+        List<T> GetGeneric<T>(DataFilter filter, Pagination pagin) where T : class;
+        T GetGeneric<T>(params object[] primaryKeys) where T : class;
+        bool UpdateGeneric<T>(T item, DataFilter filter) where T : class;
+        bool UpdateGeneric<T>(T item, params object[] primaryKeys) where T : class;
         long Count(DataFilter filter);
         int Delete(DataFilter filter);
         int Delete(params object[] primaryKeys);

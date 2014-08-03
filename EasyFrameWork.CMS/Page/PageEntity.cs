@@ -37,10 +37,12 @@ namespace Easy.CMS.Page
 
         protected override void ViewConfigure()
         {
+            ViewConfig(m => m.PageName).AsTextBox().Order(1);
             ViewConfig(m => m.Status).AsDropDownList().DataSource(Constant.DicKeys.RecordStatus, Constant.SourceType.Dictionary);
             ViewConfig(m => m.LayoutId).AsDropDownList().DataSource(new Layout.LayoutService().Get().ToDictionary(m => m.ID, m => m.LayoutName));
             ViewConfig(m => m.ParentId).AsHidden();
             ViewConfig(m => m.ID).AsHidden();
+            ViewConfig(m => m.Content).AsHidden();
         }
     }
 

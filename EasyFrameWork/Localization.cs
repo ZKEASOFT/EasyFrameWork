@@ -19,7 +19,7 @@ namespace Easy
                 var lanService = Loader.CreateInstance<ILanguageService>();
                 if (lanService == null)
                     return new LanguageEntity { LanKey = lanKey, LanValue = lanKey };
-                var language = lanService.Get<LanguageEntity>(lanKey, GetCurrentLanID());
+                var language = lanService.GetGeneric<LanguageEntity>(lanKey, GetCurrentLanID());
                 if (language == null)
                 {
                     string lanValue = lanKey;
@@ -39,7 +39,7 @@ namespace Easy
                         LanType = LanType,
                         Module = Module
                     };
-                    lanService.Add(language);
+                    lanService.AddGeneric<LanguageEntity>(language);
                 }
                 return language;
             });
