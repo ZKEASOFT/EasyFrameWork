@@ -96,8 +96,16 @@ namespace Easy.Web.Controller
 
         [HttpPost]
         [ValidateInput(false)]
-        public virtual ActionResult Edit(T entity)
+        public virtual ActionResult Edit(T entity, ActionType? actionType)
         {
+            if (actionType.HasValue)
+            {
+                if (actionType.Value == ActionType.Delete)
+                {
+                    Service.Delete(entity.ID);
+                    return RedirectToAction("Index");
+                }
+            }
             ViewBag.Title = entity.Title;
             if (ModelState.IsValid)
             {

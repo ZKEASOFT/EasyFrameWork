@@ -20,15 +20,15 @@ namespace Easy.RepositoryPattern
         {
             return repBase.Get(primaryKeys);
         }
-        public virtual List<Entity> Get()
+        public virtual IEnumerable<Entity> Get()
         {
             return repBase.Get(new DataFilter());
         }
-        public virtual List<Entity> Get(DataFilter filter)
+        public virtual IEnumerable<Entity> Get(DataFilter filter)
         {
             return repBase.Get(filter);
         }
-        public virtual List<Entity> Get(DataFilter filter, Pagination pagin)
+        public virtual IEnumerable<Entity> Get(DataFilter filter, Pagination pagin)
         {
             return repBase.Get(filter, pagin);
         }
@@ -104,19 +104,19 @@ namespace Easy.RepositoryPattern
             rep.Add(item);
         }
 
-        public virtual List<T> GetGeneric<T>() where T : class
+        public virtual IEnumerable<T> GetGeneric<T>() where T : class
         {
             RepositoryBase<T> rep = new RepositoryBase<T>();
             return rep.Get(new DataFilter());
         }
 
-        public virtual List<T> GetGeneric<T>(DataFilter filter) where T : class
+        public virtual IEnumerable<T> GetGeneric<T>(DataFilter filter) where T : class
         {
             RepositoryBase<T> rep = new RepositoryBase<T>();
             return rep.Get(filter);
         }
 
-        public virtual List<T> GetGeneric<T>(DataFilter filter, Pagination pagin) where T : class
+        public virtual IEnumerable<T> GetGeneric<T>(DataFilter filter, Pagination pagin) where T : class
         {
             RepositoryBase<T> rep = new RepositoryBase<T>();
             return rep.Get(filter, pagin);
@@ -139,5 +139,8 @@ namespace Easy.RepositoryPattern
             RepositoryBase<T> rep = new RepositoryBase<T>();
             return rep.Update(item, primaryKeys);
         }
+
+
+      
     }
 }

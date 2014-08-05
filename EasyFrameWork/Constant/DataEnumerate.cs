@@ -63,4 +63,11 @@ namespace Easy.Constant
         Active = 1,
         InActive = 2
     }
+    public enum ActionType
+    {
+        Create = 1,
+        Update = 2,
+        Delete = 3,
+        Design = 4
+    }
 }

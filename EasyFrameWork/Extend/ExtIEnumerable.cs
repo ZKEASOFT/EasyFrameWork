@@ -17,5 +17,11 @@ namespace Easy.Extend
                 fun(item);
             }
         }
+        public static List<TResult> ToList<T, TResult>(this IEnumerable<T> source, Func<T, TResult> fun)
+        {
+            List<TResult> result = new List<TResult>();
+            source.Each(m => result.Add(fun(m)));
+            return result;
+        }
     }
 }

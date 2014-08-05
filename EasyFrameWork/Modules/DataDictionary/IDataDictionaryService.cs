@@ -10,11 +10,11 @@ namespace Easy.Modules.DataDictionary
         /// </summary>
         /// <param name="dicType"></param>
         /// <returns></returns>
-        List<DataDictionaryEntity> GetDictionaryByType(string dicType);
+        IEnumerable<DataDictionaryEntity> GetDictionaryByType(string dicType);
         /// <summary>
         /// 获取数据字典所有类别
         /// </summary>
         /// <returns></returns>
-        List<string> GetDictionaryType();
+        IEnumerable<string> GetDictionaryType();
     }
 }

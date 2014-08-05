@@ -20,7 +20,7 @@ namespace Easy.Modules.User.Service
             passWord = Easy.EncryptionTool.Encryption(passWord);
             var result = this.Get(new Data.DataFilter().Where("UserID", OperatorType.Equal, userID)
                 .Where("PassWord", OperatorType.Equal, passWord));
-            if (result.Count == 1)
+            if (result.Any())
             {
                 var user = result.First();
                 user.LastLoginDate = DateTime.Now;

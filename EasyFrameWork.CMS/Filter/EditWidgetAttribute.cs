@@ -8,6 +8,7 @@ using Easy;
 using Easy.CMS.Page;
 using Easy.CMS.Layout;
 using Easy.Constant;
+using Easy.Extend;
 
 namespace Easy.CMS.Filter
 {
@@ -29,9 +30,9 @@ namespace Easy.CMS.Filter
                 layout = layoutService.Get(page.LayoutId);
                 layout.Page = page;
                 WidgetService widgetService = new WidgetService();
-                List<WidgetBase> widgets = widgetService.Get(new Data.DataFilter().Where<WidgetBase>(m => m.PageId, OperatorType.Equal, page.ID));
+                IEnumerable<WidgetBase> widgets = widgetService.Get(new Data.DataFilter().Where<WidgetBase>(m => m.PageId, OperatorType.Equal, page.ID));
 
-                widgets.ForEach(m =>
+                widgets.Each(m =>
                 {
                     IWidgetPartDriver partDriver = Loader.CreateInstance<IWidgetPartDriver>(m.AssemblyName, m.ServiceTypeName);
                     WidgetPart part = partDriver.Display(partDriver.GetWidget(m.ID), filterContext.HttpContext);

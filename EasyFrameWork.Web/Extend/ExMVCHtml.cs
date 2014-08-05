@@ -25,11 +25,11 @@ namespace Easy.Web.Extend
             string name = ExpressionHelper.GetExpressionText(expression);
             return new MvcHtmlString(string.Format("<label for='{0}'>{1}</label>", name, de.GetPropertyDisplayName(name)));
         }
-        public static MvcHtmlString EasyTags<TModel>(this HtmlHelper<TModel> htmlHelper)
+        public static MvcHtmlString EditModel<TModel>(this HtmlHelper<TModel> htmlHelper)
         {
-            return EasyTags<TModel>(htmlHelper, 1);
+            return EditModel<TModel>(htmlHelper, 1);
         }
-        public static MvcHtmlString EasyTags<TModel>(this HtmlHelper<TModel> htmlHelper, int cols)
+        public static MvcHtmlString EditModel<TModel>(this HtmlHelper<TModel> htmlHelper, int cols)
         {
             ViewModelDecode<TModel> de = new ViewModelDecode<TModel>(htmlHelper.ViewData.Model);
             de.ExtendPropertyValue = htmlHelper.ViewContext.Controller.ViewData;
@@ -52,7 +52,7 @@ namespace Easy.Web.Extend
             builder.Append("</div>");
             return new MvcHtmlString(builder.ToString());
         }
-        public static MvcHtmlString EasyTagsForDisplay<TModel>(this HtmlHelper<TModel> htmlHelper)
+        public static MvcHtmlString DisplayModel<TModel>(this HtmlHelper<TModel> htmlHelper)
         {
             ViewModelDecode<TModel> de = new ViewModelDecode<TModel>(htmlHelper.ViewData.Model);
             var tags = de.GetViewModelPropertyHtmlTag();

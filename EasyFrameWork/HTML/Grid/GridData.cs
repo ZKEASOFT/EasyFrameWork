@@ -191,7 +191,7 @@ namespace Easy.HTML.Grid
             else return -1;
         }
         #endregion
-        public string GetJsonDataForGrid<T>(IList<T> data, long pageSize, long pageIndex, long recordCount)
+        public string GetJsonDataForGrid<T>(IEnumerable<T> data, long pageSize, long pageIndex, long recordCount)
         {
             string baseStr = "{{ Columns: {0}, Rows: [{1}] ,PageIndex:{2},PageSize:{3},RecordCount:{4}}}";
             StringBuilder RowBuilder = new StringBuilder();
@@ -202,7 +202,7 @@ namespace Easy.HTML.Grid
             }
             return string.Format(baseStr, GetHtmlModelString<T>(), RowBuilder.ToString().Trim(','), pageIndex, pageSize, recordCount);
         }
-        public string GetJsonDataForGrid<T>(IList<T> data, Pagination page)
+        public string GetJsonDataForGrid<T>(IEnumerable<T> data, Pagination page)
         {
             return this.GetJsonDataForGrid<T>(data, page.PageSize, page.PageIndex, page.RecordCount);
         }

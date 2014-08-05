@@ -34,21 +34,21 @@ namespace Easy.CMS.Widget
             WidgetBaseService.Update(item.ToWidgetBase(), filter);
             return base.Update(item, filter);
         }
-        public override List<T> Get(Data.DataFilter filter)
+        public override IEnumerable<T> Get(Data.DataFilter filter)
         {
-            List<WidgetBase> widgetBases = WidgetBaseService.Get(filter);
-            List<T> lists = base.Get(filter);
+            List<WidgetBase> widgetBases = WidgetBaseService.Get(filter).ToList();
+            List<T> lists = base.Get(filter).ToList();
             for (int i = 0; i < widgetBases.Count; i++)
             {
                 Easy.Reflection.ClassAction.CopyProperty(widgetBases[i], lists[i]);
             }
             return lists;
         }
-        public override List<T> Get(Data.DataFilter filter, Data.Pagination pagin)
+        public override IEnumerable<T> Get(Data.DataFilter filter, Data.Pagination pagin)
         {
-            List<WidgetBase> widgetBases = WidgetBaseService.Get(filter, pagin);
-            List<T> lists = base.Get(filter, pagin);
-            for (int i = 0; i < widgetBases.Count; i++)
+            List<WidgetBase> widgetBases = WidgetBaseService.Get(filter, pagin).ToList();
+            List<T> lists = base.Get(filter, pagin).ToList();
+            for (int i = 0; i < widgetBases.Count(); i++)
             {
                 Easy.Reflection.ClassAction.CopyProperty(widgetBases[i], lists[i]);
             }
