@@ -27,12 +27,15 @@ namespace Easy.Web.RazorEngineTemplate
         }
 
         public virtual void WriteAttribute(string name, Tuple<String, int> attrStart, Tuple<String, int> attrEnd,
-            Tuple<Tuple<string, int>, Tuple<Object, int>, bool> value)
+           params Tuple<Tuple<string, int>, Tuple<object, int>, bool>[] values)
         {
             WriteLiteral(attrStart.Item1);
-            WriteLiteral(value.Item2.Item1);
+            foreach (Tuple<Tuple<string, int>, Tuple<object, int>, bool> value in values)
+            {
+                WriteLiteral(value.Item1.Item1);
+                WriteLiteral(value.Item2.Item1);
+            }
             WriteLiteral(attrEnd.Item1);
         }
-
     }
 }
