@@ -45,7 +45,10 @@ namespace Easy.Web.RazorEngineTemplate
                 codeProvider.GenerateCodeFromCompileUnit(GenerateCode(modelType, viewPath).GeneratedCode, writer, new CodeGeneratorOptions());
             }
             var result = codeProvider.CompileAssemblyFromSource(BuildCompilerParameters(), new[] { builder.ToString() });
-
+            if (result.Errors.Count > 0)
+            {
+                throw new CombileFailException(result.Errors[0].ToString());
+            }
             if (!string.IsNullOrEmpty(result.PathToAssembly) && CacheAssembly)
             {
                 if (File.Exists(result.PathToAssembly))

@@ -9,5 +9,11 @@ namespace Easy.Web.RazorEngineTemplate
         {
 
         }
+
+        public CombileFailException(string message)
+            :base(message)
+        {
+            
+        }
     }
 }

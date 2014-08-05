@@ -103,7 +103,7 @@
     <Compile Include="ModelBinderProvider\EasyBinderProvider.cs" />
     <Compile Include="ModelBinder\EasyBinder.cs" />
     <Compile Include="Page\HtmlStringWriter.cs" />
-    <Compile Include="RazorEngineTemplate\CombileFailExcessi.cs" />
+    <Compile Include="RazorEngineTemplate\CombileFailException.cs" />
     <Compile Include="RazorEngineTemplate\Combiler.cs" />
     <Compile Include="RazorEngineTemplate\RazorTemplateBase.cs" />
     <Compile Include="Resource\Enums.cs" />
