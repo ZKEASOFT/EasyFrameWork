@@ -23,6 +23,15 @@ namespace Easy.CMS.Filter
             string path = filterContext.RequestContext.HttpContext.Request.Path;
             var pageService = new PageService();
             IEnumerable<PageEntity> pages = pageService.Get(new Data.DataFilter().Where<PageEntity>(m => m.Url, OperatorType.Equal, path));
+            if (!pages.Any() && path == "/")
+            {
+                var homePage = pageService.Get(new Data.DataFilter().Where("ParentId", OperatorType.Equal, "0"));
+                if (homePage.Any())
+                {
+                    filterContext.Result = new RedirectResult(homePage.First().Url);
+                    return;
+                }
+            }
             if (pages.Any())
             {
                 PageEntity page = pages.First();

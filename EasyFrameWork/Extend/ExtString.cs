@@ -379,11 +379,6 @@ namespace Easy.Extend
             return float.TryParse(instance, out result);
         }
 
-        public static bool IsNullEmpty(this string instance)
-        {
-            return string.IsNullOrEmpty(instance);
-        }
-
         public static bool IsNullOrWhiteSpace(this string instance)
         {
             return string.IsNullOrWhiteSpace(instance);

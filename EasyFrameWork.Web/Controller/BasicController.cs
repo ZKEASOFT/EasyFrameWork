@@ -61,11 +61,11 @@ namespace Easy.Web.Controller
         {
             this.Service = service;
         }
-        public virtual ActionResult Index()
+        public virtual ActionResult Index(ParamsContext<P> context)
         {
             return View();
         }
-        public virtual ActionResult Create()
+        public virtual ActionResult Create(ParamsContext<P> context)
         {
             T entity = Activator.CreateInstance<T>();
             entity.Status = (int)RecordStatus.Active;
@@ -88,9 +88,9 @@ namespace Easy.Web.Controller
             }
             return View(entity);
         }
-        public virtual ActionResult Edit(P id)
+        public virtual ActionResult Edit(ParamsContext<P> context)
         {
-            T entity = Service.Get(id);
+            T entity = Service.Get(context.ID);
             return View(entity);
         }
 

@@ -90,6 +90,7 @@
     <Compile Include="Constant\Enums.cs" />
     <Compile Include="ControllerFactory\DefaultIndexControllerFactory.cs" />
     <Compile Include="ControllerFactory\IocControllerFactory.cs" />
+    <Compile Include="Controller\ParamsContext.cs" />
     <Compile Include="Module.cs" />
     <Compile Include="Controller\BasicController.cs" />
     <Compile Include="Extend\ExHttpContext.cs" />

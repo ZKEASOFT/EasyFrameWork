@@ -55,7 +55,7 @@ namespace Easy.HTML.Tags
                     builder = AppendOption(builder, item.Key, item.Value, item.Key == val);
                 }
             }
-            return BaseStr.Replace("</select>", "") + builder.ToString() + "</select>";
+            return BaseStr.Replace("</select>", builder.ToString() + "</select>");
         }
 
         private StringBuilder AppendOption(StringBuilder builder, string key, string text, bool selected)

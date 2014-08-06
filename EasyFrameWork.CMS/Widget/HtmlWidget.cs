@@ -26,8 +26,8 @@ namespace Easy.CMS.Widget
 
         protected override void ViewConfigure()
         {
-            ViewConfig(m => m.WidgetName).AsTextBox().Order(1);
-            ViewConfig(m => m.ZoneId).AsDropDownList().DataSource(ViewDataKeys.Zones, Easy.Constant.SourceType.ViewData);
+            ViewConfig(m => m.WidgetName).AsTextBox().Order(1).Required();
+            ViewConfig(m => m.ZoneId).AsDropDownList().DataSource(ViewDataKeys.Zones, Easy.Constant.SourceType.ViewData).Required();
             ViewConfig(m => m.HTML).AsMutiLineTextBox();
         }
     }

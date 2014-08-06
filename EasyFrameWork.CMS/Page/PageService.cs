@@ -9,6 +9,18 @@ namespace Easy.CMS.Page
 {
     public class PageService : ServiceBase<PageEntity>
     {
+        public override void Add(PageEntity item)
+        {
+            if (item.ID.IsNullOrEmpty())
+            {
+                item.ID = Guid.NewGuid().ToString("N");
+            }
+            if (item.ParentId.IsNullOrEmpty())
+            {
+                item.ParentId = "0";
+            }
+            base.Add(item);
+        }
         public override int Delete(Data.DataFilter filter)
         {
             var deletes = this.Get(filter).ToList(m => m.ID);

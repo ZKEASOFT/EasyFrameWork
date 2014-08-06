@@ -138,14 +138,7 @@ namespace Easy.HTML.Tags
             StringBuilder builder = new StringBuilder();
             if (widthLabel)
             {
-                if (!this.IsReadOnly)
-                {
-                    builder.AppendFormat("<span class=\"input-group-addon\">{0}</span>", this.DisplayName);
-                }
-                else
-                {
-                    builder.AppendFormat("<span class=\"input-group-addon\">{0}</span>", this.DisplayName);
-                }
+                builder.AppendFormat("<span class=\"input-group-addon {1}\">{0}</span>", this.DisplayName, this.IsRequired ? "required" : "");
             }
             if (this.TagType == HTMLEnumerate.HTMLTagTypes.File)
             {
