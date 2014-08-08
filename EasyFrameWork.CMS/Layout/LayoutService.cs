@@ -78,7 +78,7 @@ namespace Easy.CMS.Layout
             IEnumerable<ZoneEntity> zones = new ZoneService().Get(new Data.DataFilter().Where<ZoneEntity>(m => m.LayoutId, OperatorType.Equal, entity.ID));
             entity.Zones = new ZoneCollection();
             zones.Each(entity.Zones.Add);
-            IEnumerable<LayoutHtml> htmls = new LayoutHtmlService().Get(new Data.DataFilter().Where<LayoutHtml>(m => m.LayoutId, OperatorType.Equal, entity.ID));
+            IEnumerable<LayoutHtml> htmls = new LayoutHtmlService().Get(new Data.DataFilter().OrderBy("LayoutHtmlId", OrderType.Ascending).Where<LayoutHtml>(m => m.LayoutId, OperatorType.Equal, entity.ID));
             entity.Html = new LayoutHtmlCollection();
             htmls.Each(entity.Html.Add);
             return entity;
