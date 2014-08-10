@@ -22,7 +22,9 @@ namespace Easy.CMS.Filter
             //Page
             string path = filterContext.RequestContext.HttpContext.Request.Path;
             var pageService = new PageService();
-            IEnumerable<PageEntity> pages = pageService.Get(new Data.DataFilter().Where<PageEntity>(m => m.Url, OperatorType.Equal, path));
+            var filter = new Data.DataFilter().Where("Url", OperatorType.Equal, path).Where("Status", OperatorType.Equal, (int)Constant.RecordStatus.Active);
+
+            IEnumerable<PageEntity> pages = pageService.Get(filter);
             if (!pages.Any() && path == "/")
             {
                 var homePage = pageService.Get(new Data.DataFilter().Where("ParentId", OperatorType.Equal, "0"));
@@ -36,6 +38,7 @@ namespace Easy.CMS.Filter
             {
                 PageEntity page = pages.First();
                 var layoutService = new LayoutService();
+                Cache.StaticCache cache = new Cache.StaticCache();
                 LayoutEntity layout = layoutService.Get(page.LayoutId);
                 layout.Page = page;
                 var widgetService = new WidgetService();

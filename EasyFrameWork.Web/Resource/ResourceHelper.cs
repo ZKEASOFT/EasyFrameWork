@@ -18,10 +18,7 @@ namespace Easy.Web.Resource
                 case ResourceType.Script: _source = ResourceManager.ScriptSource; break;
                 case ResourceType.Style: _source = ResourceManager.StyleSource; break;
             }
-            if (!_source.ContainsKey(name))
-            {
-                _source.Add(name, new ResourceCollection());
-            }
+            _source.Add(name, new ResourceCollection { Name = name });
             _name = name;
             _resourceType = resourceType;
         }

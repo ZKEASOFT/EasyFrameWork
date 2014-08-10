@@ -38,6 +38,13 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>false</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>
+    </AssemblyOriginatorKeyFile>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <Private>True</Private>
@@ -81,9 +88,9 @@
     <Compile Include="ActionInvoker\DefaultIndexActionInvoder.cs" />
     <Compile Include="AjaxState.cs" />
     <Compile Include="ApplicationContext.cs" />
-    <Compile Include="Attribute\AdminAttribute.cs" />
+    <Compile Include="Attribute\PopUpAttribute.cs" />
+    <Compile Include="Attribute\AdminThemeAttribute.cs" />
     <Compile Include="Attribute\OnceSubmitAttribute.cs" />
-    <Compile Include="Attribute\SEOAttribute.cs" />
     <Compile Include="Cache\MemoryCache.cs" />
     <Compile Include="Common.cs" />
     <Compile Include="CommonType.cs" />

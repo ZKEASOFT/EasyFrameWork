@@ -69,5 +69,10 @@ namespace Easy.Web.HTML
         {
             return new MvcHtmlString(_tree.ToString());
         }
+        public Tree<T> On(string events,string fun)
+        {
+            _tree.On(events,fun);
+            return this;
+        }
     }
 }

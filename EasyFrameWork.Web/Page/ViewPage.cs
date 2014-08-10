@@ -1,6 +1,6 @@
-﻿using Easy.Web.Resource;
+﻿using System;
+using Easy.Web.Resource;
 using Easy.Web.Resource.Enums;
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -43,21 +43,17 @@ namespace Easy.Web.Page
             {
                 case PartScriptKey:
                     ResourceManager.ScriptSource.Where(m => m.Value.Required && m.Value.Position == position)
-                        .Each(m => m.Value.Each(r => writer.WriteLine(r.ToSource(this, this.Context))));break;
+                        .Each(m => m.Value.Each(r => writer.WriteLine(r.ToSource(this, this.Context)))); break;
                 case PartStyleKey:
                     ResourceManager.StyleSource.Where(m => m.Value.Required && m.Value.Position == position)
-                        .Each(m => m.Value.Each(r => writer.WriteLine(r.ToSource(this, this.Context))));break;
+                        .Each(m => m.Value.Each(r => writer.WriteLine(r.ToSource(this, this.Context)))); break;
             }
-            if (ViewData.ContainsKey(key))
+            if (TempData.ContainsKey(key))
             {
-                var source = ViewData[key] as ResourceCollection;
+                var source = TempData[key] as Dictionary<string, ResourceCollection>;
                 if (source != null)
                 {
-                    var headSource = source.Where(m => m.Position == position);
-                    foreach (ResourceEntity item in headSource)
-                    {
-                        writer.WriteLine(item.ToSource(this, this.Context));
-                    }
+                    source.Each(m => m.Value.Where(n => n.Position == position).Each(l => writer.WriteLine(l.ToSource(this, this.Context))));
                 }
             }
             return writer;
@@ -80,26 +76,29 @@ namespace Easy.Web.Page
                 return _style ?? (_style = new StyleRegister(this, appendResourceAction));
             }
         }
-        private void appendResourceAction(ResourceEntity resource, string key)
+        private void appendResourceAction(ResourceCollection resource, string key)
         {
-            List<ResourceEntity> source = null;
-            if (ViewData.ContainsKey(key))
+            Dictionary<string, ResourceCollection> source = null;
+            if (TempData.ContainsKey(key))
             {
-                source = ViewData[key] as ResourceCollection;
+                source = TempData[key] as Dictionary<string, ResourceCollection>;
             }
             else
             {
-                source = new ResourceCollection();
+                source = new Dictionary<string, ResourceCollection>();
             }
-            source.Add(resource);
-            ViewData[key] = source;
+            if (!source.ContainsKey(resource.Name))
+            {
+                source.Add(resource.Name, resource);
+                TempData[key] = source;
+            }
         }
 
 
 
         public override void Execute()
         {
-           
+
         }
     }
 

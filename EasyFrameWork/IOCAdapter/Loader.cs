@@ -33,8 +33,27 @@ namespace Easy
             }
             return default(T);
         }
-        public static T CreateInstance<T>(string assemblyName, string fullClassName) where T : class
+        public static T CreateInstance<T>(string assemblyName, string fullClassName, bool dynamicLoad = false) where T : class
         {
+            if (dynamicLoad)
+            {
+                assemblyName = string.Format("{0}.dll", assemblyName);
+                Cache.StaticCache cache = new Cache.StaticCache();
+                Type type = cache.Get(string.Format("{0}_{1}", assemblyName, fullClassName), m =>
+                {
+                    Assembly[] assemblies = AppDomain.CurrentDomain.GetAssemblies();
+                    foreach (Assembly item in assemblies)
+                    {
+                        if (item.ManifestModule.Name.Equals(assemblyName, StringComparison.CurrentCultureIgnoreCase))
+                        {
+                            return item.GetType(fullClassName);
+                        }
+                    }
+                    return null;
+                });
+                T result = BuildInstance(type) as T;
+                return result;
+            }
             return System.Activator.CreateInstance(assemblyName, fullClassName).Unwrap() as T;
         }
 

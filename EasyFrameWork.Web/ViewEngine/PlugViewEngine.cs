@@ -78,6 +78,7 @@ namespace Easy.Web.ViewEngine
         protected override bool FileExists(ControllerContext controllerContext, string virtualPath)
         {
             return base.FileExists(controllerContext, virtualPath);
+
         }
         public override ViewEngineResult FindPartialView(ControllerContext controllerContext, string partialViewName, bool useCache)
         {

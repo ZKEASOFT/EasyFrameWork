@@ -22,52 +22,92 @@ namespace Easy.CMS.Widget
         {
             item.ID = Guid.NewGuid().ToString("N");
             WidgetBaseService.Add(item.ToWidgetBase());
-            base.Add(item);
+            if (typeof(T) != typeof(WidgetBase))
+            {
+                base.Add(item);
+            }
         }
         public override bool Update(T item, params object[] primaryKeys)
         {
-            WidgetBaseService.Update(item.ToWidgetBase(), primaryKeys);
-            return base.Update(item, primaryKeys);
+            bool result = WidgetBaseService.Update(item.ToWidgetBase(), primaryKeys);
+            if (typeof(T) != typeof(WidgetBase))
+            {
+                return base.Update(item, primaryKeys);
+            }
+            return result;
         }
         public override bool Update(T item, Data.DataFilter filter)
         {
-            WidgetBaseService.Update(item.ToWidgetBase(), filter);
-            return base.Update(item, filter);
+            bool result = WidgetBaseService.Update(item.ToWidgetBase(), filter);
+            if (typeof(T) != typeof(WidgetBase))
+            {
+                return base.Update(item, filter);
+            }
+            return result;
         }
         public override IEnumerable<T> Get(Data.DataFilter filter)
         {
             List<WidgetBase> widgetBases = WidgetBaseService.Get(filter).ToList();
-            List<T> lists = base.Get(filter).ToList();
-            for (int i = 0; i < widgetBases.Count; i++)
+
+            List<T> lists = new List<T>();
+            if (typeof(T) != typeof(WidgetBase))
             {
-                Easy.Reflection.ClassAction.CopyProperty(widgetBases[i], lists[i]);
+                lists = base.Get(filter).ToList();
+                for (int i = 0; i < widgetBases.Count; i++)
+                {
+                    Easy.Reflection.ClassAction.CopyProperty(widgetBases[i], lists[i]);
+                }
+            }
+            else
+            {
+                widgetBases.ForEach(m => lists.Add(m as T));
             }
             return lists;
+
         }
         public override IEnumerable<T> Get(Data.DataFilter filter, Data.Pagination pagin)
         {
             List<WidgetBase> widgetBases = WidgetBaseService.Get(filter, pagin).ToList();
-            List<T> lists = base.Get(filter, pagin).ToList();
-            for (int i = 0; i < widgetBases.Count(); i++)
+            List<T> lists = new List<T>();
+            if (typeof(T) != typeof(WidgetBase))
             {
-                Easy.Reflection.ClassAction.CopyProperty(widgetBases[i], lists[i]);
+                lists = base.Get(filter, pagin).ToList();
+                for (int i = 0; i < widgetBases.Count(); i++)
+                {
+                    Easy.Reflection.ClassAction.CopyProperty(widgetBases[i], lists[i]);
+                }
+            }
+            else
+            {
+                widgetBases.ForEach(m => lists.Add(m as T));
             }
             return lists;
         }
         public override int Delete(Data.DataFilter filter)
         {
-            WidgetBaseService.Delete(filter);
-            return base.Delete(filter);
+            int result = WidgetBaseService.Delete(filter);
+            if (typeof(T) != typeof(WidgetBase))
+            {
+                return base.Delete(filter);
+            }
+            return result;
         }
         public override int Delete(params object[] primaryKeys)
         {
-            WidgetBaseService.Delete(primaryKeys);
-            return base.Delete(primaryKeys);
+            int result = WidgetBaseService.Delete(primaryKeys);
+            if (typeof(T) != typeof(WidgetBase))
+            {
+                return base.Delete(primaryKeys);
+            }
+            return result;
         }
         public override T Get(params object[] primaryKeys)
         {
             T model = base.Get(primaryKeys);
-            Easy.Reflection.ClassAction.CopyProperty(WidgetBaseService.Get(primaryKeys), model);
+            if (typeof(T) != typeof(WidgetBase))
+            {
+                Easy.Reflection.ClassAction.CopyProperty(WidgetBaseService.Get(primaryKeys), model);
+            }
             return model;
         }
         public virtual WidgetBase GetWidget(string widgetId)

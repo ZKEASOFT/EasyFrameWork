@@ -13,10 +13,10 @@ namespace Easy.Web.Resource
     public abstract class ResourceRegister
     {
         protected WebPageBase _page;
-        protected Action<ResourceEntity, string> _callBack;
-        protected ResourceRegister(WebPageBase page, Action<ResourceEntity, string> callBack)
+        protected Action<ResourceCollection, string> _callBack;
+        protected ResourceRegister(WebPageBase page, Action<ResourceCollection, string> callBack)
         {
-            this._page = page;          
+            this._page = page;
             _callBack = callBack;
         }
 
@@ -33,8 +33,8 @@ namespace Easy.Web.Resource
         private WebPageBase _page;
         private string _key;
         private ResourcePosition _position;
-        private Action<ResourceEntity, string> _callBack;
-        public Capture(WebPageBase page, Action<ResourceEntity, string> callBack, ResourcePosition position, string key)
+        private Action<ResourceCollection, string> _callBack;
+        public Capture(WebPageBase page, Action<ResourceCollection, string> callBack, ResourcePosition position, string key)
         {
             _key = key;
             this._page = page;
@@ -46,17 +46,20 @@ namespace Easy.Web.Resource
             ResourceEntity resource = new ResourceEntity();
             resource.Position = _position;
             resource.Source = _page.OutputStack.Pop();
-            _callBack(resource, _key);
+            var resources=new ResourceCollection();
+            resources.Name = Guid.NewGuid().ToString("N");
+            resources.Add(resource);
+            _callBack(resources, _key);
         }
     }
 
     public class ResourceCapture
     {
         private WebPageBase _page;
-        private List<ResourceEntity> _resource;
-        private Action<ResourceEntity, string> _callBack;
+        private ResourceCollection _resource;
+        private Action<ResourceCollection, string> _callBack;
         private string _key;
-        public ResourceCapture(WebPageBase page, Action<ResourceEntity, string> callBack, List<ResourceEntity> source, string key)
+        public ResourceCapture(WebPageBase page, Action<ResourceCollection, string> callBack, ResourceCollection source, string key)
         {
             _page = page;
             _callBack = callBack;
@@ -65,41 +68,47 @@ namespace Easy.Web.Resource
         }
         public void AtHead()
         {
+            var resources = new ResourceCollection();
+            resources.Name = _resource.Name;
             _resource.Each(m =>
             {
                 ResourceEntity entity = m.ToNew();
                 entity.Position = ResourcePosition.Head;
-                _callBack(entity, _key);
+                resources.Add(entity);
             });
+            _callBack(resources, _key);
         }
         public void AtFoot()
         {
+            var resources = new ResourceCollection();
+            resources.Name = _resource.Name;
             _resource.Each(m =>
             {
                 ResourceEntity entity = m.ToNew();
                 entity.Position = ResourcePosition.Foot;
-                _callBack(entity, _key);
+                resources.Add(entity);
             });
+            _callBack(resources, _key);
         }
     }
 
 
     public class ScriptRegister : ResourceRegister
     {
-        public ScriptRegister(WebPageBase page, Action<ResourceEntity, string> callBack)
+        public ScriptRegister(WebPageBase page, Action<ResourceCollection, string> callBack)
             : base(page, callBack)
         {
         }
 
         public override IDisposable AtHead()
         {
-            _page.OutputStack.Push(new StringWriter());  
+            _page.OutputStack.Push(new StringWriter());
             return new Capture(this._page, _callBack, ResourcePosition.Head, ViewPage.PartScriptKey);
         }
 
         public override IDisposable AtFoot()
         {
-            _page.OutputStack.Push(new StringWriter());  
+            _page.OutputStack.Push(new StringWriter());
             return new Capture(this._page, _callBack, ResourcePosition.Foot, ViewPage.PartScriptKey);
         }
 
@@ -115,7 +124,7 @@ namespace Easy.Web.Resource
 
     public class StyleRegister : ResourceRegister
     {
-        public StyleRegister(WebPageBase page, Action<ResourceEntity, string> callBack)
+        public StyleRegister(WebPageBase page, Action<ResourceCollection, string> callBack)
             : base(page, callBack)
         {
         }

@@ -171,6 +171,7 @@ namespace Easy.HTML.jsTree
             node.id = valueProperty(data);
             node.text = textProperty(data);
             node.state = new State { opened = true };
+            node.a_attr = data;
             node.children = new List<Node>();
             DataSource.Where(m => parentProperty(m) == node.id).Each(m => node.children.Add(InitNode(m)));
             return node;
