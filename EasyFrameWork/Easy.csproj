@@ -151,9 +151,9 @@
     <Compile Include="Constant\DataEnumerate.cs" />
     <Compile Include="Data\DataFilter.cs" />
     <Compile Include="Data\Pagination.cs" />
-    <Compile Include="Attribute\IDataViewMetaData.cs" />
-    <Compile Include="Attribute\DataViewMetaData.cs" />
-    <Compile Include="Attribute\DataConfigureAttribute.cs" />
+    <Compile Include="MetaData\IDataViewMetaData.cs" />
+    <Compile Include="MetaData\DataViewMetaData.cs" />
+    <Compile Include="MetaData\DataConfigureAttribute.cs" />
     <Compile Include="Reflection\ClassAction.cs" />
     <Compile Include="Extend\ExtRow.cs" />
     <Compile Include="Image\ImageUnity.cs" />

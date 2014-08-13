@@ -6,6 +6,7 @@ using Easy.RepositoryPattern;
 using Easy.Extend;
 using Easy.CMS.Zone;
 using Easy.Constant;
+using Easy.CMS.Widget;
 
 namespace Easy.CMS.Layout
 {
@@ -81,6 +82,23 @@ namespace Easy.CMS.Layout
             IEnumerable<LayoutHtml> htmls = new LayoutHtmlService().Get(new Data.DataFilter().OrderBy("LayoutHtmlId", OrderType.Ascending).Where<LayoutHtml>(m => m.LayoutId, OperatorType.Equal, entity.ID));
             entity.Html = new LayoutHtmlCollection();
             htmls.Each(entity.Html.Add);
+            //IEnumerable<WidgetBase> widgets = new WidgetService().Get(new Data.DataFilter().Where("LayoutId", OperatorType.Equal, entity.ID));
+            //var zoneWidgets = new ZoneWidgetCollection();
+            //widgets.Each(m =>
+            //{
+            //    var partDriver = Loader.CreateInstance<IWidgetPartDriver>(m.AssemblyName, m.ServiceTypeName);
+            //    WidgetPart part = partDriver.Display(partDriver.GetWidget(m.ID), null);
+            //    if (zoneWidgets.ContainsKey(part.ZoneId))
+            //    {
+            //        zoneWidgets[part.ZoneId].Add(part);
+            //    }
+            //    else
+            //    {
+            //        var partCollection = new WidgetCollection { part };
+            //        zoneWidgets.Add(part.ZoneId, partCollection);
+            //    }
+            //});
+            //entity.ZoneWidgets = zoneWidgets;
             return entity;
         }
         public override int Delete(Data.DataFilter filter)

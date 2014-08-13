@@ -16,7 +16,7 @@ namespace Easy.Web.Metadata
         {
             if (containerType != null)
             {
-                Easy.Attribute.DataConfigureAttribute custAttribute = System.Attribute.GetCustomAttribute(containerType, typeof(Easy.Attribute.DataConfigureAttribute)) as Easy.Attribute.DataConfigureAttribute;
+                Easy.MetaData.DataConfigureAttribute custAttribute = System.Attribute.GetCustomAttribute(containerType, typeof(Easy.MetaData.DataConfigureAttribute)) as Easy.MetaData.DataConfigureAttribute;
                 if (custAttribute != null)
                 {
                     if (custAttribute.MetaData.HtmlTags.ContainsKey(propertyName))

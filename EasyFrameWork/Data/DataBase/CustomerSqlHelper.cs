@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Data;
-using Easy.Attribute;
+using Easy.MetaData;
 
 namespace Easy.Data.DataBase
 {

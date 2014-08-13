@@ -7,7 +7,7 @@ using System.Text;
 using Easy.Data;
 using Easy.Models;
 
-namespace Easy.Attribute
+namespace Easy.MetaData
 {
     public interface IDataViewMetaData
     {

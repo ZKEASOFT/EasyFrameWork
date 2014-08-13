@@ -55,7 +55,7 @@ namespace Easy.CMS.Widget
                 lists = base.Get(filter).ToList();
                 for (int i = 0; i < widgetBases.Count; i++)
                 {
-                    Easy.Reflection.ClassAction.CopyProperty(widgetBases[i], lists[i]);
+                    CopyProperty(widgetBases[i], lists[i]);
                 }
             }
             else
@@ -74,7 +74,7 @@ namespace Easy.CMS.Widget
                 lists = base.Get(filter, pagin).ToList();
                 for (int i = 0; i < widgetBases.Count(); i++)
                 {
-                    Easy.Reflection.ClassAction.CopyProperty(widgetBases[i], lists[i]);
+                    CopyProperty(widgetBases[i], lists[i]);
                 }
             }
             else
@@ -106,13 +106,37 @@ namespace Easy.CMS.Widget
             T model = base.Get(primaryKeys);
             if (typeof(T) != typeof(WidgetBase))
             {
-                Easy.Reflection.ClassAction.CopyProperty(WidgetBaseService.Get(primaryKeys), model);
+                CopyProperty(WidgetBaseService.Get(primaryKeys), model);
             }
             return model;
         }
-        public virtual WidgetBase GetWidget(string widgetId)
+        private void CopyProperty(WidgetBase widget, T model)
         {
-            return this.Get(widgetId);
+            model.AssemblyName = widget.AssemblyName;
+            model.CreateBy = widget.CreateBy;
+            model.CreatebyName = widget.CreatebyName;
+            model.CreateDate = widget.CreateDate;
+            model.Description = widget.Description;
+            model.ID = widget.ID;
+            model.LastUpdateBy = widget.LastUpdateBy;
+            model.LastUpdateByName = widget.LastUpdateByName;
+            model.LastUpdateDate = widget.LastUpdateDate;
+            model.LayoutId = widget.LayoutId;
+            model.PageId = widget.PageId;
+            model.PartialView = widget.PartialView;
+            model.Position = widget.Position;
+            model.ServiceTypeName = widget.ServiceTypeName;
+            model.Status = widget.Status;
+            model.Title = widget.Title;
+            model.ViewModelTypeName = widget.ViewModelTypeName;
+            model.WidgetName = widget.WidgetName;
+            model.ZoneId = widget.ZoneId;
+        }
+        public virtual WidgetBase GetWidget(WidgetBase widget)
+        {
+            T result = base.Get(widget.ID);
+            CopyProperty(widget, result);
+            return result;
         }
 
         public virtual WidgetPart Display(WidgetBase widget, HttpContextBase httpContext)

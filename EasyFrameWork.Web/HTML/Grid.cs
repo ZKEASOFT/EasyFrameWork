@@ -16,30 +16,12 @@ namespace Easy.Web.HTML
         public Grid(ViewContext viewContex)
         {
             this._viewContex = viewContex;
-            string controller = viewContex.RouteData.Values["controller"].ToString();
             string area = string.Empty;
             string getList = string.Empty;
             string delete = string.Empty;
-            if (viewContex.RouteData.DataTokens.ContainsKey("area"))
-            {
-                area = viewContex.RouteData.DataTokens["area"].ToString();
-                var controller1 = this._viewContex.Controller as System.Web.Mvc.Controller;
-                if (controller1 != null)
-                {
-                    getList = controller1.Url.Action("GetList", controller, new { area = area });
-                    delete = controller1.Url.Action("Delete", controller, new { area = area });
-
-                }
-            }
-            else
-            {
-                var controller1 = this._viewContex.Controller as System.Web.Mvc.Controller;
-                if (controller1 != null)
-                {
-                    getList = controller1.Url.Action("GetList", controller);
-                    delete = controller1.Url.Action("Delete", controller);
-                }
-            }
+            var controller = this._viewContex.Controller as System.Web.Mvc.Controller;
+            getList = controller.Url.Action("GetList");
+            delete = controller.Url.Action("Delete");
             base.DataSource(getList);
             base.DeleteUrl(delete);
         }

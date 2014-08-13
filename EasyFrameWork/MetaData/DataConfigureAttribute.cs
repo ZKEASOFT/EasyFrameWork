@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Easy.Attribute
+namespace Easy.MetaData
 {
     /// <summary>
     /// 数据和视图的配置特性

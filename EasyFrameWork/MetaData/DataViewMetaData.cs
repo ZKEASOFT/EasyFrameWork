@@ -11,7 +11,7 @@ using Easy.Models;
 using System.ComponentModel;
 using Easy;
 
-namespace Easy.Attribute
+namespace Easy.MetaData
 {
     /// <summary>
     /// 数据元数据特性

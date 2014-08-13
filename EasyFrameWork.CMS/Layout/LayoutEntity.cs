@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Easy.Attribute;
+using Easy.MetaData;
 using Easy.CMS.Zone;
 using Easy.Models;
 using Easy.CMS.Page;

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Easy.Attribute;
+using Easy.MetaData;
 using Easy.Models;
 using Easy.RepositoryPattern;
 
@@ -15,7 +15,7 @@ namespace Easy.CMS.Widget
         public string WidgetName { get; set; }
         public string Title { get; set; }
         public int Position { get; set; }
-        public string LayouId { get; set; }
+        public string LayoutId { get; set; }
         public string PageId { get; set; }
         public string ZoneId { get; set; }
         public string PartialView { get; set; }
@@ -79,7 +79,7 @@ namespace Easy.CMS.Widget
                 LastUpdateBy = this.LastUpdateBy,
                 LastUpdateByName = this.LastUpdateByName,
                 LastUpdateDate = this.LastUpdateDate,
-                LayouId = this.LayouId,
+                LayoutId = this.LayoutId,
                 PageId = this.PageId,
                 PartialView = this.PartialView,
                 Position = this.Position,

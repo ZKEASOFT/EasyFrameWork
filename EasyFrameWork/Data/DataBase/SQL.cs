@@ -199,7 +199,7 @@ namespace Easy.Data.DataBase
 
         public override List<T> Get<T>(DataFilter filter, Pagination pagin)
         {
-            Attribute.DataConfigureAttribute custAttribute = Easy.Attribute.DataConfigureAttribute.GetAttribute<T>();
+            MetaData.DataConfigureAttribute custAttribute = Easy.MetaData.DataConfigureAttribute.GetAttribute<T>();
             string tableName = GetTableName<T>(custAttribute);
             List<KeyValuePair<string, string>> comMatch;
             string selectCol = GetSelectColumn<T>(custAttribute, out comMatch);

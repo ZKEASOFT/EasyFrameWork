@@ -23,5 +23,6 @@ namespace Easy.Extend
             source.Each(m => result.Add(fun(m)));
             return result;
         }
+        
     }
 }

@@ -47,7 +47,7 @@ namespace Easy.CMS.Filter
                 widgets.Each(m =>
                 {
                     var partDriver = Loader.CreateInstance<IWidgetPartDriver>(m.AssemblyName, m.ServiceTypeName);
-                    WidgetPart part = partDriver.Display(partDriver.GetWidget(m.ID), filterContext.HttpContext);
+                    WidgetPart part = partDriver.Display(partDriver.GetWidget(m), filterContext.HttpContext);
                     if (zones.ContainsKey(part.ZoneId))
                     {
                         zones[part.ZoneId].Add(part);

@@ -138,7 +138,7 @@ namespace Easy.Web.Controller
                         listIds.Add(item);
                     }
                 }
-                string primary = Easy.Attribute.DataConfigureAttribute.GetAttribute<T>().MetaData.Primarykey[0];
+                string primary = Easy.MetaData.DataConfigureAttribute.GetAttribute<T>().MetaData.Primarykey[0];
                 int result = Service.Delete(new Easy.Data.DataFilter().Where(primary, OperatorType.In, listIds));
                 if (result > 0)
                 {
