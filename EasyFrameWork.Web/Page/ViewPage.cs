@@ -11,7 +11,7 @@ using Easy.Extend;
 
 namespace Easy.Web.Page
 {
-    public class ViewPage<TModel> : WebViewPage<TModel>
+    public abstract class ViewPage<TModel> : WebViewPage<TModel>
     {
         public const string PartScriptKey = "ViewDataKey_PartScript";
         public const string PartStyleKey = "ViewDataKey_PartStyle";
@@ -93,16 +93,9 @@ namespace Easy.Web.Page
                 TempData[key] = source;
             }
         }
-
-
-
-        public override void Execute()
-        {
-
-        }
     }
 
-    public class ViewPage : ViewPage<dynamic>
+    public abstract class ViewPage : ViewPage<dynamic>
     {
         public ViewPage()
         {
