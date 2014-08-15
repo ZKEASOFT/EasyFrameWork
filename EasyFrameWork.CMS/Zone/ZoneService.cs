@@ -37,9 +37,9 @@ namespace Easy.CMS.Zone
             {
                 Widget.WidgetService widgetService = new Widget.WidgetService();
                 var widgets = widgetService.Get(new Data.DataFilter().Where("ZoneId", Constant.OperatorType.In, deletes));
-                Loader.ResolveAll<Widget.IWidgetPartDriver>().Each(m =>
+                widgets.Each(m =>
                 {
-                    widgets.Each(n => m.DeleteWidget(n.ID));
+                    m.CreateServiceInstance().DeleteWidget(m.ID);
                 });
             }
             return base.Delete(filter);
@@ -48,9 +48,9 @@ namespace Easy.CMS.Zone
         {
             Widget.WidgetService widgetService = new Widget.WidgetService();
             var widgets = widgetService.Get(new Data.DataFilter().Where("ZoneId", Constant.OperatorType.Equal, primaryKeys[0]));
-            Loader.ResolveAll<Widget.IWidgetPartDriver>().Each(m =>
+            widgets.Each(m =>
             {
-                widgets.Each(n => m.DeleteWidget(n.ID));
+                m.CreateServiceInstance().DeleteWidget(m.ID);
             });
             return base.Delete(primaryKeys);
         }

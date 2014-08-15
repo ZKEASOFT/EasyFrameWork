@@ -42,20 +42,37 @@ namespace Easy.CMS.Filter
                 LayoutEntity layout = layoutService.Get(page.LayoutId);
                 layout.Page = page;
                 var widgetService = new WidgetService();
-                IEnumerable<WidgetBase> widgets = widgetService.Get(new Data.DataFilter().Where<WidgetBase>(m => m.PageId, OperatorType.Equal, page.ID));
+                IEnumerable<WidgetBase> widgets = widgetService.Get(new Data.DataFilter().Where<WidgetBase>(m => m.PageID, OperatorType.Equal, page.ID));
 
                 widgets.Each(m =>
                 {
                     var partDriver = Loader.CreateInstance<IWidgetPartDriver>(m.AssemblyName, m.ServiceTypeName);
                     WidgetPart part = partDriver.Display(partDriver.GetWidget(m), filterContext.HttpContext);
-                    if (zones.ContainsKey(part.ZoneId))
+                    if (zones.ContainsKey(part.Widget.ZoneID))
                     {
-                        zones[part.ZoneId].Add(part);
+                        zones[part.Widget.ZoneID].Add(part);
                     }
                     else
                     {
                         var partCollection = new WidgetCollection { part };
-                        zones.Add(part.ZoneId, partCollection);
+                        zones.Add(part.Widget.ZoneID, partCollection);
+                    }
+                });
+
+                IEnumerable<WidgetBase> Layoutwidgets = widgetService.Get(new Data.DataFilter().Where<WidgetBase>(m => m.LayoutID, OperatorType.Equal, page.LayoutId));
+
+                Layoutwidgets.Each(m =>
+                {
+                    var partDriver = Loader.CreateInstance<IWidgetPartDriver>(m.AssemblyName, m.ServiceTypeName);
+                    WidgetPart part = partDriver.Display(partDriver.GetWidget(m), filterContext.HttpContext);
+                    if (zones.ContainsKey(part.Widget.ZoneID))
+                    {
+                        zones[part.Widget.ZoneID].Add(part);
+                    }
+                    else
+                    {
+                        var partCollection = new WidgetCollection { part };
+                        zones.Add(part.Widget.ZoneID, partCollection);
                     }
                 });
 

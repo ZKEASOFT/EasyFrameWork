@@ -15,9 +15,9 @@ namespace Easy.CMS.Widget
         public string WidgetName { get; set; }
         public string Title { get; set; }
         public int Position { get; set; }
-        public string LayoutId { get; set; }
-        public string PageId { get; set; }
-        public string ZoneId { get; set; }
+        public string LayoutID { get; set; }
+        public string PageID { get; set; }
+        public string ZoneID { get; set; }
         public string PartialView { get; set; }
         public string AssemblyName { get; set; }
         public string ServiceTypeName { get; set; }
@@ -26,24 +26,16 @@ namespace Easy.CMS.Widget
         {
             return new WidgetPart
             {
-                PartialView = PartialView,
-                Position = Position,
-                ViewModel = this,
-                WidgetId = ID,
-                WidgetName = WidgetName,
-                ZoneId = ZoneId
+                Widget = this,
+                ViewModel = this
             };
         }
         public WidgetPart ToWidgetPart(object viewModel)
         {
             return new WidgetPart
             {
-                PartialView = PartialView,
-                Position = Position,
-                WidgetId = ID,
-                ViewModel = viewModel,
-                WidgetName = WidgetName,
-                ZoneId = ZoneId
+                Widget = this,
+                ViewModel = viewModel
             };
         }
         public string Description { get; set; }
@@ -79,8 +71,8 @@ namespace Easy.CMS.Widget
                 LastUpdateBy = this.LastUpdateBy,
                 LastUpdateByName = this.LastUpdateByName,
                 LastUpdateDate = this.LastUpdateDate,
-                LayoutId = this.LayoutId,
-                PageId = this.PageId,
+                LayoutID = this.LayoutID,
+                PageID = this.PageID,
                 PartialView = this.PartialView,
                 Position = this.Position,
                 ServiceTypeName = this.ServiceTypeName,
@@ -88,7 +80,7 @@ namespace Easy.CMS.Widget
                 Title = this.Title,
                 ViewModelTypeName = this.ViewModelTypeName,
                 WidgetName = this.WidgetName,
-                ZoneId = this.ZoneId
+                ZoneID = this.ZoneID
             };
         }
     }

@@ -3,14 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Easy.CMS.WidgetTemplate
+namespace Easy.CMS
 {
-    public class WidgetTemplateViewModel
+    public class QueryContext
     {
-        public string PageID { get; set; }
         public string LayoutID { get; set; }
         public string ZoneID { get; set; }
+        public string PageID { get; set; }
+        public string WidgetID { get; set; }
         public string ReturnUrl { get; set; }
-        public List<WidgetTemplateEntity> WidgetTemplates { get; set; }
+        public long WidgetTemplateID { get; set; }
     }
 }

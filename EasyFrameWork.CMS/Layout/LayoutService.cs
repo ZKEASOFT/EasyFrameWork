@@ -82,23 +82,6 @@ namespace Easy.CMS.Layout
             IEnumerable<LayoutHtml> htmls = new LayoutHtmlService().Get(new Data.DataFilter().OrderBy("LayoutHtmlId", OrderType.Ascending).Where<LayoutHtml>(m => m.LayoutId, OperatorType.Equal, entity.ID));
             entity.Html = new LayoutHtmlCollection();
             htmls.Each(entity.Html.Add);
-            //IEnumerable<WidgetBase> widgets = new WidgetService().Get(new Data.DataFilter().Where("LayoutId", OperatorType.Equal, entity.ID));
-            //var zoneWidgets = new ZoneWidgetCollection();
-            //widgets.Each(m =>
-            //{
-            //    var partDriver = Loader.CreateInstance<IWidgetPartDriver>(m.AssemblyName, m.ServiceTypeName);
-            //    WidgetPart part = partDriver.Display(partDriver.GetWidget(m.ID), null);
-            //    if (zoneWidgets.ContainsKey(part.ZoneId))
-            //    {
-            //        zoneWidgets[part.ZoneId].Add(part);
-            //    }
-            //    else
-            //    {
-            //        var partCollection = new WidgetCollection { part };
-            //        zoneWidgets.Add(part.ZoneId, partCollection);
-            //    }
-            //});
-            //entity.ZoneWidgets = zoneWidgets;
             return entity;
         }
         public override int Delete(Data.DataFilter filter)
@@ -116,20 +99,35 @@ namespace Easy.CMS.Layout
                 Page.PageService pageService = new Page.PageService();
                 pageService.Delete(new Data.DataFilter().Where("LayoutId", OperatorType.In, deletes));
 
+                Widget.WidgetService widgetService = new Widget.WidgetService();
+                var widgets = widgetService.Get(new Data.DataFilter().Where("LayoutId", Constant.OperatorType.In, deletes));
+                widgets.Each(m =>
+                {
+                    m.CreateServiceInstance().DeleteWidget(m.ID);
+                });
+
             }
             return base.Delete(filter);
         }
         public override int Delete(params object[] primaryKeys)
         {
+            LayoutEntity layout = Get(primaryKeys);
             LayoutHtmlService layoutHtmlService = new LayoutHtmlService();
-            layoutHtmlService.Delete(new Data.DataFilter().Where<LayoutHtml>(m => m.LayoutId, OperatorType.Equal, primaryKeys[0]));
+            layoutHtmlService.Delete(new Data.DataFilter().Where<LayoutHtml>(m => m.LayoutId, OperatorType.Equal, layout.ID));
 
             ZoneService zoneService = new ZoneService();
-            zoneService.Delete(new Data.DataFilter().Where<ZoneEntity>(m => m.LayoutId, OperatorType.Equal, primaryKeys[0]));
+            zoneService.Delete(new Data.DataFilter().Where<ZoneEntity>(m => m.LayoutId, OperatorType.Equal, layout.ID));
 
 
             Page.PageService pageService = new Page.PageService();
-            pageService.Delete(new Data.DataFilter().Where("LayoutId", OperatorType.Equal, primaryKeys[0]));
+            pageService.Delete(new Data.DataFilter().Where("LayoutId", OperatorType.Equal, layout.ID));
+
+            Widget.WidgetService widgetService = new Widget.WidgetService();
+            var widgets = widgetService.Get(new Data.DataFilter().Where("LayoutId", Constant.OperatorType.Equal, layout.ID));
+            widgets.Each(m =>
+            {
+                m.CreateServiceInstance().DeleteWidget(m.ID);
+            });
 
             return base.Delete(primaryKeys);
         }

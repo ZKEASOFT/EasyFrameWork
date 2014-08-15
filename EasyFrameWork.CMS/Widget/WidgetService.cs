@@ -9,7 +9,14 @@ namespace Easy.CMS.Widget
 {
     public class WidgetService : ServiceBase<WidgetBase>
     {
-
+        public IEnumerable<WidgetBase> GetByLayoutId(string layoutId)
+        {
+            return this.Get(new Data.DataFilter().Where("LayoutID", Constant.OperatorType.Equal, layoutId));
+        }
+        public IEnumerable<WidgetBase> GetByPageId(string pageId)
+        {
+            return this.Get(new Data.DataFilter().Where("PageID", Constant.OperatorType.Equal, pageId));
+        }
     }
     public abstract class WidgetService<T> : ServiceBase<T>, IWidgetPartDriver where T : WidgetBase
     {
@@ -121,8 +128,8 @@ namespace Easy.CMS.Widget
             model.LastUpdateBy = widget.LastUpdateBy;
             model.LastUpdateByName = widget.LastUpdateByName;
             model.LastUpdateDate = widget.LastUpdateDate;
-            model.LayoutId = widget.LayoutId;
-            model.PageId = widget.PageId;
+            model.LayoutID = widget.LayoutID;
+            model.PageID = widget.PageID;
             model.PartialView = widget.PartialView;
             model.Position = widget.Position;
             model.ServiceTypeName = widget.ServiceTypeName;
@@ -130,7 +137,7 @@ namespace Easy.CMS.Widget
             model.Title = widget.Title;
             model.ViewModelTypeName = widget.ViewModelTypeName;
             model.WidgetName = widget.WidgetName;
-            model.ZoneId = widget.ZoneId;
+            model.ZoneID = widget.ZoneID;
         }
         public virtual WidgetBase GetWidget(WidgetBase widget)
         {
