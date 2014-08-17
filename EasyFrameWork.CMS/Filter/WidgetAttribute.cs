@@ -22,8 +22,12 @@ namespace Easy.CMS.Filter
             //Page
             string path = filterContext.RequestContext.HttpContext.Request.Path;
             var pageService = new PageService();
-            var filter = new Data.DataFilter().Where("Url", OperatorType.Equal, path).Where("Status", OperatorType.Equal, (int)Constant.RecordStatus.Active);
 
+            var filter = new Data.DataFilter().Where("Url", OperatorType.Equal, path);
+            if (!(filterContext.RequestContext.HttpContext.Request.QueryString["ViewType"] == "Review"))
+            {
+                filter.Where("Status", OperatorType.Equal, (int)Constant.RecordStatus.Active).Where("IsPublish=true");
+            }
             IEnumerable<PageEntity> pages = pageService.Get(filter);
             if (!pages.Any() && path == "/")
             {

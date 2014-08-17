@@ -82,6 +82,7 @@
     <Compile Include="Layout\LayoutHtml.cs" />
     <Compile Include="Layout\LayoutHtmlService.cs" />
     <Compile Include="Layout\LayoutService.cs" />
+    <Compile Include="MetaData\WidgetMetaData.cs" />
     <Compile Include="ModelBinder\WidgetBinder.cs" />
     <Compile Include="Page\PageEntity.cs" />
     <Compile Include="Page\PageService.cs" />

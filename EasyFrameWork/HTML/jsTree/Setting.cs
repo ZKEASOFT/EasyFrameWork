@@ -91,7 +91,7 @@ namespace Easy.HTML.jsTree
         public const string ActiveNode = "activate_node.jstree";
         /// <summary>
         /// triggered when an node is hovered
-        /// function(node)
+        /// function(node,selected)
         /// </summary>
         public const string HoverNode = "hover_node.jstree";
         /// <summary>

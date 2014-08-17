@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Easy.MetaData;
+using Easy.CMS.MetaData;
 
 namespace Easy.CMS.Widget
 {
@@ -11,12 +12,9 @@ namespace Easy.CMS.Widget
     {
         public string HTML { get; set; }
     }
-    class HtmlWidgetMetaData : DataViewMetaData<HtmlWidget>
+    class HtmlWidgetMetaData : WidgetMetaData<HtmlWidget>
     {
-        protected override bool IsIgnoreBase()
-        {
-            return true;
-        }
+       
         protected override void DataConfigure()
         {
             DataTable("HtmlWidget");
@@ -26,9 +24,7 @@ namespace Easy.CMS.Widget
 
         protected override void ViewConfigure()
         {
-            ViewConfig(m => m.WidgetName).AsTextBox().Order(1).Required();
-            ViewConfig(m => m.ZoneID).AsDropDownList().Order(2).DataSource(ViewDataKeys.Zones, Easy.Constant.SourceType.ViewData).Required();
-            ViewConfig(m => m.Position).AsTextBox().Order(3).RegularExpression(Constant.RegularExpression.Integer);
+            InitViewBase();
             ViewConfig(m => m.HTML).AsMutiLineTextBox().AddClass("html");
         }
     }

@@ -16,5 +16,6 @@ namespace Easy.Modules.DataDictionary
         /// </summary>
         /// <returns></returns>
         IEnumerable<string> GetDictionaryType();
+        IEnumerable<DataDictionaryEntity> GetChildren(string dicType, long parentId);
     }
 }

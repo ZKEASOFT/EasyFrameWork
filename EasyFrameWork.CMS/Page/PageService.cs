@@ -49,5 +49,13 @@ namespace Easy.CMS.Page
             });
             return base.Delete(primaryKeys);
         }
+
+        public void Publish(string pageID)
+        {
+            this.Update(new PageEntity { IsPublish = true, PublishDate = DateTime.Now },
+                new Data.DataFilter(new List<string> { "IsPublish", "PublishDate" })
+                .Where("ID", Constant.OperatorType.Equal, pageID));
+
+        }
     }
 }

@@ -157,7 +157,7 @@ namespace Easy.HTML.Tags
                 {
                     foreach (DataDictionaryEntity item in dicService.GetDictionaryByType(dictionaryType))
                     {
-                        this.Data.Add(item.DicValue, item.Title);
+                        this.Data.Add(item.ID.ToString(), item.Title);
                     }
                 }
             }

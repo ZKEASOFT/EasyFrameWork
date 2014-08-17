@@ -40,6 +40,9 @@ namespace Easy.CMS.Page
         public string Description { get; set; }
 
         public int Status { get; set; }
+
+        public DateTime? PublishDate { get; set; }
+        public bool IsPublish { get; set; }
     }
     public class PageBaseMetaData : DataViewMetaData<PageEntity>
     {
@@ -60,6 +63,8 @@ namespace Easy.CMS.Page
             ViewConfig(m => m.ParentId).AsHidden();
             ViewConfig(m => m.ID).AsHidden();
             ViewConfig(m => m.Content).AsHidden();
+            ViewConfig(m => m.PublishDate).AsTextBox().Hide();
+            ViewConfig(m => m.IsPublish).AsTextBox().Hide();
         }
     }
 

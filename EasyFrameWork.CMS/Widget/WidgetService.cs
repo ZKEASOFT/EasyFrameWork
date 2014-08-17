@@ -17,6 +17,14 @@ namespace Easy.CMS.Widget
         {
             return this.Get(new Data.DataFilter().Where("PageID", Constant.OperatorType.Equal, pageId));
         }
+        public IEnumerable<WidgetBase> GetAllByPageId(string pageId)
+        {
+            var page = new Page.PageService().Get(pageId);
+            var result = GetByLayoutId(page.LayoutId);
+            List<WidgetBase> widgets = result.ToList();
+            widgets.AddRange(this.Get(new Data.DataFilter().Where("PageID", Constant.OperatorType.Equal, pageId)));
+            return widgets;
+        }
     }
     public abstract class WidgetService<T> : ServiceBase<T>, IWidgetPartDriver where T : WidgetBase
     {

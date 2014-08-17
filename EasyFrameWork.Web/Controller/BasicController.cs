@@ -84,7 +84,7 @@ namespace Easy.Web.Controller
                     UpLoadImage(entity as IImage);
                 }
                 Service.Add(entity);
-                return RedirectToAction("Edit", new { id = entity.ID });
+                return RedirectToAction("Index");
             }
             return View(entity);
         }
