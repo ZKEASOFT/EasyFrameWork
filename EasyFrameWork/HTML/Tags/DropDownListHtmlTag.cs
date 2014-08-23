@@ -31,8 +31,8 @@ namespace Easy.HTML.Tags
         {
             string BaseStr = base.ToString(widthLabel);
             StringBuilder builder = new StringBuilder();
-            string val = this.Value.ToString();
-            if (typeof(ICollection).IsAssignableFrom(this.Value.GetType()))
+            string val = this.Value == null ? "" : this.Value.ToString();
+            if (this.Value != null && typeof(ICollection).IsAssignableFrom(this.Value.GetType()))
             {
                 ICollection vals = this.Value as ICollection;
 

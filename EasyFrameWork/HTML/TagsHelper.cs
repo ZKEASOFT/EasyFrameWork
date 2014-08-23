@@ -150,5 +150,16 @@ namespace Easy.HTML
             Attributes.Add(this.Key, tag);
             return tag;
         }
+        public CollectionAreaTag AsCollectionArea()
+        {
+            CollectionAreaTag tag = new CollectionAreaTag(modelType, Key);
+            if (Attributes.ContainsKey(this.Key))
+            {
+                Attributes.Remove(this.Key);
+            }
+            tag.DataType = dataType;
+            Attributes.Add(this.Key, tag);
+            return tag;
+        }
     }
 }

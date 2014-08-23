@@ -8,11 +8,9 @@ using Easy.MetaData;
 namespace Easy.CMS.WidgetTemplate
 {
     [DataConfigure(typeof(WidgetTemplateMetaData))]
-    public class WidgetTemplateEntity : EditorEntity, IBasicEntity<long>
+    public class WidgetTemplateEntity : EditorEntity
     {
         public long ID { get; set; }
-
-        public string Title { get; set; }
 
         public string PartialView { get; set; }
         public string AssemblyName { get; set; }
@@ -20,10 +18,6 @@ namespace Easy.CMS.WidgetTemplate
 
         public string ViewModelTypeName { get; set; }
         public int Order { get; set; }
-
-        public string Description { get; set; }
-
-        public int Status { get; set; }
 
         private void CopyToWidget(Widget.WidgetBase widget)
         {

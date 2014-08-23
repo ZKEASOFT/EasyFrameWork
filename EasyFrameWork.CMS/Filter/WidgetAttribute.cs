@@ -24,7 +24,7 @@ namespace Easy.CMS.Filter
             var pageService = new PageService();
 
             var filter = new Data.DataFilter().Where("Url", OperatorType.Equal, path);
-            if (!(filterContext.RequestContext.HttpContext.Request.QueryString["ViewType"] == "Review"))
+            if (!(filterContext.RequestContext.HttpContext.Request.QueryString[ReView.QueryKey] == ReView.Review))
             {
                 filter.Where("Status", OperatorType.Equal, (int)Constant.RecordStatus.Active).Where("IsPublish=true");
             }
@@ -42,7 +42,6 @@ namespace Easy.CMS.Filter
             {
                 PageEntity page = pages.First();
                 var layoutService = new LayoutService();
-                Cache.StaticCache cache = new Cache.StaticCache();
                 LayoutEntity layout = layoutService.Get(page.LayoutId);
                 layout.Page = page;
                 var widgetService = new WidgetService();
@@ -79,7 +78,6 @@ namespace Easy.CMS.Filter
                         zones.Add(part.Widget.ZoneID, partCollection);
                     }
                 });
-
                 layout.ZoneWidgets = zones;
                 var viewResult = (filterContext.Result as ViewResult);
                 if (viewResult != null)

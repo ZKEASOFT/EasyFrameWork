@@ -16,6 +16,19 @@ namespace Easy.HTML.Tags
             this.EndStr = "/>";
             this.AddProperty("type", "text");
         }
+        public override void SetValue(object val)
+        {
+            if (val != null && DataType.Name == "DateTime")
+            {
+                DateTime time = Convert.ToDateTime(val);
+                Value = time.ToString(DateFormat);
+            }
+            else
+            {
+                base.SetValue(val);
+            }
+
+        }
         public string DateFormat { get; set; }
         /// <summary>
         /// 只显示日期，格式为：年/月/日

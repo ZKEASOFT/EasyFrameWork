@@ -11,13 +11,12 @@ using Easy.CMS.Widget;
 namespace Easy.CMS.Layout
 {
     [DataConfigure(typeof(LayoutEntityMetaData))]
-    public class LayoutEntity : EditorEntity, IBasicEntity<string>
+    public class LayoutEntity : EditorEntity
     {
         public const string LayoutKey = "ViewDataKey_Layout";
         public string ID { get; set; }
 
         public string LayoutName { get; set; }
-        public string Title { get; set; }
         public string ContainerClass { get; set; }
         public string Script { get; set; }
         public string Style { get; set; }
@@ -26,11 +25,6 @@ namespace Easy.CMS.Layout
         public LayoutHtmlCollection Html { get; set; }
 
         public PageEntity Page { get; set; }
-
-
-        public string Description { get; set; }
-
-        public int Status { get; set; }
     }
 
     public class LayoutEntityMetaData : DataViewMetaData<LayoutEntity>
@@ -45,7 +39,6 @@ namespace Easy.CMS.Layout
         {
             ViewConfig(m => m.ID).AsHidden();
             ViewConfig(m => m.ContainerClass).AsHidden();
-            ViewConfig(m => m.Status).AsDropDownList().DataSource(Constant.DicKeys.RecordStatus, Constant.SourceType.Dictionary);
             ViewConfig(m => m.Title).AsHidden();
             ViewConfig(m => m.LayoutName).AsTextBox().Required();
         }

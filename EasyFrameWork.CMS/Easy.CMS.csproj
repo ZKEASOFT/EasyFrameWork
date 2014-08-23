@@ -81,6 +81,7 @@
     <Compile Include="Layout\LayoutEntity.cs" />
     <Compile Include="Layout\LayoutHtml.cs" />
     <Compile Include="Layout\LayoutHtmlService.cs" />
+    <Compile Include="Layout\LayoutsAttribute.cs" />
     <Compile Include="Layout\LayoutService.cs" />
     <Compile Include="MetaData\WidgetMetaData.cs" />
     <Compile Include="ModelBinder\WidgetBinder.cs" />
@@ -99,6 +100,7 @@
     <Compile Include="Widget\WidgetCollection.cs" />
     <Compile Include="Widget\WidgetPart.cs" />
     <Compile Include="Widget\WidgetService.cs" />
+    <Compile Include="Widget\ViewData_ZonesAttribute.cs" />
     <Compile Include="Widget\ZoneWidgetCollection.cs" />
     <Compile Include="Zone\Helper.cs" />
     <Compile Include="Zone\ZoneCollection.cs" />

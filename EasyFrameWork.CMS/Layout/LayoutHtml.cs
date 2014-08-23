@@ -25,6 +25,9 @@ namespace Easy.CMS.Layout
         {
             DataTable("CMS_LayoutHtml");
             DataConfig(m => m.LayoutHtmlId).AsIncreasePrimaryKey();
+            DataConfig(m => m.Status).Ignore();
+            DataConfig(m => m.Title).Ignore();
+            DataConfig(m => m.Description).Ignore();
         }
 
         protected override void ViewConfigure()

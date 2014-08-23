@@ -9,11 +9,10 @@ using Easy.RepositoryPattern;
 namespace Easy.CMS.Widget
 {
     [DataConfigure(typeof(WidgetBaseMetaData))]
-    public class WidgetBase : EditorEntity, IBasicEntity<string>
+    public class WidgetBase : EditorEntity
     {
         public string ID { get; set; }
         public string WidgetName { get; set; }
-        public string Title { get; set; }
         public int Position { get; set; }
         public string LayoutID { get; set; }
         public string PageID { get; set; }
@@ -38,10 +37,6 @@ namespace Easy.CMS.Widget
                 ViewModel = viewModel
             };
         }
-        public string Description { get; set; }
-
-        public int Status { get; set; }
-
         public IWidgetPartDriver CreateServiceInstance()
         {
             return Loader.CreateInstance<IWidgetPartDriver>(this.AssemblyName, this.ServiceTypeName);

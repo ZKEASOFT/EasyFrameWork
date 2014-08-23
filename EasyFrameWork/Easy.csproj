@@ -67,11 +67,11 @@
     <Compile Include="Extend\ExtDate.cs" />
     <Compile Include="Extend\ExtIEnumerable.cs" />
     <Compile Include="HTML\jsTree\ContextmenuItem.cs" />
+    <Compile Include="HTML\Tags\CollectionAreaTag.cs" />
     <Compile Include="IOCAdapter\Exceptions\UnregisteredException.cs" />
     <Compile Include="IOCAdapter\ImplType.cs" />
     <Compile Include="Models\AutoComplete.cs" />
     <Compile Include="Models\EditorEntity.cs" />
-    <Compile Include="Models\IBasicEntity.cs" />
     <Compile Include="Models\IImage.cs" />
     <Compile Include="Models\IUser.cs" />
     <Compile Include="Cache\StaticCache.cs" />

@@ -32,6 +32,10 @@ namespace Easy.RepositoryPattern
         {
             return repBase.Get(filter, pagin);
         }
+        public virtual IEnumerable<Entity> Get(string property, Constant.OperatorType operatorType, object value)
+        {
+            return repBase.Get(new DataFilter().Where(property, operatorType, value));
+        }
         public virtual void Add(Entity item)
         {
             if (item is EditorEntity)
@@ -141,6 +145,6 @@ namespace Easy.RepositoryPattern
         }
 
 
-      
+
     }
 }

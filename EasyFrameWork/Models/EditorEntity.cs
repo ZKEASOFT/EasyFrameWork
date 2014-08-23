@@ -8,6 +8,16 @@ namespace Easy.Models
 {
     public class EditorEntity
     {
+
+        public string Title { get; set; }
+        /// <summary>
+        /// 说明
+        /// </summary>
+        public string Description { get; set; }
+        /// <summary>
+        /// 是否通过
+        /// </summary>
+        public int Status { get; set; }
         /// <summary>
         /// 创建人ID
         /// </summary>
@@ -32,6 +42,8 @@ namespace Easy.Models
         /// 最后更新日期
         /// </summary>
         public DateTime? LastUpdateDate { get; set; }
+
+        public Constant.ActionType? ActionType { get; set; }
     }
 
 }

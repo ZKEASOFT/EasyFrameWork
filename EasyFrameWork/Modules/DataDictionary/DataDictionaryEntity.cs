@@ -8,12 +8,10 @@ using Easy.Models;
 namespace Easy.Modules.DataDictionary
 {
     [DataConfigure(typeof(DataDictionaryEntityMetaData))]
-    public class DataDictionaryEntity : EditorEntity, IImage, IBasicEntity<long>
+    public class DataDictionaryEntity : IImage
     {
         public long ID { get; set; }
         public string DicName { get; set; }
-
-        public string Title { get; set; }
 
         public string DicValue { get; set; }
 
@@ -27,9 +25,42 @@ namespace Easy.Modules.DataDictionary
 
         public string ImageThumbUrl { get; set; }
 
-        public string Description { get; set; }
 
+        public string Title { get; set; }
+        /// <summary>
+        /// 说明
+        /// </summary>
+        public string Description { get; set; }
+        /// <summary>
+        /// 是否通过
+        /// </summary>
         public int Status { get; set; }
+        /// <summary>
+        /// 创建人ID
+        /// </summary>
+        public string CreateBy { get; set; }
+        /// <summary>
+        /// 创建人
+        /// </summary>
+        public string CreatebyName { get; set; }
+        /// <summary>
+        /// 创建日期
+        /// </summary>
+        public DateTime? CreateDate { get; set; }
+        /// <summary>
+        /// 修改人ID
+        /// </summary>
+        public string LastUpdateBy { get; set; }
+        /// <summary>
+        /// 最后修改人
+        /// </summary>
+        public string LastUpdateByName { get; set; }
+        /// <summary>
+        /// 最后更新日期
+        /// </summary>
+        public DateTime? LastUpdateDate { get; set; }
+
+
     }
     class DataDictionaryEntityMetaData : DataViewMetaData<DataDictionaryEntity>
     {

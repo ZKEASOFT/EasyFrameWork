@@ -9,7 +9,7 @@ using Easy.Models;
 namespace Easy.CMS.Zone
 {
     [DataConfigure(typeof(ZoneEntityMetaData))]
-    public class ZoneEntity : EditorEntity,IBasicEntity<string>
+    public class ZoneEntity : EditorEntity
     {
         public const string ZoneTag = "<zone>";
         public const string ZoneEndTag = "</zone>";
@@ -17,11 +17,6 @@ namespace Easy.CMS.Zone
         public string LayoutId { get; set; }
         public string ZoneName { get; set; }
 
-        public string Title { get; set; }
-
-        public string Description { get; set; }
-
-        public int Status { get; set; }
     }
   
     public class ZoneEntityMetaData : DataViewMetaData<ZoneEntity>

@@ -91,6 +91,7 @@
     <Compile Include="Attribute\PopUpAttribute.cs" />
     <Compile Include="Attribute\AdminThemeAttribute.cs" />
     <Compile Include="Attribute\OnceSubmitAttribute.cs" />
+    <Compile Include="Attribute\ViewDataAttribute.cs" />
     <Compile Include="Cache\MemoryCache.cs" />
     <Compile Include="Common.cs" />
     <Compile Include="CommonType.cs" />

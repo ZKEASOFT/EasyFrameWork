@@ -8,6 +8,5 @@ namespace Easy.Constant
     public class DicKeys
     {
         public const string RecordStatus = "RecordStatus";
-        public const string ArticleCategory = "ArticleCategory";
     }
 }

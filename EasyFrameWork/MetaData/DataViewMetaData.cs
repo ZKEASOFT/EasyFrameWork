@@ -92,10 +92,15 @@ namespace Easy.MetaData
                 ViewConfig("LastUpdateBy").AsHidden();
                 ViewConfig("LastUpdateByName").AsTextBox().Hide();
                 ViewConfig("LastUpdateDate").AsTextBox().Hide().FormatAsDateTime();
+                ViewConfig("ActionType").AsHidden().AddClass("actionType");
+                ViewConfig("Title").AsTextBox().Order(1);
+                ViewConfig("Description").AsMutiLineTextBox().Order(101);
+                ViewConfig("Status").AsDropDownList().DataSource(Constant.DicKeys.RecordStatus, SourceType.Dictionary);
 
                 DataConfig("CreateBy").Update();
                 DataConfig("CreatebyName").Update();
                 DataConfig("CreateDate").Update();
+                DataConfig("ActionType").Ignore();
             }
             if (typeof(IImage).IsAssignableFrom(this.TargetType))
             {

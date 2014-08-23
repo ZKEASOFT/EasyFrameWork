@@ -69,6 +69,7 @@ namespace Easy.Constant
         Update = 2,
         Delete = 3,
         Design = 4,
-        Publish = 5
+        Publish = 5,
+        Unattached = 6
     }
 }

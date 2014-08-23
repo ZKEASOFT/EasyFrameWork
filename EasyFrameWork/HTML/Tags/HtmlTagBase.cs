@@ -33,7 +33,10 @@ namespace Easy.HTML.Tags
         string errorMsgPlace = "<span class=\"field-validation-valid\" data-valmsg-for=\"{0}\" data-valmsg-replace=\"true\"></span>";
         #endregion
         #region 可继承私有方法
-
+        public virtual void SetValue(object val)
+        {
+            this.Value = val;
+        }
         #endregion
         #region 公共属性
         /// <summary>
@@ -69,6 +72,8 @@ namespace Easy.HTML.Tags
         /// </summary>
         public string Name { get; private set; }
 
+        public string NamePreFix { get; set; }
+
         /// <summary>
         /// 显示名称
         /// </summary>
@@ -77,6 +82,8 @@ namespace Easy.HTML.Tags
         /// 值
         /// </summary>
         public object Value { get; set; }
+
+        public object DefaultValue { get; set; }
 
         /// <summary>
         /// 在列表显示时的配置
@@ -126,23 +133,19 @@ namespace Easy.HTML.Tags
 
         private string ToHtmlString(bool widthLabel)
         {
-            if (this.Value == null)
-            {
-                this.Value = string.Empty;
-            }
             if (string.IsNullOrEmpty(this.DisplayName))
             {
                 this.DisplayName = this.Name;
             }
-            string val = this.Value.ToString().HtmlEncode();
+            string val = this.Value == null ? this.DataType.IsClass ? "" : Activator.CreateInstance(this.DataType).ToString() : this.Value.ToString().HtmlEncode();
             StringBuilder builder = new StringBuilder();
-            if (widthLabel)
+            if (widthLabel && this.TagType != HTMLEnumerate.HTMLTagTypes.Hidden && !this.IsHidden && !this.IsIgnore)
             {
                 builder.AppendFormat("<span class=\"input-group-addon {1}\">{0}</span>", this.DisplayName, this.IsRequired ? "required" : "");
             }
             if (this.TagType == HTMLEnumerate.HTMLTagTypes.File)
             {
-                builder.AppendFormat("<input type=\"hidden\" name=\"{0}\" value=\"{1}\" />", this.Name, val);
+                builder.AppendFormat("<input type=\"hidden\" name=\"{0}{1}\" id=\"{0}{1}\" value=\"{2}\" />", this.NamePreFix, this.Name, val);
             }
             builder.Append(StartStr);
 
@@ -154,15 +157,15 @@ namespace Easy.HTML.Tags
                 case HTMLEnumerate.HTMLTagTypes.CheckBox:
                     {
                         bool check = false;
-                        if (Value == null || Value.ToString() == "")
+                        if (val == "")
                             check = false;
-                        else check = Convert.ToBoolean(Value);
+                        else check = Convert.ToBoolean(val);
                         builder.AppendFormat(" {0} ", check ? "checked=\"checked\"" : "");
                         builder.AppendFormat(" value=\"{0}\" ", check ? "true" : "false");
                         break;
                     }
             }
-            builder.AppendFormat(" id=\"{0}\" name=\"{0}\"", this.Name, this.Name);
+            builder.AppendFormat(" id=\"{1}{0}\" name=\"{1}{0}\"", this.Name, this.NamePreFix);
             if (Validator.Count > 0)
             {
                 this.AddProperty("data-val", "true");
@@ -243,6 +246,11 @@ namespace Easy.HTML.Tags
         public virtual string ToString(bool widthLabel)
         {
             return this.ToHtmlString(widthLabel);
+        }
+
+        public void ResetValue()
+        {
+            this.Value = this.DefaultValue == null ? ((this.DataType.IsClass || this.DataType.IsInterface || this.DataType.IsAbstract) ? null : Activator.CreateInstance(this.DataType)) : this.DefaultValue;
         }
 
         #region
@@ -621,6 +629,7 @@ namespace Easy.HTML.Tags
             this.ValueFormat = format;
             return this;
         }
+
         #endregion
     }
 }

@@ -16,10 +16,16 @@ namespace Easy.HTML.Grid
     public class GridData
     {
         NameValueCollection _form;
+        private Func<HtmlTagBase, Dictionary<string, string>> _dataSource;
 
         public GridData(NameValueCollection form)
         {
             this._form = form;
+        }
+        public GridData(NameValueCollection form, Func<HtmlTagBase, Dictionary<string, string>> dataSource)
+        {
+            this._form = form;
+            _dataSource = dataSource;
         }
         #region 私有方法
         private string GetModelString(object source, DataConfigureAttribute attribute)
@@ -35,23 +41,34 @@ namespace Easy.HTML.Grid
                     attribute.MetaData.HtmlTags[item.Name].TagType == HTML.HTMLEnumerate.HTMLTagTypes.MutiSelect)
                     && value != null)
                 {
-                    Dictionary<string, string> Data = (attribute.MetaData.HtmlTags[item.Name] as DropDownListHtmlTag).OptionItems;
-                    if (typeof(ICollection).IsAssignableFrom(item.PropertyType))
+                    var tag = attribute.MetaData.HtmlTags[item.Name] as DropDownListHtmlTag;
+                    Dictionary<string, string> Data = tag.OptionItems;
+                    if (tag.SourceType == SourceType.ViewData)
                     {
-                        ICollection vals = value as ICollection;
-                        StringBuilder builderResult = new StringBuilder();
-                        foreach (object val in vals)
+                        if (_dataSource != null)
                         {
-                            if (Data.ContainsKey(val.ToString()))
-                            {
-                                builderResult.AppendFormat("{0},", Data[val.ToString()]);
-                            }
+                            Data = _dataSource(tag);
                         }
-                        value = builderResult.ToString().Trim(',');
                     }
-                    else if (Data.ContainsKey(value.ToString()))
+                    if (Data != null)
                     {
-                        value = Data[value.ToString()];
+                        if (typeof(ICollection).IsAssignableFrom(item.PropertyType))
+                        {
+                            ICollection vals = value as ICollection;
+                            StringBuilder builderResult = new StringBuilder();
+                            foreach (object val in vals)
+                            {
+                                if (Data.ContainsKey(val.ToString()))
+                                {
+                                    builderResult.AppendFormat("{0},", Data[val.ToString()]);
+                                }
+                            }
+                            value = builderResult.ToString().Trim(',');
+                        }
+                        else if (Data.ContainsKey(value.ToString()))
+                        {
+                            value = Data[value.ToString()];
+                        }
                     }
                 }
                 else if ((attribute.MetaData.HtmlTags[item.Name].TagType == HTML.HTMLEnumerate.HTMLTagTypes.Input ||

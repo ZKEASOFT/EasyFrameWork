@@ -66,7 +66,7 @@ namespace Easy.HTML
                         }
                     }
                     object Val = ClassAction.GetObjPropertyValue(entity, item.Name);
-                    SetValue(item, Val);
+                    item.SetValue(Val);
                 }
                 lists.Add(item.ToString(widthLabel));
             }
@@ -78,7 +78,7 @@ namespace Easy.HTML
             foreach (var item in attribute.GetHtmlTags(false))
             {
                 object val = ClassAction.GetObjPropertyValue(entity, item.Name);
-                this.SetValue(item, val);
+                item.SetValue(val);
                 results.Add(item);
             }
             return results;
@@ -95,7 +95,7 @@ namespace Easy.HTML
                 if (this.WithValue)
                 {
                     object Val = ClassAction.GetObjPropertyValue(this.entity, item.Name);
-                    SetValue(item, Val);
+                    item.SetValue(Val);
                 }
                 lists.Add(item.ToString(false));
             }
@@ -110,7 +110,7 @@ namespace Easy.HTML
         {
             object Val = ClassAction.GetObjPropertyValue(this.entity, property);
             var html = attribute.GetHtmlTag(property);
-            SetValue(html, Val);
+            html.SetValue(Val);
             return html.ToString();
         }
         /// <summary>
@@ -122,26 +122,6 @@ namespace Easy.HTML
         {
             return attribute.GetDisplayName(property);
         }
-        void SetValue(HtmlTagBase tab, object val)
-        {
-            if (val != null)
-            {
-                if (tab.DataType.Name == "DateTime")
-                {
-                    DateTime time = DateTime.Now;
-                    if (DateTime.TryParse(val.ToString(), out time))
-                    {
-                        if (tab is TextBoxHtmlTag)
-                        {
-                            tab.Value = time.ToString((tab as TextBoxHtmlTag).DateFormat);
-                        }
-                        else tab.Value = val;
-                    }
-                    else tab.Value = val;
-                }
-                else tab.Value = val;
-            }
-            else tab.Value = "";
-        }
+        
     }
 }

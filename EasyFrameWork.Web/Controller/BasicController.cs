@@ -8,6 +8,7 @@ using System.Text;
 using System.Web.Mvc;
 using Easy.Web.Extend;
 using Easy.Constant;
+using Easy.HTML.Tags;
 
 namespace Easy.Web.Controller
 {
@@ -17,8 +18,8 @@ namespace Easy.Web.Controller
     /// <typeparam name="T">实体类型</typeparam>
     /// <typeparam name="P">主键类型</typeparam>
     /// <typeparam name="S">Service类型</typeparam>
-    public class BasicController<T, P, S> : System.Web.Mvc.Controller
-        where T : class, IBasicEntity<P>
+    public class BasicController<T, S> : System.Web.Mvc.Controller
+        where T : EditorEntity
         where S : ServiceBase<T>
     {
         /// <summary>
@@ -57,17 +58,30 @@ namespace Easy.Web.Controller
             }
             return entity;
         }
+
+        protected object[] GetPrimaryKeys(T entity)
+        {
+            var primaryKey = Easy.MetaData.DataConfigureAttribute.GetAttribute<T>().MetaData.Primarykey;
+            object[] primaryKeys = new object[primaryKey.Count];
+            for (int i = 0; i < primaryKey.Count; i++)
+            {
+                primaryKeys[i] = Reflection.ClassAction.GetPropertyValue<T>(entity, primaryKey[i]);
+            }
+            return primaryKeys;
+        }
+
         public BasicController(S service)
         {
             this.Service = service;
         }
-        public virtual ActionResult Index(ParamsContext<P> context)
+        public virtual ActionResult Index(ParamsContext context)
         {
             return View();
         }
-        public virtual ActionResult Create(ParamsContext<P> context)
+        public virtual ActionResult Create(ParamsContext context)
         {
             T entity = Activator.CreateInstance<T>();
+            Easy.Reflection.ClassAction.CopyProperty(context, entity);
             entity.Status = (int)RecordStatus.Active;
             ViewBag.Title = "添加";
             return View(entity);
@@ -88,7 +102,7 @@ namespace Easy.Web.Controller
             }
             return View(entity);
         }
-        public virtual ActionResult Edit(ParamsContext<P> context)
+        public virtual ActionResult Edit(ParamsContext context)
         {
             T entity = Service.Get(context.ID);
             return View(entity);
@@ -96,16 +110,14 @@ namespace Easy.Web.Controller
 
         [HttpPost]
         [ValidateInput(false)]
-        public virtual ActionResult Edit(T entity, ActionType? actionType)
+        public virtual ActionResult Edit(T entity)
         {
-            if (actionType.HasValue)
+            if (entity.ActionType == ActionType.Delete)
             {
-                if (actionType.Value == ActionType.Delete)
-                {
-                    Service.Delete(entity.ID);
-                    return RedirectToAction("Index");
-                }
+                Service.Delete(GetPrimaryKeys(entity));
+                return RedirectToAction("Index");
             }
+
             ViewBag.Title = entity.Title;
             if (ModelState.IsValid)
             {
@@ -157,7 +169,14 @@ namespace Easy.Web.Controller
         [HttpPost]
         public virtual JsonResult GetList()
         {
-            GridData data = new GridData(Request.Form);
+            GridData data = new GridData(Request.Form, (tag) =>
+            {
+                if (tag is DropDownListHtmlTag)
+                {
+                    return ViewData[(tag as DropDownListHtmlTag).SourceKey] as Dictionary<string, string>;
+                }
+                return null;
+            });
             var filter = data.GetDataFilter<T>();
             var pagin = data.GetPagination();
             return Json(data.GetJsonDataForGrid<T>(Service.Get(filter, pagin), pagin));

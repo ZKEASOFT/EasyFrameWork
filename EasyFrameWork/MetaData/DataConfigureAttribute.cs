@@ -20,24 +20,19 @@ namespace Easy.MetaData
         }
         public DataConfigureAttribute(Type MetaDataType)
         {
-            Easy.Cache.StaticCache cache = new Easy.Cache.StaticCache();
-            IDataViewMetaData metaData = cache.Get("MetaData_" + MetaDataType.FullName, m =>
+            IDataViewMetaData metaData = Activator.CreateInstance(MetaDataType) as IDataViewMetaData;
+            //HTML标签的多语言
+            Dictionary<string, string> lan = new Dictionary<string, string>();
+            foreach (var item in metaData.HtmlTags)
             {
-                metaData = Activator.CreateInstance(MetaDataType) as IDataViewMetaData;
-                //HTML标签的多语言
-                Dictionary<string, string> lan = new Dictionary<string, string>();
-                foreach (var item in metaData.HtmlTags)
-                {
-                    if (string.IsNullOrEmpty(item.Value.DisplayName))
-                        lan.Add(item.Key, item.Value.ModelType.Name + "@" + item.Key);
-                }
-                lan = Localization.InitLan(lan);
-                foreach (var item in lan)
-                {
-                    metaData.HtmlTags[item.Key].DisplayName = item.Value;
-                }
-                return metaData;
-            });
+                if (string.IsNullOrEmpty(item.Value.DisplayName))
+                    lan.Add(item.Key, item.Value.ModelType.Name + "@" + item.Key);
+            }
+            lan = Localization.InitLan(lan);
+            foreach (var item in lan)
+            {
+                metaData.HtmlTags[item.Key].DisplayName = item.Value;
+            }
             this.MetaData = metaData;
         }
         /// <summary>
@@ -137,23 +132,27 @@ namespace Easy.MetaData
             Type targetType = Easy.Loader.GetType<T>();
             StaticCache cache = new StaticCache();
             string typeName = typeof(T).FullName;
-            return cache.Get("DataConfigureAttribute_" + typeName, m =>
-              {
-                  return
-                      System.Attribute.GetCustomAttribute(targetType, typeof(DataConfigureAttribute)) as
-                          DataConfigureAttribute;
-              });
+            var attribute = cache.Get("DataConfigureAttribute_" + typeName, m =>
+                {
+                    return
+                        System.Attribute.GetCustomAttribute(targetType, typeof(DataConfigureAttribute)) as
+                            DataConfigureAttribute;
+                });
+            attribute.GetHtmlTags(true).ForEach(m => m.ResetValue());
+            return attribute;
         }
         public static DataConfigureAttribute GetAttribute(Type type)
         {
             StaticCache cache = new StaticCache();
             string typeName = type.FullName;
-            return cache.Get("DataConfigureAttribute_" + typeName, m =>
+            var attribute = cache.Get("DataConfigureAttribute_" + typeName, m =>
             {
                 return
                     System.Attribute.GetCustomAttribute(type, typeof(DataConfigureAttribute)) as
                         DataConfigureAttribute;
             });
+            attribute.GetHtmlTags(true).ForEach(m => m.ResetValue());
+            return attribute;
         }
     }
 }
