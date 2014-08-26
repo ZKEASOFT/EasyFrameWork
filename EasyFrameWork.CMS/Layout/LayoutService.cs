@@ -12,6 +12,7 @@ namespace Easy.CMS.Layout
 {
     public class LayoutService : ServiceBase<LayoutEntity>
     {
+        public const string LayoutChanged = "LayoutChanged";
         public override void Add(LayoutEntity item)
         {
             item.ID = Guid.NewGuid().ToString("N");
@@ -71,18 +72,34 @@ namespace Easy.CMS.Layout
             }
 
         }
+        public override bool Update(LayoutEntity item, Data.DataFilter filter)
+        {
+            new Cache.Signal().Do(LayoutChanged);
+            return base.Update(item, filter);
+        }
+        public override bool Update(LayoutEntity item, params object[] primaryKeys)
+        {
+            new Cache.Signal().Do(LayoutChanged);
+            return base.Update(item, primaryKeys);
+        }
         public override LayoutEntity Get(params object[] primaryKeys)
         {
-            LayoutEntity entity = base.Get(primaryKeys);
-            if (entity == null)
-                return null;
-            IEnumerable<ZoneEntity> zones = new ZoneService().Get(new Data.DataFilter().Where<ZoneEntity>(m => m.LayoutId, OperatorType.Equal, entity.ID));
-            entity.Zones = new ZoneCollection();
-            zones.Each(entity.Zones.Add);
-            IEnumerable<LayoutHtml> htmls = new LayoutHtmlService().Get(new Data.DataFilter().OrderBy("LayoutHtmlId", OrderType.Ascending).Where<LayoutHtml>(m => m.LayoutId, OperatorType.Equal, entity.ID));
-            entity.Html = new LayoutHtmlCollection();
-            htmls.Each(entity.Html.Add);
-            return entity;
+            Cache.StaticCache cache = new Cache.StaticCache();
+            return cache.Get("Layout_" + primaryKeys[0], m =>
+            {
+                m.When(LayoutChanged);
+                LayoutEntity entity = base.Get(primaryKeys);
+                if (entity == null)
+                    return null;
+                IEnumerable<ZoneEntity> zones = new ZoneService().Get(new Data.DataFilter().Where("LayoutId", OperatorType.Equal, entity.ID));
+                entity.Zones = new ZoneCollection();
+                zones.Each(entity.Zones.Add);
+                IEnumerable<LayoutHtml> htmls = new LayoutHtmlService().Get(new Data.DataFilter().OrderBy("LayoutHtmlId", OrderType.Ascending).Where("LayoutId", OperatorType.Equal, entity.ID));
+                entity.Html = new LayoutHtmlCollection();
+                htmls.Each(entity.Html.Add);
+                return entity;
+            });
+
         }
         public override int Delete(Data.DataFilter filter)
         {
@@ -107,6 +124,7 @@ namespace Easy.CMS.Layout
                 });
 
             }
+            new Cache.Signal().Do(LayoutChanged);
             return base.Delete(filter);
         }
         public override int Delete(params object[] primaryKeys)
@@ -128,7 +146,7 @@ namespace Easy.CMS.Layout
             {
                 m.CreateServiceInstance().DeleteWidget(m.ID);
             });
-
+            new Cache.Signal().Do(LayoutChanged);
             return base.Delete(primaryKeys);
         }
     }

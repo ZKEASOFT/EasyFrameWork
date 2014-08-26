@@ -37,7 +37,7 @@ namespace Easy
         {
             Cache.StaticCache cache = new Cache.StaticCache();
             T result = null;
-            Type type = cache.Get(assemblyName + "_" + fullClassName, m =>
+            Type type = cache.Get("TypeCache_"+assemblyName + "_" + fullClassName, m =>
             {
                 result = System.Activator.CreateInstance(assemblyName, fullClassName).Unwrap() as T;
                 return result.GetType();
@@ -121,7 +121,7 @@ namespace Easy
         public static Type GetType(string fullClassName)
         {
             Cache.StaticCache cache = new Cache.StaticCache();
-            return cache.Get(fullClassName, m =>
+            return cache.Get("TypeCache_" + fullClassName, m =>
             {
                 Type type = null;
                 AppDomain.CurrentDomain.GetAssemblies().Each(n => n.GetTypes().Each(t =>

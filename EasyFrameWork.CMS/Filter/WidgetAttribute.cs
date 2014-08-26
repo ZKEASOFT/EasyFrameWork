@@ -45,7 +45,7 @@ namespace Easy.CMS.Filter
                 LayoutEntity layout = layoutService.Get(page.LayoutId);
                 layout.Page = page;
                 var widgetService = new WidgetService();
-                IEnumerable<WidgetBase> widgets = widgetService.Get(new Data.DataFilter().Where<WidgetBase>(m => m.PageID, OperatorType.Equal, page.ID));
+                IEnumerable<WidgetBase> widgets = widgetService.Get(new Data.DataFilter().Where("PageID", OperatorType.Equal, page.ID));
 
                 widgets.Each(m =>
                 {
@@ -62,7 +62,7 @@ namespace Easy.CMS.Filter
                     }
                 });
 
-                IEnumerable<WidgetBase> Layoutwidgets = widgetService.Get(new Data.DataFilter().Where<WidgetBase>(m => m.LayoutID, OperatorType.Equal, page.LayoutId));
+                IEnumerable<WidgetBase> Layoutwidgets = widgetService.Get(new Data.DataFilter().Where("LayoutID", OperatorType.Equal, page.LayoutId));
 
                 Layoutwidgets.Each(m =>
                 {
