@@ -39,7 +39,7 @@ namespace Easy.CMS.Page
         public DateTime? PublishDate { get; set; }
         public bool IsPublish { get; set; }
     }
-    public class PageBaseMetaData : DataViewMetaData<PageEntity>
+    class PageBaseMetaData : DataViewMetaData<PageEntity>
     {
         protected override void DataConfigure()
         {

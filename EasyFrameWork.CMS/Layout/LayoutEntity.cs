@@ -27,7 +27,7 @@ namespace Easy.CMS.Layout
         public PageEntity Page { get; set; }
     }
 
-    public class LayoutEntityMetaData : DataViewMetaData<LayoutEntity>
+    class LayoutEntityMetaData : DataViewMetaData<LayoutEntity>
     {
         protected override void DataConfigure()
         {

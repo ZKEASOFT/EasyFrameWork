@@ -19,7 +19,7 @@ namespace Easy.CMS.Zone
 
     }
   
-    public class ZoneEntityMetaData : DataViewMetaData<ZoneEntity>
+    class ZoneEntityMetaData : DataViewMetaData<ZoneEntity>
     {
         protected override void DataConfigure()
         {

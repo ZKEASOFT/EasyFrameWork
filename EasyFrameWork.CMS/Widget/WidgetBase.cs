@@ -79,7 +79,7 @@ namespace Easy.CMS.Widget
             };
         }
     }
-    public class WidgetBaseMetaData : DataViewMetaData<WidgetBase>
+    class WidgetBaseMetaData : DataViewMetaData<WidgetBase>
     {
         protected override void DataConfigure()
         {

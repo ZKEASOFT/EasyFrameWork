@@ -11,6 +11,7 @@ namespace Easy.CMS.WidgetTemplate
     public class WidgetTemplateEntity : EditorEntity
     {
         public long ID { get; set; }
+        public string GroupName { get; set; }
 
         public string PartialView { get; set; }
         public string AssemblyName { get; set; }
