@@ -21,13 +21,13 @@ namespace Easy.CMS.Zone
         {
             var page = new Easy.CMS.Page.PageService().Get(pageId);
             var layout = new Easy.CMS.Layout.LayoutService().Get(page.LayoutId);
-            var zones = new Easy.CMS.Zone.ZoneService().Get(new Data.DataFilter().Where("LayoutId", Constant.OperatorType.Equal, layout.ID));
+            var zones = new Easy.CMS.Zone.ZoneService().Get(new Data.DataFilter().Where("LayoutId", Constant.OperatorType.Equal, layout.ID).OrderBy("ID", Constant.OrderType.Ascending));
             return zones;
         }
         public IEnumerable<ZoneEntity> GetZonesByLayoutId(string layoutId)
         {
             var layout = new Easy.CMS.Layout.LayoutService().Get(layoutId);
-            var zones = new Easy.CMS.Zone.ZoneService().Get(new Data.DataFilter().Where("LayoutId", Constant.OperatorType.Equal, layout.ID));
+            var zones = new Easy.CMS.Zone.ZoneService().Get(new Data.DataFilter().Where("LayoutId", Constant.OperatorType.Equal, layout.ID).OrderBy("ID", Constant.OrderType.Ascending));
             return zones;
         }
         public override int Delete(Data.DataFilter filter)
