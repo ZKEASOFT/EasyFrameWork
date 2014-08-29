@@ -7,17 +7,16 @@ using Easy.Extend;
 
 namespace Easy.CMS.ModelBinder
 {
-    public class WidgetBinder : IModelBinder
+    public class WidgetBinder : DefaultModelBinder
     {
-        public object BindModel(ControllerContext controllerContext, ModelBindingContext bindingContext)
+        public override object BindModel(ControllerContext controllerContext, ModelBindingContext bindingContext)
         {
-            DefaultModelBinder binder = new DefaultModelBinder();
-            object model = binder.BindModel(controllerContext, bindingContext);
+            object model = base.BindModel(controllerContext, bindingContext);
             var widgetBase = model as Widget.WidgetBase;
             if (!widgetBase.ViewModelTypeName.IsNullOrEmpty())
             {
                 bindingContext.ModelMetadata = ModelMetadataProviders.Current.GetMetadataForType(() => widgetBase.CreateViewModelInstance(), widgetBase.GetViewModelType());
-                model = binder.BindModel(controllerContext, bindingContext);
+                model = base.BindModel(controllerContext, bindingContext);
             }
             return model;
         }

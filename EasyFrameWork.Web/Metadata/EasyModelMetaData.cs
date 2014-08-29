@@ -1,5 +1,6 @@
 ﻿using Easy.Data;
 using Easy.HTML.Tags;
+using Easy.MetaData;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,7 +17,7 @@ namespace Easy.Web.Metadata
         {
             if (containerType != null)
             {
-                Easy.MetaData.DataConfigureAttribute custAttribute = System.Attribute.GetCustomAttribute(containerType, typeof(Easy.MetaData.DataConfigureAttribute)) as Easy.MetaData.DataConfigureAttribute;
+                DataConfigureAttribute custAttribute = DataConfigureAttribute.GetAttribute(containerType);
                 if (custAttribute != null)
                 {
                     if (custAttribute.MetaData.HtmlTags.ContainsKey(propertyName))

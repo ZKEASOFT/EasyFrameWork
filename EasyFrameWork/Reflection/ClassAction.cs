@@ -130,9 +130,30 @@ namespace Easy.Reflection
             {
                 if (!data.Columns.Contains(item.Key))
                     continue;
-                if (data.Rows[RowIndex][item.Key].GetType() != typeof(DBNull))
+                if (!(data.Rows[RowIndex][item.Key] is DBNull))
                 {
                     PropertyInfo property = ty.GetProperty(item.Value);
+                    if (property.CanWrite)
+                    {
+                        property.SetValue(obj, ValueConvert(property, data.Rows[RowIndex][item.Key]), null);
+                    }
+                }
+            }
+            return obj;
+        }
+        public static T GetModel<T>(System.Data.DataTable data, int RowIndex, List<KeyValuePair<string, string>> columns, Dictionary<string, PropertyInfo> properties)
+        {
+            if (data == null || data.Rows.Count == 0)
+                return default(T);
+            Type ty = Easy.Loader.GetType<T>();
+            T obj = Easy.Loader.CreateInstance<T>();
+            foreach (var item in columns)
+            {
+                if (!data.Columns.Contains(item.Key))
+                    continue;
+                if (!(data.Rows[RowIndex][item.Key] is DBNull) && properties.ContainsKey(item.Value))
+                {
+                    PropertyInfo property = properties[item.Value];
                     if (property.CanWrite)
                     {
                         property.SetValue(obj, ValueConvert(property, data.Rows[RowIndex][item.Key]), null);

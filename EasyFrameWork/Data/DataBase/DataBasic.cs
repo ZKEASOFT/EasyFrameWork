@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Reflection;
 using System.Text;
+using Easy.Extend;
 
 namespace Easy.Data.DataBase
 {
@@ -173,9 +174,11 @@ namespace Easy.Data.DataBase
             DataTable table = this.GetTable(selectCom.ToString(), filter.GetParameterValues());
             if (table == null) return new List<T>();
             List<T> list = new List<T>();
+            Dictionary<string, PropertyInfo> properties = new Dictionary<string, PropertyInfo>();
+            custAttribute.MetaData.TargetType.GetProperties().Each(m => properties.Add(m.Name, m));
             for (int i = 0; i < table.Rows.Count; i++)
             {
-                list.Add(Reflection.ClassAction.GetModel<T>(table, i, comMatch));
+                list.Add(Reflection.ClassAction.GetModel<T>(table, i, comMatch, properties));
             }
             return list;
 
@@ -273,9 +276,11 @@ namespace Easy.Data.DataBase
             DataTable table = this.GetTable(builder.ToString(), filter.GetParameterValues());
             if (table == null) return new List<T>(); ;
             List<T> list = new List<T>();
+            Dictionary<string,PropertyInfo> properties=new Dictionary<string,PropertyInfo>();
+            custAttribute.MetaData.TargetType.GetProperties().Each(m => properties.Add(m.Name, m));
             for (int i = 0; i < table.Rows.Count; i++)
             {
-                list.Add(Reflection.ClassAction.GetModel<T>(table, i, comMatch));
+                list.Add(Reflection.ClassAction.GetModel<T>(table, i, comMatch, properties));
             }
             return list;
         }

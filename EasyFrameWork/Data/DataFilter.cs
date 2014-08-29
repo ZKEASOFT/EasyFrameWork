@@ -1,4 +1,5 @@
 ﻿using Easy.Constant;
+using Easy.MetaData;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -60,7 +61,7 @@ namespace Easy.Data
         public DataFilter Where<T>(Expression<Func<T, object>> expression, OperatorType operatorType, object value)
         {
             string property = Common.GetLinqExpressionText(expression);
-            MetaData.DataConfigureAttribute attribute = System.Attribute.GetCustomAttribute(typeof(T), typeof(MetaData.DataConfigureAttribute)) as MetaData.DataConfigureAttribute;
+            DataConfigureAttribute attribute = DataConfigureAttribute.GetAttribute<T>();
             if (attribute != null && attribute.MetaData.PropertyDataConfig.ContainsKey(property))
             {
                 string propertyMap = attribute.MetaData.PropertyDataConfig[property].ColumnName;
