@@ -23,7 +23,7 @@ namespace Easy.CMS.Filter
             string path = filterContext.RequestContext.HttpContext.Request.Path;
             var pageService = new PageService();
 
-            var filter = new Data.DataFilter().Where("Url", OperatorType.Equal, path);
+            var filter = new Data.DataFilter().Where("Url", OperatorType.Equal, "~" + path);
             if (!(filterContext.RequestContext.HttpContext.Request.QueryString[ReView.QueryKey] == ReView.Review))
             {
                 filter.Where("Status", OperatorType.Equal, (int)Constant.RecordStatus.Active).Where("IsPublish=true");
@@ -31,7 +31,7 @@ namespace Easy.CMS.Filter
             IEnumerable<PageEntity> pages = pageService.Get(filter);
             if (!pages.Any() && path == "/")
             {
-                var homePage = pageService.Get(new Data.DataFilter().Where("ParentId", OperatorType.Equal, "0"));
+                var homePage = pageService.Get(new Data.DataFilter().Where("ParentId", OperatorType.Equal, "#").OrderBy("DisplayOrder", Constant.OrderType.Ascending));
                 if (homePage.Any())
                 {
                     filterContext.Result = new RedirectResult(homePage.First().Url);

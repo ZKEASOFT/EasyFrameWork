@@ -26,6 +26,7 @@ namespace Easy.CMS.Page
             }
             set { _PageUrl = value; }
         }
+        public int DisplayOrder { get; set; }
         public string LayoutId { get; set; }
         public string PageName { get; set; }
         public string Content { get; set; }

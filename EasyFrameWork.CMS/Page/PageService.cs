@@ -17,7 +17,7 @@ namespace Easy.CMS.Page
             }
             if (item.ParentId.IsNullOrEmpty())
             {
-                item.ParentId = "0";
+                item.ParentId = "#";
             }
             base.Add(item);
         }
@@ -56,6 +56,37 @@ namespace Easy.CMS.Page
                 new Data.DataFilter(new List<string> { "IsPublish", "PublishDate" })
                 .Where("ID", Constant.OperatorType.Equal, pageID));
 
+        }
+        public void Move(string id, int position, int oldPosition)
+        {
+            var page = this.Get(id);
+            page.DisplayOrder = position;
+            var filter = new Data.DataFilter()
+                .Where("ParentId", Constant.OperatorType.Equal, page.ParentId)
+                .Where("Id", Constant.OperatorType.NotEqual, page.ID);
+            if (position > oldPosition)
+            {
+                filter.Where("DisplayOrder", Constant.OperatorType.LessThanOrEqualTo, position);
+                filter.Where("DisplayOrder", Constant.OperatorType.GreaterThanOrEqualTo, oldPosition);
+                var pages = this.Get(filter);
+                pages.Each(m =>
+                {
+                    m.DisplayOrder--;
+                    this.Update(m);
+                });
+            }
+            else
+            {
+                filter.Where("DisplayOrder", Constant.OperatorType.LessThanOrEqualTo, oldPosition);
+                filter.Where("DisplayOrder", Constant.OperatorType.GreaterThanOrEqualTo, position);
+                var pages = this.Get(filter);
+                pages.Each(m =>
+                {
+                    m.DisplayOrder++;
+                    this.Update(m);
+                });
+            }
+            this.Update(page);
         }
     }
 }

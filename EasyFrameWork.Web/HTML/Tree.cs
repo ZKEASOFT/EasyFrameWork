@@ -57,6 +57,16 @@ namespace Easy.Web.HTML
             _tree.AddContextMenuItem(item);
             return this;
         }
+        /// <summary>
+        /// function (operation, node, node_parent, node_position, more)
+        /// </summary>
+        /// <param name="fun"></param>
+        /// <returns></returns>
+        public Tree<T> CheckCallBack(string fun)
+        {
+            _tree.CheckCallBack(fun);
+            return this;
+        }
         public override string ToString()
         {
             using (var writer = new HtmlTextWriter(_viewContex.Writer))

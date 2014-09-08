@@ -21,6 +21,7 @@ namespace Easy.HTML.jsTree
         List<Node> nodes;
         string _rootId;
         string _name;
+        string _check_callback;
         public Tree()
         {
             this._name = Guid.NewGuid().ToString("N");
@@ -107,7 +108,11 @@ namespace Easy.HTML.jsTree
             _rootId = rootId;
             return this;
         }
-
+        public Tree<T> CheckCallBack(string fun)
+        {
+            _check_callback = fun;
+            return this;
+        }
         public List<Node> ToNode(Expression<Func<T, string>> value, Expression<Func<T, string>> text, Expression<Func<T, string>> parent, string rootId)
         {
             valueProperty = value.Compile();
@@ -132,7 +137,7 @@ namespace Easy.HTML.jsTree
             {
                 source = Newtonsoft.Json.JsonConvert.SerializeObject(nodes);
             }
-            builder.AppendFormat(".jstree({{'core':{{data:{0}}}", source);
+            builder.AppendFormat(".jstree({{'core':{{data:{0},'check_callback':{1}}}", source, _check_callback.IsNullOrEmpty() ? "false" : _check_callback);
             if (_plugins.Count > 0)
             {
                 builder.AppendFormat(",'plugins':{0}", Newtonsoft.Json.JsonConvert.SerializeObject(_plugins));
