@@ -11,9 +11,10 @@ using Easy.CMS.Widget;
 namespace Easy.CMS.Layout
 {
     [DataConfigure(typeof(LayoutEntityMetaData))]
-    public class LayoutEntity : EditorEntity
+    public class LayoutEntity : EditorEntity,IImage
     {
         public const string LayoutKey = "ViewDataKey_Layout";
+        public const string DefaultThumbnial = "~/Modules/Common/Content/Images/demoLayout.jpg";
         public string ID { get; set; }
 
         public string LayoutName { get; set; }
@@ -25,6 +26,9 @@ namespace Easy.CMS.Layout
         public LayoutHtmlCollection Html { get; set; }
 
         public PageEntity Page { get; set; }
+
+        public string ImageUrl { get; set; }
+        public string ImageThumbUrl { get; set; }
     }
 
     class LayoutEntityMetaData : DataViewMetaData<LayoutEntity>
