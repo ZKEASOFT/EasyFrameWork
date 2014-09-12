@@ -11,7 +11,8 @@ namespace Easy.HTML.Tags
 {
     public class DropDownListHtmlTag : HtmlTagBase
     {
-        Dictionary<string, string> Data = new Dictionary<string, string>();
+        private Dictionary<string, string> _data;
+        private Func<Dictionary<string, string>> _souceFunc;
         public DropDownListHtmlTag(Type modelType, string property)
             : base(modelType, property)
         {
@@ -19,7 +20,17 @@ namespace Easy.HTML.Tags
             this.StartStr = "<select";
             this.EndStr = "></select>";
         }
-        public Dictionary<string, string> OptionItems { get { return Data; } }
+        public Dictionary<string, string> OptionItems
+        {
+            get
+            {
+                if (_souceFunc != null && _data == null)
+                {
+                    _data = _souceFunc.Invoke();
+                }
+                return _data ?? (_data = new Dictionary<string, string>());
+            }
+        }
         public SourceType SourceType { get; set; }
         public string SourceKey { get; set; }
         public override string ToString()
@@ -29,14 +40,14 @@ namespace Easy.HTML.Tags
 
         public override string ToString(bool widthLabel)
         {
-            string BaseStr = base.ToString(widthLabel);
-            StringBuilder builder = new StringBuilder();
+            string baseStr = base.ToString(widthLabel);
+            var builder = new StringBuilder();
             string val = this.Value == null ? "" : this.Value.ToString();
-            if (this.Value != null && typeof(ICollection).IsAssignableFrom(this.Value.GetType()))
+            if (this.Value != null && this.Value is ICollection)
             {
-                ICollection vals = this.Value as ICollection;
+                var vals = this.Value as ICollection;
 
-                foreach (var item in Data)
+                foreach (var item in OptionItems)
                 {
                     bool selected = false;
                     foreach (object valItem in vals)
@@ -50,12 +61,9 @@ namespace Easy.HTML.Tags
             }
             else
             {
-                foreach (var item in Data)
-                {
-                    builder = AppendOption(builder, item.Key, item.Value, item.Key == val);
-                }
+                builder = OptionItems.Aggregate(builder, (current, item) => AppendOption(current, item.Key, item.Value, item.Key == val));
             }
-            return BaseStr.Replace("</select>", builder.ToString() + "</select>");
+            return baseStr.Replace("</select>", builder.ToString() + "</select>");
         }
 
         private StringBuilder AppendOption(StringBuilder builder, string key, string text, bool selected)
@@ -73,8 +81,8 @@ namespace Easy.HTML.Tags
 
         public string GetOptions()
         {
-            StringBuilder builder = new StringBuilder();
-            foreach (var item in Data)
+            var builder = new StringBuilder();
+            foreach (var item in OptionItems)
             {
                 builder.AppendFormat("<option value='{0}'>{1}</option>", item.Key, item.Value);
             }
@@ -104,7 +112,7 @@ namespace Easy.HTML.Tags
         /// <returns></returns>
         public DropDownListHtmlTag DataSource(Dictionary<string, string> Data)
         {
-            this.Data = Data;
+            this._data = Data;
             return this;
         }
         /// <summary>
@@ -130,11 +138,11 @@ namespace Easy.HTML.Tags
             {
                 if (lan.ContainsKey(text[i]))
                 {
-                    this.Data.Add(Enum.Format(dataType, Enum.Parse(dataType, text[i], true), "d"), lan[text[i]]);
+                    this._data.Add(Enum.Format(dataType, Enum.Parse(dataType, text[i], true), "d"), lan[text[i]]);
                 }
                 else
                 {
-                    this.Data.Add(Enum.Format(dataType, Enum.Parse(dataType, text[i], true), "d"), text[i]);
+                    this._data.Add(Enum.Format(dataType, Enum.Parse(dataType, text[i], true), "d"), text[i]);
                 }
             }
 
@@ -155,9 +163,13 @@ namespace Easy.HTML.Tags
                 IDataDictionaryService dicService = Easy.Loader.CreateInstance<IDataDictionaryService>();
                 if (dicService != null)
                 {
+                    if (this._data == null)
+                    {
+                        _data = new Dictionary<string, string>();
+                    }
                     foreach (DataDictionaryEntity item in dicService.GetDictionaryByType(dictionaryType))
                     {
-                        this.Data.Add(item.ID.ToString(), item.Title);
+                        this._data.Add(item.ID.ToString(), item.Title);
                     }
                 }
             }
@@ -173,15 +185,25 @@ namespace Easy.HTML.Tags
             string dictionaryType = this.ModelType.Name + "_" + this.Name;
             if (type == SourceType.Dictionary)
             {
-                IDataDictionaryService dicService = Easy.Loader.CreateInstance<IDataDictionaryService>();
+                var dicService = Loader.CreateInstance<IDataDictionaryService>();
                 if (dicService != null)
                 {
+                    if (this._data == null)
+                    {
+                        _data=new Dictionary<string, string>();
+                    }
                     foreach (DataDictionaryEntity item in dicService.GetDictionaryByType(dictionaryType))
                     {
-                        this.Data.Add(item.DicValue, item.Title);
+                        this._data.Add(item.DicValue, item.Title);
                     }
                 }
             }
+            return this;
+        }
+
+        public DropDownListHtmlTag DataSource(Func<Dictionary<string, string>> souceFunc)
+        {
+            _souceFunc = souceFunc;
             return this;
         }
         public DropDownListHtmlTag EffectTo(string ProPerty)

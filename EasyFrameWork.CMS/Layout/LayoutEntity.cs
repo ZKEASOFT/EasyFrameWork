@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
+using System.Web;
+using Easy.Extend;
 using Easy.MetaData;
 using Easy.CMS.Zone;
 using Easy.Models;
@@ -11,7 +14,7 @@ using Easy.CMS.Widget;
 namespace Easy.CMS.Layout
 {
     [DataConfigure(typeof(LayoutEntityMetaData))]
-    public class LayoutEntity : EditorEntity,IImage
+    public class LayoutEntity : EditorEntity, IImage
     {
         public const string LayoutKey = "ViewDataKey_Layout";
         public const string DefaultThumbnial = "~/Modules/Common/Content/Images/demoLayout.jpg";
@@ -29,6 +32,8 @@ namespace Easy.CMS.Layout
 
         public string ImageUrl { get; set; }
         public string ImageThumbUrl { get; set; }
+
+        public string Theme { get; set; }
     }
 
     class LayoutEntityMetaData : DataViewMetaData<LayoutEntity>
@@ -45,6 +50,17 @@ namespace Easy.CMS.Layout
             ViewConfig(m => m.ContainerClass).AsHidden();
             ViewConfig(m => m.Title).AsHidden();
             ViewConfig(m => m.LayoutName).AsTextBox().Required();
+            ViewConfig(m => m.Theme).AsDropDownList().DataSource(() =>
+            {
+                var themes = new Dictionary<string, string>();
+                
+                Directory.GetDirectories(HttpContext.Current.Server.MapPath("~/Themes")).Each(m =>
+                {
+                    var dic = new DirectoryInfo(m);
+                    themes.Add(dic.Name, dic.Name);
+                });
+                return themes;
+            });
         }
     }
 
