@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link href='https://fonts.googleapis.com/css?family=Architects+Daughter' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/pygment_trac.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print">
+
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <title>Easyframework by SeriaWei</title>
+  </head>
+
+  <body>
+    <header>
+      <div class="inner">
+        <h1>Easyframework</h1>
+        <h2>Easy to use.  Easy to code.</h2>
+        <a href="https://github.com/SeriaWei/EasyFrameWork" class="button"><small>View project on</small> GitHub</a>
+      </div>
+    </header>
+
+    <div id="content-wrapper">
+      <div class="inner clearfix">
+        <section id="main-content">
+          <h1>
+<a name="easyframework" class="anchor" href="#easyframework"><span class="octicon octicon-link"></span></a>EasyFrameWork</h1>
+
+<h1></h1>
+
+<h2>
+<a name="%E4%B8%BB%E6%97%A8%E7%AE%80%E5%8D%95%E4%BD%BF%E7%94%A8%E5%BF%AB%E9%80%9F%E5%BC%80%E5%8F%91" class="anchor" href="#%E4%B8%BB%E6%97%A8%E7%AE%80%E5%8D%95%E4%BD%BF%E7%94%A8%E5%BF%AB%E9%80%9F%E5%BC%80%E5%8F%91"><span class="octicon octicon-link"></span></a>主旨：简单使用，快速开发。</h2>
+
+<h3>
+<a name="%E4%BD%BF%E7%94%A8%E6%9C%AC%E6%A1%86%E6%9E%B6%E5%BC%80%E5%8F%91%E4%BB%8E%E8%AE%BF%E9%97%AE%E6%95%B0%E6%8D%AE%E5%BA%93%E5%88%B0ui%E4%BA%A4%E4%BA%92%E9%83%BD%E5%8F%AF%E4%BB%A5%E5%BF%AB%E9%80%9F%E8%BD%BB%E6%9D%BE%E5%AE%8C%E6%88%90%E5%A6%82%E6%97%A0%E7%89%B9%E5%88%AB%E9%9C%80%E6%B1%82%E5%9F%BA%E6%9C%AC%E5%8F%AF%E4%B8%8D%E5%86%99%E4%BB%A3%E7%A0%81" class="anchor" href="#%E4%BD%BF%E7%94%A8%E6%9C%AC%E6%A1%86%E6%9E%B6%E5%BC%80%E5%8F%91%E4%BB%8E%E8%AE%BF%E9%97%AE%E6%95%B0%E6%8D%AE%E5%BA%93%E5%88%B0ui%E4%BA%A4%E4%BA%92%E9%83%BD%E5%8F%AF%E4%BB%A5%E5%BF%AB%E9%80%9F%E8%BD%BB%E6%9D%BE%E5%AE%8C%E6%88%90%E5%A6%82%E6%97%A0%E7%89%B9%E5%88%AB%E9%9C%80%E6%B1%82%E5%9F%BA%E6%9C%AC%E5%8F%AF%E4%B8%8D%E5%86%99%E4%BB%A3%E7%A0%81"><span class="octicon octicon-link"></span></a>使用本框架开发，从访问数据库，到UI交互都可以快速，轻松完成。如无特别需求，基本可不写代码。</h3>
+
+<h3>
+<a name="%E7%AE%80%E5%8D%95%E7%A4%BA%E4%BE%8B" class="anchor" href="#%E7%AE%80%E5%8D%95%E7%A4%BA%E4%BE%8B"><span class="octicon octicon-link"></span></a>简单示例</h3>
+
+<h3>
+<a name="%E5%AE%9E%E4%BD%93" class="anchor" href="#%E5%AE%9E%E4%BD%93"><span class="octicon octicon-link"></span></a>实体:</h3>
+
+<p><code>public override void DataConfigure()</code>
+        <code>{</code>
+            <code>DataTable("Advertisement");</code>
+            <code>DataConfig(m =&gt; m.ID).AsIncreasePrimaryKey();</code>
+       <code>}</code></p>
+
+<h3>
+<a name="%E7%AE%80%E5%8D%95%E7%9A%84%E4%B8%A4%E5%8F%A5%E5%B0%B1%E5%AE%8C%E6%88%90%E4%BA%86%E4%B8%8E%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E8%AE%BE%E7%BD%AE" class="anchor" href="#%E7%AE%80%E5%8D%95%E7%9A%84%E4%B8%A4%E5%8F%A5%E5%B0%B1%E5%AE%8C%E6%88%90%E4%BA%86%E4%B8%8E%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E8%AE%BE%E7%BD%AE"><span class="octicon octicon-link"></span></a>简单的两句，就完成了与数据库的设置。</h3>
+
+<p><code>public override void ViewConfigure()</code>
+        <code>{</code>
+            <code>ViewConfig(m =&gt; m.ID).AsHidden();</code>
+            <code>ViewConfig(m =&gt; m.Title).AsTextBox().Required().Order(1).MaxLength(100);</code>
+            <code>ViewConfig(m =&gt; m.Description).AsMutiLineTextBox().Order(101);</code>
+            <code>ViewConfig(m =&gt; m.Position).AsDropDownList().DataSource&lt;EnumFlag.ADPosition&gt;();</code>
+        <code>}</code></p>
+
+<h3>
+<a name="%E8%BF%99%E6%98%AF%E5%AF%B9ui%E7%9A%84%E9%85%8D%E7%BD%AE%E5%A6%82%E4%BD%95%E5%91%88%E7%8E%B0%E4%B8%80%E5%88%87%E9%9A%8F%E4%BD%A0%E7%AE%80%E5%8D%95%E9%85%8D%E7%BD%AE" class="anchor" href="#%E8%BF%99%E6%98%AF%E5%AF%B9ui%E7%9A%84%E9%85%8D%E7%BD%AE%E5%A6%82%E4%BD%95%E5%91%88%E7%8E%B0%E4%B8%80%E5%88%87%E9%9A%8F%E4%BD%A0%E7%AE%80%E5%8D%95%E9%85%8D%E7%BD%AE"><span class="octicon octicon-link"></span></a>这是对UI的配置，如何呈现，一切随你简单配置。</h3>
+
+<h3>
+<a name="%E6%8E%A7%E5%88%B6%E5%99%A8controller" class="anchor" href="#%E6%8E%A7%E5%88%B6%E5%99%A8controller"><span class="octicon octicon-link"></span></a>控制器（Controller）</h3>
+
+<p><code>public class AdvertisementController : BasicController&lt;[Entity], [long], [Service]&gt;</code>
+    <code>{</code> <code>}</code>
+不用写一句代码，增，删，改，查，便可轻松完成。</p>
+
+<h3>
+<a name="%E7%95%8C%E9%9D%A2ui" class="anchor" href="#%E7%95%8C%E9%9D%A2ui"><span class="octicon octicon-link"></span></a>界面（UI）</h3>
+
+<p>列表：
+<code>@(</code>
+ <code>Html.Grid().Name("AdvertisementList")</code>
+     <code>.SetAsToolBar("#toolBar")</code>
+     <code>.SetColumnTemplate(m =&gt; { m.Add(q =&gt; q.Title, "&lt;a&gt;{Title}&lt;/a&gt;"); })</code>
+     <code>.ShowCheckbox(m =&gt; m.ID)</code>
+     <code>.OrderBy(m=&gt;m.OrderIndex, Easy.Constant.DataEnumerate.OrderType.Descending)</code>
+<code>)</code>
+这样，便完成了一个复杂的列表页面，包括检索，分页，自定义排序等。
+编辑，新建：
+<code>@Html.EasyTags(2)</code>
+这样，便完成了一个2例N行的自动布局。</p>
+
+<h2>
+<a name="easyframework%E4%BD%BF%E7%94%A8%E5%A6%82%E6%AD%A4%E7%AE%80%E5%8D%95%E5%B9%B6%E4%B8%8D%E4%BB%A3%E8%A1%A8%E5%AE%83%E5%8F%AA%E8%83%BD%E5%AE%9E%E7%8E%B0%E8%BF%99%E6%A0%B7%E7%AE%80%E5%8D%95%E7%9A%84%E4%B8%9C%E8%A5%BF%E7%AE%80%E7%BA%A6%E4%BD%86%E5%B9%B6%E4%B8%8D%E7%AE%80%E5%8D%95" class="anchor" href="#easyframework%E4%BD%BF%E7%94%A8%E5%A6%82%E6%AD%A4%E7%AE%80%E5%8D%95%E5%B9%B6%E4%B8%8D%E4%BB%A3%E8%A1%A8%E5%AE%83%E5%8F%AA%E8%83%BD%E5%AE%9E%E7%8E%B0%E8%BF%99%E6%A0%B7%E7%AE%80%E5%8D%95%E7%9A%84%E4%B8%9C%E8%A5%BF%E7%AE%80%E7%BA%A6%E4%BD%86%E5%B9%B6%E4%B8%8D%E7%AE%80%E5%8D%95"><span class="octicon octicon-link"></span></a>EasyFramework使用如此简单，并不代表它只能实现这样简单的东西。简约，但并不简单。</h2>
+        </section>
+
+        <aside id="sidebar">
+          <a href="https://github.com/SeriaWei/EasyFrameWork/zipball/master" class="button">
+            <small>Download</small>
+            .zip file
+          </a>
+          <a href="https://github.com/SeriaWei/EasyFrameWork/tarball/master" class="button">
+            <small>Download</small>
+            .tar.gz file
+          </a>
+
+          <p class="repo-owner"><a href="https://github.com/SeriaWei/EasyFrameWork"></a> is maintained by <a href="https://github.com/SeriaWei">SeriaWei</a>.</p>
+
+          <p>This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the Architect theme by <a href="https://twitter.com/jasonlong">Jason Long</a>.</p>
+        </aside>
+      </div>
+    </div>
+
+  
+  </body>
+</html>
