@@ -14,17 +14,9 @@ namespace Easy.CMS.Widget
     }
     class HtmlWidgetMetaData : WidgetMetaData<HtmlWidget>
     {
-       
-        protected override void DataConfigure()
-        {
-            DataTable("HtmlWidget");
-            DataConfig(m => m.ID).AsPrimaryKey();
-
-        }
-
         protected override void ViewConfigure()
         {
-            InitViewBase();
+            base.ViewConfigure();
             ViewConfig(m => m.HTML).AsMutiLineTextBox().AddClass("html");
         }
     }
