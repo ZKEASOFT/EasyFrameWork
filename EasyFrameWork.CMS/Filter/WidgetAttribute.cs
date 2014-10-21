@@ -21,17 +21,21 @@ namespace Easy.CMS.Filter
 
             //Page
             string path = filterContext.RequestContext.HttpContext.Request.Path;
+            if (path != "/" && path.EndsWith("/"))
+            {
+                path = path.Substring(0, path.Length - 1);
+            }
             var pageService = new PageService();
 
             var filter = new Data.DataFilter().Where("Url", OperatorType.Equal, "~" + path);
-            if (!(filterContext.RequestContext.HttpContext.Request.QueryString[ReView.QueryKey] == ReView.Review))
+            if (filterContext.RequestContext.HttpContext.Request.QueryString[ReView.QueryKey] != ReView.Review)
             {
                 filter.Where("Status", OperatorType.Equal, (int)Constant.RecordStatus.Active).Where("IsPublish=true");
             }
             IEnumerable<PageEntity> pages = pageService.Get(filter);
             if (!pages.Any() && path == "/")
             {
-                var homePage = pageService.Get(new Data.DataFilter().Where("ParentId", OperatorType.Equal, "#").OrderBy("DisplayOrder", Constant.OrderType.Ascending));
+                var homePage = pageService.Get(new Data.DataFilter().Where("ParentId", OperatorType.Equal, "#").OrderBy("DisplayOrder", OrderType.Ascending));
                 if (homePage.Any())
                 {
                     filterContext.Result = new RedirectResult(homePage.First().Url);
