@@ -94,7 +94,6 @@
     <Compile Include="Attribute\ViewDataAttribute.cs" />
     <Compile Include="Cache\MemoryCache.cs" />
     <Compile Include="Common.cs" />
-    <Compile Include="CommonType.cs" />
     <Compile Include="Constant\Enums.cs" />
     <Compile Include="ControllerFactory\DefaultIndexControllerFactory.cs" />
     <Compile Include="ControllerFactory\IocControllerFactory.cs" />

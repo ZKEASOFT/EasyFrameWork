@@ -5,7 +5,7 @@ using System.Text;
 using Easy.RepositoryPattern;
 using System.ComponentModel;
 
-namespace Easy.CMS.Widget
+namespace Easy.Web.CMS.Widget
 {
     public interface IWidgetPartDriver
     {

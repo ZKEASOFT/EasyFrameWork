@@ -2,13 +2,15 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Easy.Cache;
+using Easy.Data;
 using Easy.RepositoryPattern;
 using Easy.Extend;
-using Easy.CMS.Zone;
+using Easy.Web.CMS.Zone;
 using Easy.Constant;
-using Easy.CMS.Widget;
+using Easy.Web.CMS.Widget;
 
-namespace Easy.CMS.Layout
+namespace Easy.Web.CMS.Layout
 {
     public class LayoutService : ServiceBase<LayoutEntity>
     {
@@ -74,17 +76,17 @@ namespace Easy.CMS.Layout
         }
         public override bool Update(LayoutEntity item, Data.DataFilter filter)
         {
-            new Cache.Signal().Do(LayoutChanged);
+            new Signal().Do(LayoutChanged);
             return base.Update(item, filter);
         }
         public override bool Update(LayoutEntity item, params object[] primaryKeys)
         {
-            new Cache.Signal().Do(LayoutChanged);
+            new Signal().Do(LayoutChanged);
             return base.Update(item, primaryKeys);
         }
         public override LayoutEntity Get(params object[] primaryKeys)
         {
-            Cache.StaticCache cache = new Cache.StaticCache();
+            var cache = new StaticCache();
             return cache.Get("Layout_" + primaryKeys[0], m =>
             {
                 m.When(LayoutChanged);
@@ -106,47 +108,47 @@ namespace Easy.CMS.Layout
             var deletes = this.Get(filter).ToList(m => m.ID);
             if (deletes.Any())
             {
-                LayoutHtmlService layoutHtmlService = new LayoutHtmlService();
+                var layoutHtmlService = new LayoutHtmlService();
                 layoutHtmlService.Delete(new Data.DataFilter().Where<LayoutHtml>(m => m.LayoutId, OperatorType.In, deletes));
 
-                ZoneService zoneService = new ZoneService();
+                var zoneService = new ZoneService();
                 zoneService.Delete(new Data.DataFilter().Where<ZoneEntity>(m => m.LayoutId, OperatorType.In, deletes));
 
 
-                Page.PageService pageService = new Page.PageService();
+                var pageService = new Page.PageService();
                 pageService.Delete(new Data.DataFilter().Where("LayoutId", OperatorType.In, deletes));
 
-                Widget.WidgetService widgetService = new Widget.WidgetService();
-                var widgets = widgetService.Get(new Data.DataFilter().Where("LayoutId", Constant.OperatorType.In, deletes));
+                var widgetService = new Widget.WidgetService();
+                var widgets = widgetService.Get(new Data.DataFilter().Where("LayoutId", OperatorType.In, deletes));
                 widgets.Each(m =>
                 {
                     m.CreateServiceInstance().DeleteWidget(m.ID);
                 });
 
             }
-            new Cache.Signal().Do(LayoutChanged);
+            new Signal().Do(LayoutChanged);
             return base.Delete(filter);
         }
         public override int Delete(params object[] primaryKeys)
         {
             LayoutEntity layout = Get(primaryKeys);
-            LayoutHtmlService layoutHtmlService = new LayoutHtmlService();
+            var layoutHtmlService = new LayoutHtmlService();
             layoutHtmlService.Delete(new Data.DataFilter().Where<LayoutHtml>(m => m.LayoutId, OperatorType.Equal, layout.ID));
 
-            ZoneService zoneService = new ZoneService();
+            var zoneService = new ZoneService();
             zoneService.Delete(new Data.DataFilter().Where<ZoneEntity>(m => m.LayoutId, OperatorType.Equal, layout.ID));
 
 
-            Page.PageService pageService = new Page.PageService();
-            pageService.Delete(new Data.DataFilter().Where("LayoutId", OperatorType.Equal, layout.ID));
+            var pageService = new Page.PageService();
+            pageService.Delete(new DataFilter().Where("LayoutId", OperatorType.Equal, layout.ID));
 
-            Widget.WidgetService widgetService = new Widget.WidgetService();
-            var widgets = widgetService.Get(new Data.DataFilter().Where("LayoutId", Constant.OperatorType.Equal, layout.ID));
+            var widgetService = new WidgetService();
+            var widgets = widgetService.Get(new DataFilter().Where("LayoutId", OperatorType.Equal, layout.ID));
             widgets.Each(m =>
             {
                 m.CreateServiceInstance().DeleteWidget(m.ID);
             });
-            new Cache.Signal().Do(LayoutChanged);
+            new Signal().Do(LayoutChanged);
             return base.Delete(primaryKeys);
         }
     }

@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using Easy.Extend;
 
-namespace Easy.CMS.Layout
+namespace Easy.Web.CMS.Layout
 {
     public class ViewData_LayoutsAttribute : ViewDataAttribute
     {

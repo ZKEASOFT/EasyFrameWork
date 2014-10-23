@@ -1,16 +1,17 @@
-﻿using Easy.CMS.Widget;
+﻿using Easy.Data;
+using Easy.Web.CMS.Widget;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Web.Mvc;
 using Easy;
-using Easy.CMS.Page;
-using Easy.CMS.Layout;
+using Easy.Web.CMS.Page;
+using Easy.Web.CMS.Layout;
 using Easy.Constant;
 using Easy.Extend;
 
-namespace Easy.CMS.Filter
+namespace Easy.Web.CMS.Filter
 {
     public class WidgetAttribute : FilterAttribute, IActionFilter
     {
@@ -30,12 +31,12 @@ namespace Easy.CMS.Filter
             var filter = new Data.DataFilter().Where("Url", OperatorType.Equal, "~" + path);
             if (filterContext.RequestContext.HttpContext.Request.QueryString[ReView.QueryKey] != ReView.Review)
             {
-                filter.Where("Status", OperatorType.Equal, (int)Constant.RecordStatus.Active).Where("IsPublish=true");
+                filter.Where("Status", OperatorType.Equal, (int)RecordStatus.Active).Where("IsPublish=true");
             }
             IEnumerable<PageEntity> pages = pageService.Get(filter);
             if (!pages.Any() && path == "/")
             {
-                var homePage = pageService.Get(new Data.DataFilter().Where("ParentId", OperatorType.Equal, "#").OrderBy("DisplayOrder", OrderType.Ascending));
+                var homePage = pageService.Get(new DataFilter().Where("ParentId", OperatorType.Equal, "#").OrderBy("DisplayOrder", OrderType.Ascending));
                 if (homePage.Any())
                 {
                     filterContext.Result = new RedirectResult(homePage.First().Url);
@@ -86,7 +87,7 @@ namespace Easy.CMS.Filter
                 var viewResult = (filterContext.Result as ViewResult);
                 if (viewResult != null)
                 {
-                    //viewResult.MasterName = "~/Modules/Easy.CMS.Page/Views/Shared/_Layout.cshtml";
+                    //viewResult.MasterName = "~/Modules/Easy.Web.CMS.Page/Views/Shared/_Layout.cshtml";
                     viewResult.ViewData[LayoutEntity.LayoutKey] = layout;
                 }
             }

@@ -6,7 +6,7 @@ using System.Text;
 using Easy.MetaData;
 using System.Collections.ObjectModel;
 
-namespace Easy.CMS.Layout
+namespace Easy.Web.CMS.Layout
 {
     [DataConfigure(typeof(LayoutHtmlMetaData))]
     public class LayoutHtml : EditorEntity

@@ -6,12 +6,12 @@ using System.Text;
 using System.Web;
 using Easy.Extend;
 using Easy.MetaData;
-using Easy.CMS.Zone;
+using Easy.Web.CMS.Zone;
 using Easy.Models;
-using Easy.CMS.Page;
-using Easy.CMS.Widget;
+using Easy.Web.CMS.Page;
+using Easy.Web.CMS.Widget;
 
-namespace Easy.CMS.Layout
+namespace Easy.Web.CMS.Layout
 {
     [DataConfigure(typeof(LayoutEntityMetaData))]
     public class LayoutEntity : EditorEntity, IImage

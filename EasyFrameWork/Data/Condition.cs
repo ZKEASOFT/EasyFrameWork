@@ -17,7 +17,7 @@ namespace Easy.Data
         readonly string _valueKey;
         public Condition()
         {
-            this.ConditionType = Constant.ConditionType.And;
+            this.ConditionType = ConditionType.And;
             this._valueKey = Guid.NewGuid().ToString("N");
         }
 
@@ -26,11 +26,11 @@ namespace Easy.Data
             this.Property = property;
             this.OperatorType = operatorType;
             this.Value = value;
-            this.ConditionType = Constant.ConditionType.And;
+            this.ConditionType = ConditionType.And;
             this._valueKey = Guid.NewGuid().ToString("N");
         }
 
-        public Condition(string condition, Constant.ConditionType conditionTyep)
+        public Condition(string condition, ConditionType conditionTyep)
         {
             this.ConditionString = condition;
             this.ConditionType = conditionTyep;
@@ -46,12 +46,12 @@ namespace Easy.Data
         /// <summary>
         /// 运算符
         /// </summary>
-        public Constant.OperatorType OperatorType { get; set; }
+        public OperatorType OperatorType { get; set; }
 
         /// <summary>
         /// 条件类型
         /// </summary>
-        public Constant.ConditionType ConditionType
+        public ConditionType ConditionType
         {
             get;
             set;
@@ -64,7 +64,7 @@ namespace Easy.Data
 
         public override string ToString()
         {
-            StringBuilder builder = new StringBuilder();
+            var builder = new StringBuilder();
             if (!string.IsNullOrEmpty(this.ConditionString))
             {
                 if (this.ConditionString.Contains("{0}"))
@@ -81,7 +81,7 @@ namespace Easy.Data
                 if (string.IsNullOrEmpty(this.Property)) return string.Empty;
                 switch (this.OperatorType)
                 {
-                    case Constant.OperatorType.Equal:
+                    case OperatorType.Equal:
                         {
                             if (this.Property.Contains("["))
                             {
@@ -93,7 +93,7 @@ namespace Easy.Data
                             }
                             break;
                         }
-                    case Constant.OperatorType.GreaterThan:
+                    case OperatorType.GreaterThan:
                         {
                             if (this.Property.Contains("["))
                             {
@@ -105,7 +105,7 @@ namespace Easy.Data
                             }
                             break;
                         }
-                    case Constant.OperatorType.GreaterThanOrEqualTo:
+                    case OperatorType.GreaterThanOrEqualTo:
                         {
                             if (this.Property.Contains("["))
                             {
@@ -117,7 +117,7 @@ namespace Easy.Data
                             }
                             break;
                         }
-                    case Constant.OperatorType.LessThan:
+                    case OperatorType.LessThan:
                         {
                             if (this.Property.Contains("["))
                             {
@@ -129,7 +129,7 @@ namespace Easy.Data
                             }
                             break;
                         }
-                    case Constant.OperatorType.LessThanOrEqualTo:
+                    case OperatorType.LessThanOrEqualTo:
                         {
                             if (this.Property.Contains("["))
                             {
@@ -141,7 +141,7 @@ namespace Easy.Data
                             }
                             break;
                         }
-                    case Constant.OperatorType.NotEqual:
+                    case OperatorType.NotEqual:
                         {
                             if (this.Property.Contains("["))
                             {
@@ -153,9 +153,9 @@ namespace Easy.Data
                             }
                             break;
                         }
-                    case Constant.OperatorType.StartWith:
-                    case Constant.OperatorType.EndWith:
-                    case Constant.OperatorType.Contains:
+                    case OperatorType.StartWith:
+                    case OperatorType.EndWith:
+                    case OperatorType.Contains:
                         {
                             if (this.Property.Contains("["))
                             {
@@ -167,7 +167,7 @@ namespace Easy.Data
                             }
                             break;
                         }
-                    case Constant.OperatorType.In:
+                    case OperatorType.In:
                         {
                             var valuesBuilder = new StringBuilder();
                             if (this.Value is IEnumerable)
@@ -202,7 +202,7 @@ namespace Easy.Data
                             }
                             break;
                         }
-                    case Constant.OperatorType.NotIn:
+                    case OperatorType.NotIn:
                         {
                             var valuesBuilder = new StringBuilder();
                             if (this.Value is IEnumerable)
@@ -259,8 +259,8 @@ namespace Easy.Data
             {
                 switch (this.ConditionType)
                 {
-                    case Constant.ConditionType.And: return " AND " + ToString();
-                    case Constant.ConditionType.Or: return " OR " + ToString();
+                    case ConditionType.And: return " AND " + ToString();
+                    case ConditionType.Or: return " OR " + ToString();
                     default: return " AND " + ToString();
                 }
             }
@@ -273,11 +273,11 @@ namespace Easy.Data
         {
             switch (this.OperatorType)
             {
-                case Constant.OperatorType.StartWith: return new KeyValuePair<string, object>(_valueKey, Value + "%");
-                case Constant.OperatorType.EndWith: return new KeyValuePair<string, object>(_valueKey, "%" + Value + "%");
-                case Constant.OperatorType.Contains: return new KeyValuePair<string, object>(_valueKey, "%" + Value + "%");
-                case Constant.OperatorType.In:
-                case Constant.OperatorType.NotIn: return new KeyValuePair<string, object>();
+                case OperatorType.StartWith: return new KeyValuePair<string, object>(_valueKey, Value + "%");
+                case OperatorType.EndWith: return new KeyValuePair<string, object>(_valueKey, "%" + Value + "%");
+                case OperatorType.Contains: return new KeyValuePair<string, object>(_valueKey, "%" + Value + "%");
+                case OperatorType.In:
+                case OperatorType.NotIn: return new KeyValuePair<string, object>();
                 default: return new KeyValuePair<string, object>(_valueKey, Value);
             }
 
@@ -299,7 +299,7 @@ namespace Easy.Data
         /// <summary>
         /// 条件类型
         /// </summary>
-        public Constant.ConditionType ConditionType
+        public ConditionType ConditionType
         {
             get;
             set;
@@ -328,8 +328,8 @@ namespace Easy.Data
             {
                 switch (this.ConditionType)
                 {
-                    case Constant.ConditionType.And: return " AND " + ToString();
-                    case Constant.ConditionType.Or: return " OR " + ToString();
+                    case ConditionType.And: return " AND " + ToString();
+                    case ConditionType.Or: return " OR " + ToString();
                     default: return " AND " + ToString();
                 }
             }

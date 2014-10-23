@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Easy.Extend;
-using Easy.CMS.Layout;
+using Easy.Web.CMS.Layout;
 
-namespace Easy.CMS.Zone
+namespace Easy.Web.CMS.Zone
 {
     public static class Helper
     {

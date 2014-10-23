@@ -2,10 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Easy.Data;
 using Easy.RepositoryPattern;
 using Easy.Extend;
 
-namespace Easy.CMS.Page
+namespace Easy.Web.CMS.Page
 {
     public class PageService : ServiceBase<PageEntity>
     {
@@ -21,28 +22,28 @@ namespace Easy.CMS.Page
             }
             base.Add(item);
         }
-        public override int Delete(Data.DataFilter filter)
+        public override int Delete(DataFilter filter)
         {
             var deletes = this.Get(filter).ToList(m => m.ID);
-            if (deletes.Any() && this.Get(new Data.DataFilter().Where("ParentId", Constant.OperatorType.In, deletes)).Any())
+            if (deletes.Any() && this.Get(new DataFilter().Where("ParentId", OperatorType.In, deletes)).Any())
             {
                 Widget.WidgetService widgetService = new Widget.WidgetService();
-                var widgets = widgetService.Get(new Data.DataFilter().Where("PageID", Constant.OperatorType.In, deletes));
+                var widgets = widgetService.Get(new DataFilter().Where("PageID", OperatorType.In, deletes));
                 widgets.Each(m =>
                 {
                     m.CreateServiceInstance().DeleteWidget(m.ID);
                 });
-                this.Delete(new Data.DataFilter().Where("ParentId", Constant.OperatorType.In, deletes));
+                this.Delete(new DataFilter().Where("ParentId", OperatorType.In, deletes));
             }
             return base.Delete(filter);
         }
         public override int Delete(params object[] primaryKeys)
         {
             PageEntity page = Get(primaryKeys);
-            this.Delete(new Data.DataFilter().Where("ParentId", Constant.OperatorType.Equal, page.ID));
+            this.Delete(new DataFilter().Where("ParentId", OperatorType.Equal, page.ID));
 
             Widget.WidgetService widgetService = new Widget.WidgetService();
-            var widgets = widgetService.Get(new Data.DataFilter().Where("PageID", Constant.OperatorType.Equal, page.ID));
+            var widgets = widgetService.Get(new DataFilter().Where("PageID", OperatorType.Equal, page.ID));
             widgets.Each(m =>
             {
                 m.CreateServiceInstance().DeleteWidget(m.ID);
@@ -53,21 +54,21 @@ namespace Easy.CMS.Page
         public void Publish(string pageID)
         {
             this.Update(new PageEntity { IsPublish = true, PublishDate = DateTime.Now },
-                new Data.DataFilter(new List<string> { "IsPublish", "PublishDate" })
-                .Where("ID", Constant.OperatorType.Equal, pageID));
+                new DataFilter(new List<string> { "IsPublish", "PublishDate" })
+                .Where("ID", OperatorType.Equal, pageID));
 
         }
         public void Move(string id, int position, int oldPosition)
         {
             var page = this.Get(id);
             page.DisplayOrder = position;
-            var filter = new Data.DataFilter()
-                .Where("ParentId", Constant.OperatorType.Equal, page.ParentId)
-                .Where("Id", Constant.OperatorType.NotEqual, page.ID);
+            var filter = new DataFilter()
+                .Where("ParentId", OperatorType.Equal, page.ParentId)
+                .Where("Id", OperatorType.NotEqual, page.ID);
             if (position > oldPosition)
             {
-                filter.Where("DisplayOrder", Constant.OperatorType.LessThanOrEqualTo, position);
-                filter.Where("DisplayOrder", Constant.OperatorType.GreaterThanOrEqualTo, oldPosition);
+                filter.Where("DisplayOrder", OperatorType.LessThanOrEqualTo, position);
+                filter.Where("DisplayOrder", OperatorType.GreaterThanOrEqualTo, oldPosition);
                 var pages = this.Get(filter);
                 pages.Each(m =>
                 {
@@ -77,8 +78,8 @@ namespace Easy.CMS.Page
             }
             else
             {
-                filter.Where("DisplayOrder", Constant.OperatorType.LessThanOrEqualTo, oldPosition);
-                filter.Where("DisplayOrder", Constant.OperatorType.GreaterThanOrEqualTo, position);
+                filter.Where("DisplayOrder", OperatorType.LessThanOrEqualTo, oldPosition);
+                filter.Where("DisplayOrder", OperatorType.GreaterThanOrEqualTo, position);
                 var pages = this.Get(filter);
                 pages.Each(m =>
                 {

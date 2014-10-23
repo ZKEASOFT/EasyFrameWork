@@ -64,6 +64,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Constant\DicKeys.cs" />
+    <Compile Include="Data\Operation.cs" />
     <Compile Include="Extend\ExtDate.cs" />
     <Compile Include="Extend\ExtIEnumerable.cs" />
     <Compile Include="HTML\jsTree\ContextmenuItem.cs" />

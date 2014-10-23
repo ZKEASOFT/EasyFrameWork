@@ -1,4 +1,5 @@
-﻿using Easy.Models;
+﻿using Easy.Constant;
+using Easy.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,7 +7,7 @@ using System.Text;
 using Easy.MetaData;
 using Easy.Extend;
 
-namespace Easy.CMS.Page
+namespace Easy.Web.CMS.Page
 {
     [DataConfigure(typeof(PageBaseMetaData))]
     public class PageEntity : EditorEntity
@@ -54,7 +55,7 @@ namespace Easy.CMS.Page
             ViewConfig(m => m.PageName).AsTextBox().Order(1).Required();
             ViewConfig(m => m.PageUrl).AsTextBox().Order(2).Required();
             ViewConfig(m => m.Url).AsTextBox().ReadOnly();
-            ViewConfig(m => m.LayoutId).AsDropDownList().DataSource(ViewDataKeys.Layouts, Constant.SourceType.ViewData);
+            ViewConfig(m => m.LayoutId).AsDropDownList().DataSource(ViewDataKeys.Layouts, SourceType.ViewData);
             ViewConfig(m => m.ParentId).AsHidden();
             ViewConfig(m => m.ID).AsHidden();
             ViewConfig(m => m.Content).AsHidden();

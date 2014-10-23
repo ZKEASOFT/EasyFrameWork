@@ -6,7 +6,7 @@ using Easy.MetaData;
 using Easy.Models;
 using Easy.RepositoryPattern;
 
-namespace Easy.CMS.Widget
+namespace Easy.Web.CMS.Widget
 {
     [DataConfigure(typeof(WidgetBaseMetaData))]
     public class WidgetBase : EditorEntity

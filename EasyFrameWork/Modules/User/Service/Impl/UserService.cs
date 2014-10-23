@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Easy.Data;
 using Easy.RepositoryPattern;
 using Easy.Modules.User.Models;
 using Easy.Constant;

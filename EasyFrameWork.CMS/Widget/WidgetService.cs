@@ -2,27 +2,28 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Easy.Data;
 using Easy.RepositoryPattern;
 using System.Web;
 
-namespace Easy.CMS.Widget
+namespace Easy.Web.CMS.Widget
 {
     public class WidgetService : ServiceBase<WidgetBase>
     {
         public IEnumerable<WidgetBase> GetByLayoutId(string layoutId)
         {
-            return this.Get(new Data.DataFilter().Where("LayoutID", Constant.OperatorType.Equal, layoutId));
+            return this.Get(new DataFilter().Where("LayoutID", OperatorType.Equal, layoutId));
         }
         public IEnumerable<WidgetBase> GetByPageId(string pageId)
         {
-            return this.Get(new Data.DataFilter().Where("PageID", Constant.OperatorType.Equal, pageId));
+            return this.Get(new DataFilter().Where("PageID", OperatorType.Equal, pageId));
         }
         public IEnumerable<WidgetBase> GetAllByPageId(string pageId)
         {
             var page = new Page.PageService().Get(pageId);
             var result = GetByLayoutId(page.LayoutId);
             List<WidgetBase> widgets = result.ToList();
-            widgets.AddRange(this.Get(new Data.DataFilter().Where("PageID", Constant.OperatorType.Equal, pageId)));
+            widgets.AddRange(this.Get(new DataFilter().Where("PageID", OperatorType.Equal, pageId)));
             return widgets;
         }
     }
@@ -51,7 +52,7 @@ namespace Easy.CMS.Widget
             }
             return result;
         }
-        public override bool Update(T item, Data.DataFilter filter)
+        public override bool Update(T item, DataFilter filter)
         {
             bool result = WidgetBaseService.Update(item.ToWidgetBase(), filter);
             if (typeof(T) != typeof(WidgetBase))
@@ -60,7 +61,7 @@ namespace Easy.CMS.Widget
             }
             return result;
         }
-        public override IEnumerable<T> Get(Data.DataFilter filter)
+        public override IEnumerable<T> Get(DataFilter filter)
         {
             List<WidgetBase> widgetBases = WidgetBaseService.Get(filter).ToList();
 
@@ -80,7 +81,7 @@ namespace Easy.CMS.Widget
             return lists;
 
         }
-        public override IEnumerable<T> Get(Data.DataFilter filter, Data.Pagination pagin)
+        public override IEnumerable<T> Get(DataFilter filter, Pagination pagin)
         {
             List<WidgetBase> widgetBases = WidgetBaseService.Get(filter, pagin).ToList();
             List<T> lists = new List<T>();
@@ -98,7 +99,7 @@ namespace Easy.CMS.Widget
             }
             return lists;
         }
-        public override int Delete(Data.DataFilter filter)
+        public override int Delete(DataFilter filter)
         {
             int result = WidgetBaseService.Delete(filter);
             if (typeof(T) != typeof(WidgetBase))

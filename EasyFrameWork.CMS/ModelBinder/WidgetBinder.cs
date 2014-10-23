@@ -5,7 +5,7 @@ using System.Text;
 using System.Web.Mvc;
 using Easy.Extend;
 
-namespace Easy.CMS.ModelBinder
+namespace Easy.Web.CMS.ModelBinder
 {
     public class WidgetBinder : DefaultModelBinder
     {

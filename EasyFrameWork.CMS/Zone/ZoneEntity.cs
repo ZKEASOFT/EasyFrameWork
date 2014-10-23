@@ -6,7 +6,7 @@ using Easy.MetaData;
 using System.Collections.ObjectModel;
 using Easy.Models;
 
-namespace Easy.CMS.Zone
+namespace Easy.Web.CMS.Zone
 {
     [DataConfigure(typeof(ZoneEntityMetaData))]
     public class ZoneEntity : EditorEntity

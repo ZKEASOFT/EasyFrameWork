@@ -6,7 +6,7 @@ using System.Web.Routing;
 using Easy.Extend;
 using System.Web.Mvc;
 
-namespace Easy.CMS.Route
+namespace Easy.Web.CMS.Route
 {
     class UrlRoute : RouteBase
     {

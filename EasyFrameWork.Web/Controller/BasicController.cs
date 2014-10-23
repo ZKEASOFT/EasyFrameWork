@@ -1,4 +1,5 @@
-﻿using Easy.HTML.Grid;
+﻿using Easy.Data;
+using Easy.HTML.Grid;
 using Easy.Models;
 using Easy.RepositoryPattern;
 using System;

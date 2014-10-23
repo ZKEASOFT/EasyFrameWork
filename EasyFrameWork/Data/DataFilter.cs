@@ -73,13 +73,13 @@ namespace Easy.Data
         }
         public DataFilter Where(string condition)
         {
-            Condition con = new Condition(condition, ConditionType.And);
+            var con = new Condition(condition, ConditionType.And);
             _Conditions.Add(con);
             return this;
         }
-        public DataFilter Where(string condition, Constant.ConditionType conditionType)
+        public DataFilter Where(string condition, ConditionType conditionType)
         {
-            Condition con = new Condition(condition, conditionType);
+            var con = new Condition(condition, conditionType);
             _Conditions.Add(con);
             return this;
         }

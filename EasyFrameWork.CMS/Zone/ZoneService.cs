@@ -2,10 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Easy.Data;
 using Easy.RepositoryPattern;
 using Easy.Extend;
 
-namespace Easy.CMS.Zone
+namespace Easy.Web.CMS.Zone
 {
     public class ZoneService : ServiceBase<ZoneEntity>
     {
@@ -19,15 +20,15 @@ namespace Easy.CMS.Zone
         }
         public IEnumerable<ZoneEntity> GetZonesByPageId(string pageId)
         {
-            var page = new Easy.CMS.Page.PageService().Get(pageId);
-            var layout = new Easy.CMS.Layout.LayoutService().Get(page.LayoutId);
-            var zones = new Easy.CMS.Zone.ZoneService().Get(new Data.DataFilter().Where("LayoutId", Constant.OperatorType.Equal, layout.ID).OrderBy("ID", Constant.OrderType.Ascending));
+            var page = new Easy.Web.CMS.Page.PageService().Get(pageId);
+            var layout = new Easy.Web.CMS.Layout.LayoutService().Get(page.LayoutId);
+            var zones = new Easy.Web.CMS.Zone.ZoneService().Get(new DataFilter().Where("LayoutId", OperatorType.Equal, layout.ID).OrderBy("ID", OrderType.Ascending));
             return zones;
         }
         public IEnumerable<ZoneEntity> GetZonesByLayoutId(string layoutId)
         {
-            var layout = new Easy.CMS.Layout.LayoutService().Get(layoutId);
-            var zones = new Easy.CMS.Zone.ZoneService().Get(new Data.DataFilter().Where("LayoutId", Constant.OperatorType.Equal, layout.ID).OrderBy("ID", Constant.OrderType.Ascending));
+            var layout = new Easy.Web.CMS.Layout.LayoutService().Get(layoutId);
+            var zones = new Easy.Web.CMS.Zone.ZoneService().Get(new DataFilter().Where("LayoutId", OperatorType.Equal, layout.ID).OrderBy("ID", OrderType.Ascending));
             return zones;
         }
         public override int Delete(Data.DataFilter filter)
@@ -36,7 +37,7 @@ namespace Easy.CMS.Zone
             if (deletes.Any())
             {
                 Widget.WidgetService widgetService = new Widget.WidgetService();
-                var widgets = widgetService.Get(new Data.DataFilter().Where("ZoneId", Constant.OperatorType.In, deletes));
+                var widgets = widgetService.Get(new DataFilter().Where("ZoneId", OperatorType.In, deletes));
                 widgets.Each(m =>
                 {
                     m.CreateServiceInstance().DeleteWidget(m.ID);
@@ -47,7 +48,7 @@ namespace Easy.CMS.Zone
         public override int Delete(params object[] primaryKeys)
         {
             Widget.WidgetService widgetService = new Widget.WidgetService();
-            var widgets = widgetService.Get(new Data.DataFilter().Where("ZoneId", Constant.OperatorType.Equal, primaryKeys[0]));
+            var widgets = widgetService.Get(new DataFilter().Where("ZoneId", OperatorType.Equal, primaryKeys[0]));
             widgets.Each(m =>
             {
                 m.CreateServiceInstance().DeleteWidget(m.ID);

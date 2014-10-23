@@ -1,16 +1,17 @@
-﻿using Easy.CMS.Widget;
+﻿using Easy.Data;
+using Easy.Web.CMS.Widget;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Web.Mvc;
 using Easy;
-using Easy.CMS.Page;
-using Easy.CMS.Layout;
+using Easy.Web.CMS.Page;
+using Easy.Web.CMS.Layout;
 using Easy.Constant;
 using Easy.Extend;
 
-namespace Easy.CMS.Filter
+namespace Easy.Web.CMS.Filter
 {
     public class EditWidgetAttribute : FilterAttribute, IActionFilter
     {
@@ -30,7 +31,7 @@ namespace Easy.CMS.Filter
                 layout = layoutService.Get(page.LayoutId);
                 layout.Page = page;
                 WidgetService widgetService = new WidgetService();
-                IEnumerable<WidgetBase> widgets = widgetService.Get(new Data.DataFilter().Where<WidgetBase>(m => m.PageID, OperatorType.Equal, page.ID));
+                IEnumerable<WidgetBase> widgets = widgetService.Get(new DataFilter().Where<WidgetBase>(m => m.PageID, OperatorType.Equal, page.ID));
 
                 widgets.Each(m =>
                 {

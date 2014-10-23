@@ -1,4 +1,4 @@
-﻿using Easy.CMS.Zone;
+﻿using Easy.Web.CMS.Zone;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,7 +7,7 @@ using System.Web.Mvc;
 using Easy.Extend;
 using Easy.Web.Attribute;
 
-namespace Easy.CMS.Widget
+namespace Easy.Web.CMS.Widget
 {
     public class ViewData_ZonesAttribute : ViewDataAttribute
     {

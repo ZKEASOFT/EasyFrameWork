@@ -32,7 +32,7 @@ namespace Easy.RepositoryPattern
         {
             return repBase.Get(filter, pagin);
         }
-        public virtual IEnumerable<Entity> Get(string property, Constant.OperatorType operatorType, object value)
+        public virtual IEnumerable<Entity> Get(string property, OperatorType operatorType, object value)
         {
             return repBase.Get(new DataFilter().Where(property, operatorType, value));
         }

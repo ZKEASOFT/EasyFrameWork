@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Easy.CMS.Layout
+namespace Easy.Web.CMS.Layout
 {
     public class LayoutHtmlService : ServiceBase<LayoutHtml>
     {

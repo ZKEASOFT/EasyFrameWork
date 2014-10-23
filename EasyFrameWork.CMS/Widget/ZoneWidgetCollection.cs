@@ -5,7 +5,7 @@ using System.Text;
 using Easy.MetaData;
 using Easy.Models;
 
-namespace Easy.CMS.Widget
+namespace Easy.Web.CMS.Widget
 {
     public class ZoneWidgetCollection : Dictionary<string, WidgetCollection>
     {
