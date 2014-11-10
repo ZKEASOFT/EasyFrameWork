@@ -145,6 +145,7 @@
     <Compile Include="Net\Ftp.cs" />
     <Compile Include="Net\WebPage.cs" />
     <Compile Include="RepositoryPattern\IRepository.cs" />
+    <Compile Include="RepositoryPattern\IServiceBase.cs" />
     <Compile Include="RepositoryPattern\ServiceBase.cs" />
     <Compile Include="RepositoryPattern\RepositoryBase.cs" />
     <Compile Include="Data\DataBase\DataBasic.cs" />

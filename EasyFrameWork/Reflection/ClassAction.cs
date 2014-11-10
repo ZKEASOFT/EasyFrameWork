@@ -76,6 +76,16 @@ namespace Easy.Reflection
             }
         }
 
+        public static void SetObjPropertyValue(object obj, string property, object value)
+        {
+            Type entityType = obj.GetType();
+            PropertyInfo proper = entityType.GetProperty(property);
+            if (proper != null && proper.CanWrite)
+            {
+                proper.SetValue(obj, ValueConvert(proper, value), null);
+            }
+        }
+
         /// <summary>
         /// 初始化Model,自动对对应属性赋值
         /// </summary>
@@ -257,7 +267,7 @@ namespace Easy.Reflection
         public static object ValueConvert(Type type, object obj)
         {
             TypeCode code = Type.GetTypeCode(type);
-            if (type.Name == "Nullable`1")
+            if (type.Name == "Nullable`1" && obj != null)
             {
                 code = Type.GetTypeCode(type.GetGenericArguments()[0]);
             }
