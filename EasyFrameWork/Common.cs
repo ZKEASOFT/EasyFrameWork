@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Web;
@@ -369,6 +370,32 @@ namespace Easy
             }
             return contentType;
 
+        }
+
+        public static DbType ConvertToDbType(TypeCode code)
+        {
+            switch (code)
+            {
+                case TypeCode.Boolean:return DbType.Boolean;
+                case TypeCode.Byte: return DbType.Byte;
+                case TypeCode.Char: 
+                case TypeCode.DBNull: 
+                case TypeCode.Empty: 
+                case TypeCode.String: return DbType.String;
+                case TypeCode.DateTime: return DbType.DateTime;
+                case TypeCode.Decimal: return DbType.Currency;
+                case TypeCode.Double: return DbType.Double;
+                case TypeCode.Int16: return DbType.Int16;
+                case TypeCode.Int32: return DbType.Int32;
+                case TypeCode.Int64: return DbType.Int64;
+                case TypeCode.Object: return DbType.Object;
+                case TypeCode.SByte: return DbType.SByte;
+                case TypeCode.Single: return DbType.Single;
+                case TypeCode.UInt16: return DbType.UInt16;
+                case TypeCode.UInt32: return DbType.UInt32;
+                case TypeCode.UInt64: return DbType.UInt64;
+                default: return DbType.String;
+            }
         }
     }
 }

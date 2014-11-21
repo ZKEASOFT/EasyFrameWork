@@ -274,6 +274,18 @@ namespace Easy.Data.DataBase
             }
             return this.ExecCommand(sqlcommand);
         }
+
+        public override bool IsExistTable(string tableName)
+        {
+            return
+                CustomerSql("SELECT COUNT(1) FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME='" + tableName + "'")
+                    .To<int>() != 0;
+        }
+
+        public override bool IsExistColumn(string tableName, string columnName)
+        {
+            return CustomerSql("SELECT COUNT(*) FROM INFORMATION_SCHEMA.[COLUMNS]  WHERE TABLE_NAME='" + tableName + "' AND COLUMN_NAME='" + columnName + "'").To<int>() != 0;
+        }
     }
 
 }

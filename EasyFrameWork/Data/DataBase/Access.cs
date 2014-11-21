@@ -269,5 +269,27 @@ namespace Easy.Data.DataBase
             }
             return this.ExecCommand(comm);
         }
+
+        public override bool IsExistTable(string tableName)
+        {
+            var conn = GetConnection();
+            if (conn.State != ConnectionState.Open)
+                conn.Open();
+            var table = conn.GetOleDbSchemaTable(OleDbSchemaGuid.Tables, new object[] { null, null, tableName });
+            if (conn.State != ConnectionState.Closed)
+                conn.Close();
+            return table.Rows.Count != 0;
+        }
+
+        public override bool IsExistColumn(string tableName, string columnName)
+        {
+            var conn = GetConnection();
+            if (conn.State != ConnectionState.Open)
+                conn.Open();
+            var table = conn.GetOleDbSchemaTable(OleDbSchemaGuid.Columns, new object[] { null, null, tableName, columnName });
+            if (conn.State != ConnectionState.Closed)
+                conn.Close();
+            return table.Rows.Count != 0;
+        }
     }
 }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Easy.Extend;
 
 namespace Easy.HTML.Validator
 {
@@ -13,7 +14,7 @@ namespace Easy.HTML.Validator
         }
         public override bool Validate(object value)
         {
-            if (value == null) return false;
+            if (value == null || value.ToString().IsNullOrEmpty()) return false;
             else return true;
         }
     }

@@ -7,7 +7,7 @@ using System.Text;
 
 namespace Easy.RepositoryPattern
 {
-    public abstract class ServiceBase<Entity> : IService where Entity : class
+    public abstract class ServiceBase<Entity> : IService, IServiceBase<Entity> where Entity : class
     {
         RepositoryBase<Entity> repBase;
         IApplicationContext applicationContext;

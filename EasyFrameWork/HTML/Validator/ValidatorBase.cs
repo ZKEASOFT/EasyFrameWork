@@ -17,7 +17,7 @@ namespace Easy.HTML.Validator
             {
                 if (string.IsNullOrEmpty(_ErrorMessage))
                 {
-                    return string.Format(BaseErrorMessage, DisplayName);
+                    return string.Format(BaseErrorMessage, DisplayName ?? Property);
                 }
                 else
                 {

@@ -1,4 +1,5 @@
-﻿using Easy.MetaData;
+﻿using System.Linq;
+using Easy.MetaData;
 using Easy.Constant;
 using System;
 using System.Collections.Generic;
@@ -14,6 +15,11 @@ namespace Easy.Data.DataBase
     /// </summary>
     public abstract class DataBasic
     {
+        public const string DataBaseAppSetingKey = "DataBase";
+        public const string ConnectionKey = "Easy";
+        public const string Ace = "Ace";
+        public const string Jet = "Jet";
+        public const string SQL = "SQL";
         public abstract int Delete(string tableName, string condition, List<KeyValuePair<string, object>> keyValue);
         public abstract DataTable GetTalbe(string selectCommand);
         public abstract DataTable GetTable(string selectCommand, List<KeyValuePair<string, object>> keyValue);
@@ -23,10 +29,72 @@ namespace Easy.Data.DataBase
 
         public abstract int ExecuteNonQuery(string command, CommandType ct, List<KeyValuePair<string, object>> parameter);
 
+        public abstract bool IsExistTable(string tableName);
+
+        public abstract bool IsExistColumn(string tableName, string columnName);
+
+        public virtual void AlterColumn(string tableName, string columnName, DbType columnType, int length = 255)
+        {
+            CustomerSql(string.Format("ALTER TABLE [{0}] ALTER COLUMN [{1}] {2}", tableName, columnName, GetDBTypeStr(columnType, length)))
+                .ExecuteNonQuery();
+        }
+
+        public virtual void AddColumn(string tableName, string columnName, DbType columnType, int length = -1)
+        {
+            CustomerSql(string.Format("ALTER TABLE [{0}] Add COLUMN [{1}] {2}", tableName, columnName, GetDBTypeStr(columnType, length)))
+                .ExecuteNonQuery();
+        }
+        public virtual void CreateTable<T>() where T : class
+        {
+            DataConfigureAttribute custAttribute = DataConfigureAttribute.GetAttribute<T>();
+            string tableName = GetTableName<T>(custAttribute);
+            var buildColumn = new StringBuilder();
+            GetCulumnSchema<T>(custAttribute).Each(m => buildColumn.Append(m));
+            if (custAttribute != null && custAttribute.MetaData.Primarykey.Any())
+            {
+                var primaryKeyBuilder = new StringBuilder();
+                custAttribute.MetaData.Primarykey.Each(m => primaryKeyBuilder.AppendFormat("[{0}],", m.Value));
+                buildColumn.Append(string.Format("PRIMARY KEY({0})", primaryKeyBuilder.ToString().Trim(',')));
+            }
+            CustomerSql(string.Format("Create Table [{0}] ({1}) ", tableName, buildColumn.ToString().Trim(','))).ExecuteNonQuery();
+        }
+
         public abstract CustomerSqlHelper CustomerSql(string command);
         public abstract CustomerSqlHelper StoredProcedures(string storedProcedures);
         #region 私有方法
 
+        protected virtual string GetDBTypeStr(DbType dbType, int length = 255)
+        {
+            switch (dbType)
+            {
+                case DbType.Boolean: return "Bit";
+                case DbType.Byte:
+                    return "TinyInt";
+                case DbType.String:
+                    return length > 0 ? "nvarchar(" + length + ")" : "text";
+                case DbType.DateTime:
+                    return "DateTime";
+                case DbType.Currency:
+                    return "Money";
+                case DbType.Double:
+                    return "Float";
+                case DbType.Decimal:
+                    return "decimal(18, 4)";
+                case DbType.Int16:
+                    return "SmallInt";
+                case DbType.Int32:
+                case DbType.Int64:
+                case DbType.UInt16:
+                case DbType.UInt32:
+                case DbType.UInt64:
+                    return "Int";
+                case DbType.SByte:
+                    return "TinyInt";
+                case DbType.Single:
+                    return "Real";
+                default: return "nvarchar(" + length + ")";
+            }
+        }
 
         protected string GetSelectColumn<T>(DataConfigureAttribute custAttribute, out List<KeyValuePair<string, string>> comMatch) where T : class
         {
@@ -92,6 +160,59 @@ namespace Easy.Data.DataBase
             }
             return tableName;
         }
+
+        private IEnumerable<string> GetCulumnSchema<T>(DataConfigureAttribute custAttribute) where T : class
+        {
+            StringBuilder selectCom = new StringBuilder();
+            System.Reflection.PropertyInfo[] propertys = Easy.Loader.GetType<T>().GetProperties();
+            selectCom = new StringBuilder();
+            List<string> result = new List<string>();
+            foreach (var item in propertys)
+            {
+                TypeCode code;
+                string isNull = "null";
+                if (item.PropertyType.Name == "Nullable`1")
+                {
+                    code = Type.GetTypeCode(item.PropertyType.GetGenericArguments()[0]);
+                }
+                else
+                {
+                    code = Type.GetTypeCode(item.PropertyType);
+                }
+                if (custAttribute != null)
+                {
+                    if (custAttribute.MetaData.PropertyDataConfig.ContainsKey(item.Name))
+                    {
+                        PropertyDataInfo config = custAttribute.MetaData.PropertyDataConfig[item.Name];
+                        if (config.IsPrimaryKey)
+                        {
+                            isNull = "not null";
+                        }
+                        if (!config.Ignore && !config.IsRelation)
+                        {
+                            if (!string.IsNullOrEmpty(config.ColumnName))
+                            {
+                                result.Add(string.Format("[{0}] {1} {2},", config.ColumnName, config.IsIncreasePrimaryKey ? "INT IDENTITY" : GetDBTypeStr(Common.ConvertToDbType(code), config.StringLength), isNull));
+                            }
+                            else
+                            {
+                                result.Add(string.Format("[{0}] {1} {2},", config.PropertyName, GetDBTypeStr(Common.ConvertToDbType(code), config.StringLength), isNull));
+                            }
+                        }
+                    }
+                    else
+                    {
+                        result.Add(string.Format("[{0}] {1} {2},", item.Name, GetDBTypeStr(Common.ConvertToDbType(code)), isNull));
+                    }
+                }
+                else
+                {
+                    result.Add(string.Format("[{0}] {1} {2},", item.Name, GetDBTypeStr(Common.ConvertToDbType(code)), isNull));
+                }
+            }
+            return result;
+        }
+
         #endregion
         public int Delete<T>(DataFilter filter) where T : class
         {
@@ -276,7 +397,7 @@ namespace Easy.Data.DataBase
             DataTable table = this.GetTable(builder.ToString(), filter.GetParameterValues());
             if (table == null) return new List<T>(); ;
             List<T> list = new List<T>();
-            Dictionary<string,PropertyInfo> properties=new Dictionary<string,PropertyInfo>();
+            Dictionary<string, PropertyInfo> properties = new Dictionary<string, PropertyInfo>();
             custAttribute.MetaData.TargetType.GetProperties().Each(m => properties.Add(m.Name, m));
             for (int i = 0; i < table.Rows.Count; i++)
             {

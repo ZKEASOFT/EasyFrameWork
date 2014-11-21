@@ -17,8 +17,8 @@ namespace Easy.RepositoryPattern
         }
         public RepositoryBase()
         {
-            string dataBase = System.Configuration.ConfigurationManager.AppSettings["DataBase"];
-            var con = System.Configuration.ConfigurationManager.ConnectionStrings["Easy"];
+            string dataBase = System.Configuration.ConfigurationManager.AppSettings[DataBasic.DataBaseAppSetingKey];
+            var con = System.Configuration.ConfigurationManager.ConnectionStrings[DataBasic.ConnectionKey];
             string connString = string.Empty;
             if (con != null)
             {
@@ -28,17 +28,17 @@ namespace Easy.RepositoryPattern
             {
                 connString = System.Configuration.ConfigurationManager.ConnectionStrings[0].ConnectionString;
             }
-            if (dataBase == "Ace")
+            if (dataBase == DataBasic.Ace)
             {
                 DB = new Access(connString);
                 (DB as Access).DbType = Access.DdTypes.Ace;
             }
-            else if (dataBase == "Jet")
+            else if (dataBase == DataBasic.Jet)
             {
                 DB = new Access(connString);
                 (DB as Access).DbType = Access.DdTypes.JET;
             }
-            else if (dataBase == "SQL")
+            else if (dataBase == DataBasic.SQL)
             {
                 DB = new SQL(connString);
             }

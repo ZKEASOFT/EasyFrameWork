@@ -138,7 +138,10 @@ namespace Easy.MetaData
                         System.Attribute.GetCustomAttribute(targetType, typeof(DataConfigureAttribute)) as
                             DataConfigureAttribute;
                 });
-            attribute.GetHtmlTags(true).ForEach(m => m.ResetValue());
+            if (attribute != null)
+            {
+                attribute.GetHtmlTags(true).ForEach(m => m.ResetValue());
+            }
             return attribute;
         }
         public static DataConfigureAttribute GetAttribute(Type type)
@@ -154,7 +157,7 @@ namespace Easy.MetaData
             if (attribute != null)
             {
                 attribute.GetHtmlTags(true).ForEach(m => m.ResetValue());
-            }            
+            }
             return attribute;
         }
     }

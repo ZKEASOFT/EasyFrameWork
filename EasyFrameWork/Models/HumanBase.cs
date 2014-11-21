@@ -26,7 +26,7 @@ namespace Easy.Models
         /// <summary>
         /// 年龄
         /// </summary>
-        public int? Age { get; set; }
+        public int? Age { get { return Birthday.HasValue ? (DateTime.Now.Year - Birthday.Value.Year) : 0; } }
         /// <summary>
         /// 出生日期
         /// </summary>
@@ -75,9 +75,5 @@ namespace Easy.Models
         /// QQ
         /// </summary>
         public string QQ { get; set; }
-        /// <summary>
-        /// MSN
-        /// </summary>
-        public string MSN { get; set; }
     }
 }

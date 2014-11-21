@@ -1,4 +1,5 @@
-﻿using Easy.MetaData;
+﻿using System.Data;
+using Easy.MetaData;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,6 +18,7 @@ namespace Easy.Data
             this.IsIncreasePrimaryKey = false;
             this.PropertyName = propertyName;
             this.ColumnName = PropertyName;
+            this.StringLength = 255;
         }
         /// <summary>
         /// 是否是主键
@@ -56,6 +58,9 @@ namespace Easy.Data
         /// 关联表别名
         /// </summary>
         public string TableAlias { get; set; }
+        public DbType ColumnType { get; set; }
+
+        public int StringLength { get; set; }
     }
 
     public class PropertyDataInfoHelper
@@ -164,6 +169,17 @@ namespace Easy.Data
                 Insert(false);
                 Update(false);
             }
+            return this;
+        }
+
+        public PropertyDataInfoHelper SetDbType(DbType dbType)
+        {
+            _DataConig.ColumnType = dbType;
+            return this;
+        }
+        public PropertyDataInfoHelper SetLength(int length)
+        {
+            _DataConig.StringLength = length;
             return this;
         }
     }

@@ -19,6 +19,7 @@ namespace Easy.Data
         /// 当前页，索引从0开始。
         /// </summary>
         public int PageIndex { get; set; }
+        public int PageIndexReal { get { return PageIndex + 1; } }
         /// <summary>
         /// 分页大小
         /// </summary>
