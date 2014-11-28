@@ -12,6 +12,7 @@ namespace Easy.Web.CMS.Page
     [DataConfigure(typeof(PageBaseMetaData))]
     public class PageEntity : EditorEntity
     {
+        public string ID { get; set; }
         public string ParentId { get; set; }
         public string Url { get; set; }
         string _PageUrl;
@@ -35,8 +36,7 @@ namespace Easy.Web.CMS.Page
         public string MetaDescription { get; set; }
         public string Script { get; set; }
         public string Style { get; set; }
-
-        public string ID { get; set; }
+        public bool HomePage { get; set; }
 
         public DateTime? PublishDate { get; set; }
         public bool IsPublish { get; set; }
