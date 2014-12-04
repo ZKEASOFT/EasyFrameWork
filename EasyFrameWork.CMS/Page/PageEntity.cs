@@ -36,7 +36,7 @@ namespace Easy.Web.CMS.Page
         public string MetaDescription { get; set; }
         public string Script { get; set; }
         public string Style { get; set; }
-        public bool HomePage { get; set; }
+        public bool IsHomePage { get; set; }
 
         public DateTime? PublishDate { get; set; }
         public bool IsPublish { get; set; }
