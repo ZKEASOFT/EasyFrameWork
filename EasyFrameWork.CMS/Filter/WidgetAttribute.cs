@@ -36,12 +36,7 @@ namespace Easy.Web.CMS.Filter
             IEnumerable<PageEntity> pages = pageService.Get(filter);
             if (!pages.Any() && path == "/")
             {
-                var homePage = pageService.Get(new DataFilter().Where("ParentId", OperatorType.Equal, "#").Where("HomePage=true"));
-                if (homePage.Any())
-                {
-                    filterContext.Result = new RedirectResult(homePage.First().Url);
-                    return;
-                }
+                pages = pageService.Get(new DataFilter().Where("ParentId", OperatorType.Equal, "#").Where("IsHomePage=true"));
             }
             if (pages.Any())
             {
