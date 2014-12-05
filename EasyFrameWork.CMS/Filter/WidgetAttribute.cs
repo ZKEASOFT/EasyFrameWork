@@ -36,7 +36,7 @@ namespace Easy.Web.CMS.Filter
             IEnumerable<PageEntity> pages = pageService.Get(filter);
             if (!pages.Any() && path == "/")
             {
-                pages = pageService.Get(new DataFilter().Where("ParentId", OperatorType.Equal, "#").Where("IsHomePage=true"));
+                pages = pageService.Get(new DataFilter().Where("ParentId", OperatorType.Equal, "#").Where("IsHomePage=true"));                
             }
             if (pages.Any())
             {

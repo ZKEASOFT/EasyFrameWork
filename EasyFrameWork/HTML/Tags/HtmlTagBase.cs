@@ -161,7 +161,7 @@ namespace Easy.HTML.Tags
                             check = false;
                         else check = Convert.ToBoolean(val);
                         builder.AppendFormat(" {0} ", check ? "checked=\"checked\"" : "");
-                        builder.AppendFormat(" value=\"{0}\" ", check ? "true" : "false");
+                        builder.Append(" value=\"true\" ");
                         break;
                     }
             }
