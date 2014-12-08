@@ -44,10 +44,10 @@ namespace Easy.Web.CMS.Layout
             this.Update(item, new Data.DataFilter(new List<string> { "ContainerClass" }).Where("ID", OperatorType.Equal, item.ID));
             if (item.Zones != null)
             {
-                ZoneService zoneService = new ZoneService();
+                var zoneService = new ZoneService();
                 var zones = zoneService.Get(new Data.DataFilter().Where<ZoneEntity>(m => m.LayoutId, OperatorType.Equal, item.ID));
 
-                item.Zones.Where(m => !zones.Any(n => n.ID == m.ID)).Each(m =>
+                item.Zones.Where(m => zones.All(n => n.ID != m.ID)).Each(m =>
                 {
                     m.LayoutId = item.ID;
                     zoneService.Add(m);
@@ -57,14 +57,11 @@ namespace Easy.Web.CMS.Layout
                     m.LayoutId = item.ID;
                     zoneService.Update(m);
                 });
-                zones.Where(m => !item.Zones.Any(n => n.ID == m.ID)).Each(m =>
-                {
-                    zoneService.Delete(m.ID);
-                });
+                zones.Where(m => item.Zones.All(n => n.ID != m.ID)).Each(m => zoneService.Delete(m.ID));
             }
             if (item.Html != null)
             {
-                LayoutHtmlService layoutHtmlService = new LayoutHtmlService();
+                var layoutHtmlService = new LayoutHtmlService();
                 layoutHtmlService.Delete(new Data.DataFilter().Where<LayoutHtml>(m => m.LayoutId, OperatorType.Equal, item.ID));
                 item.Html.Each(m =>
                 {
