@@ -18,6 +18,13 @@ namespace Easy.HTML.Grid
         NameValueCollection _form;
         private Func<HtmlTagBase, Dictionary<string, string>> _dataSource;
 
+        Dictionary<string, Dictionary<string, string>> _options = new Dictionary<string, Dictionary<string, string>>();
+        public Dictionary<string, Dictionary<string, string>> DropDownOptions
+        {
+            get { return _options; }
+            set { _options = value; }
+        }
+
         public GridData(NameValueCollection form)
         {
             this._form = form;
@@ -135,13 +142,23 @@ namespace Easy.HTML.Grid
                     }
                 case Easy.HTML.HTMLEnumerate.HTMLTagTypes.DropDownList:
                     {
-                        Data = (Tag as DropDownListHtmlTag).GetOptions();
+                        var dropTag = Tag as DropDownListHtmlTag;
+                        if (dropTag.SourceType == SourceType.ViewData && DropDownOptions.ContainsKey(Tag.Name))
+                        {
+                            dropTag.DataSource(DropDownOptions[Tag.Name]);
+                        }
+                        Data = dropTag.GetOptions();
                         DataType = "Select";
                         break;
                     }
                 case Easy.HTML.HTMLEnumerate.HTMLTagTypes.MutiSelect:
                     {
-                        Data = (Tag as MutiSelectHtmlTag).GetOptions();
+                        var muliTag = Tag as MutiSelectHtmlTag;
+                        if (muliTag.SourceType == SourceType.ViewData && DropDownOptions.ContainsKey(Tag.Name))
+                        {
+                            muliTag.DataSource(DropDownOptions[Tag.Name]);
+                        }
+                        Data = muliTag.GetOptions();
                         DataType = "Select";
                         break;
                     }

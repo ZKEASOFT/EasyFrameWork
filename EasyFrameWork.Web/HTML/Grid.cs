@@ -6,7 +6,10 @@ using System.Threading.Tasks;
 using System.Web.Mvc;
 using System.Web.Routing;
 using System.Web.UI;
+using Easy.Constant;
+using Easy.Extend;
 using Easy.HTML.Grid;
+using Easy.HTML.Tags;
 
 namespace Easy.Web.HTML
 {
@@ -24,6 +27,26 @@ namespace Easy.Web.HTML
             delete = controller.Url.Action("Delete");
             base.DataSource(getList);
             base.DeleteUrl(delete);
+
+            var configAttribute = Easy.MetaData.DataConfigureAttribute.GetAttribute<T>();
+            if (configAttribute != null)
+            {
+                configAttribute.GetHtmlTags(false).Each(m =>
+                {
+                    if (!this.DropDownOptions.ContainsKey(m.Name) &&
+                        m is DropDownListHtmlTag &&
+                        (m as DropDownListHtmlTag).SourceType == SourceType.ViewData &&
+                        viewContex.ViewData.ContainsKey((m as DropDownListHtmlTag).SourceKey))
+                    {
+                        var option = viewContex.ViewData[(m as DropDownListHtmlTag).SourceKey] as Dictionary<string, string>;
+                        if (option != null)
+                        {
+                            this.DropDownOptions.Add(m.Name, option);
+                        }
+                    }
+
+                });
+            }
         }
         public override EasyGrid<T> DataSource(string url)
         {
@@ -72,6 +95,7 @@ namespace Easy.Web.HTML
 
         public override string ToString()
         {
+
             using (var writer = new HtmlTextWriter(_viewContex.Writer))
             {
                 writer.Write(base.ToString());

@@ -337,6 +337,16 @@ namespace Easy.HTML.Tags
         {
             return base.SetTemplate(template) as DropDownListHtmlTag;
         }
+
         #endregion
+
+        public override void ResetValue()
+        {
+            base.ResetValue();
+            if (this.SourceType == SourceType.ViewData && this._data != null)
+            {
+                this._data.Clear();
+            }
+        }
     }
 }

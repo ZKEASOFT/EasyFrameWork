@@ -44,6 +44,12 @@ namespace Easy.HTML.Grid
         string deleteUrl;
         GridColumn columnsTemplate = new GridColumn();
         Dictionary<string, int> orderBy = new Dictionary<string, int>();
+        Dictionary<string, Dictionary<string, string>> _options = new Dictionary<string, Dictionary<string, string>>();
+        public Dictionary<string, Dictionary<string, string>> DropDownOptions
+        {
+            get { return _options; }
+            set { _options = value; }
+        }
         private string toolBarSelector;
         /// <summary>
         /// 容器名称
@@ -239,7 +245,8 @@ namespace Easy.HTML.Grid
             {
                 builder.AppendFormat(".SetDeleteUrl('{0}')", this.deleteUrl);
             }
-            builder.AppendFormat(".SetModel({0})", new GridData(null).GetHtmlModelString<T>());
+            var grid = new GridData(null) { DropDownOptions = DropDownOptions };
+            builder.AppendFormat(".SetModel({0})", grid.GetHtmlModelString<T>());
             builder.Append(".Show();});</script>");
 
             return builder.ToString();

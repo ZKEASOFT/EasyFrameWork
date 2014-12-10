@@ -1,4 +1,6 @@
-﻿using Easy.Data;
+﻿using System.Reflection;
+using Easy.Data;
+using Easy.Extend;
 using Easy.HTML.Grid;
 using Easy.Models;
 using Easy.RepositoryPattern;
@@ -75,14 +77,27 @@ namespace Easy.Web.Controller
         {
             this.Service = service;
         }
+
+        protected void QueryStringBindToEntity(T entity)
+        {
+            Type t = typeof(T);
+            t.GetProperties().Each(m =>
+            {
+                if (m.CanWrite && Request.QueryString.AllKeys.Contains(m.Name))
+                {
+                    Easy.Reflection.ClassAction.SetPropertyValue(entity, m.Name, Request.QueryString[m.Name]);
+                }
+            });
+
+        }
         public virtual ActionResult Index(ParamsContext context)
         {
             return View();
         }
         public virtual ActionResult Create(ParamsContext context)
         {
-            T entity = Activator.CreateInstance<T>();
-            Easy.Reflection.ClassAction.CopyProperty(context, entity);
+            var entity = Activator.CreateInstance<T>();
+            QueryStringBindToEntity(entity);
             entity.Status = (int)RecordStatus.Active;
             ViewBag.Title = "添加";
             return View(entity);
@@ -172,7 +187,9 @@ namespace Easy.Web.Controller
         {
             GridData data = new GridData(Request.Form, (tag) =>
             {
-                if (tag is DropDownListHtmlTag)
+                if (tag is DropDownListHtmlTag &&
+                    (tag as DropDownListHtmlTag).SourceType == SourceType.ViewData &&
+                    ViewData.ContainsKey((tag as DropDownListHtmlTag).SourceKey))
                 {
                     return ViewData[(tag as DropDownListHtmlTag).SourceKey] as Dictionary<string, string>;
                 }

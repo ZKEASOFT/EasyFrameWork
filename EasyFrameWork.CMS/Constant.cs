@@ -10,6 +10,7 @@ namespace Easy.Web.CMS
         public const string Zones = "ViewDataKey_Zones";
         public const string Layouts = "ViewDataKey_Layouts";
         public const string ArticleCategory = "ViewDataKey_ArticleType";
+        public const string ProductCategory = "ViewDataKey_ProductCategory";
     }
     public class ReView
     {

@@ -248,7 +248,7 @@ namespace Easy.HTML.Tags
             return this.ToHtmlString(widthLabel);
         }
 
-        public void ResetValue()
+        public virtual void ResetValue()
         {
             this.Value = this.DefaultValue == null ? ((this.DataType.IsClass || this.DataType.IsInterface || this.DataType.IsAbstract) ? null : Activator.CreateInstance(this.DataType)) : this.DefaultValue;
         }
