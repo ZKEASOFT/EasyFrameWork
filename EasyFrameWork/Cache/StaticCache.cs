@@ -67,7 +67,7 @@ namespace Easy.Cache
                 else
                 {
                     var signal = new Signal(key);
-                    T result = source(signal);
+                    T result = source.Invoke(signal);
                     Cache.Add(key, new CacheObject(result, signal.AutoRemove));
                     return result;
                 }
