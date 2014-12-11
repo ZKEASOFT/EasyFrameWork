@@ -22,7 +22,7 @@ namespace Easy.Modules.SystemSetting
         }
         public virtual void Update(SystemSettingBase setting)
         {
-            new Signal().Do(SignalSystemSettingUpdate);
+            new Signal().Trigger(SignalSystemSettingUpdate);
             rep.Update(setting);
         }
     }

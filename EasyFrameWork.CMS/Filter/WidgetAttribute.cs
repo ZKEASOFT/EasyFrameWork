@@ -36,7 +36,7 @@ namespace Easy.Web.CMS.Filter
             IEnumerable<PageEntity> pages = pageService.Get(filter);
             if (!pages.Any() && path == "/")
             {
-                pages = pageService.Get(new DataFilter().Where("ParentId", OperatorType.Equal, "#").Where("IsHomePage=true"));                
+                pages = pageService.Get(new DataFilter().Where("ParentId", OperatorType.Equal, "#").Where("IsHomePage=true"));
             }
             if (pages.Any())
             {
@@ -45,9 +45,8 @@ namespace Easy.Web.CMS.Filter
                 LayoutEntity layout = layoutService.Get(page.LayoutId);
                 layout.Page = page;
                 var widgetService = new WidgetService();
-                IEnumerable<WidgetBase> widgets = widgetService.Get(new Data.DataFilter().Where("PageID", OperatorType.Equal, page.ID));
-
-                widgets.Each(m =>
+                IEnumerable<WidgetBase> widgets = widgetService.Get(new DataFilter().Where("PageID", OperatorType.Equal, page.ID));
+                Action<WidgetBase> processWidget = m =>
                 {
                     var partDriver = Loader.CreateInstance<IWidgetPartDriver>(m.AssemblyName, m.ServiceTypeName);
                     WidgetPart part = partDriver.Display(partDriver.GetWidget(m), filterContext.HttpContext);
@@ -60,24 +59,12 @@ namespace Easy.Web.CMS.Filter
                         var partCollection = new WidgetCollection { part };
                         zones.Add(part.Widget.ZoneID, partCollection);
                     }
-                });
+                };
+                widgets.Each(processWidget);
 
-                IEnumerable<WidgetBase> Layoutwidgets = widgetService.Get(new Data.DataFilter().Where("LayoutID", OperatorType.Equal, page.LayoutId));
+                IEnumerable<WidgetBase> Layoutwidgets = widgetService.Get(new DataFilter().Where("LayoutID", OperatorType.Equal, page.LayoutId));
 
-                Layoutwidgets.Each(m =>
-                {
-                    var partDriver = Loader.CreateInstance<IWidgetPartDriver>(m.AssemblyName, m.ServiceTypeName);
-                    WidgetPart part = partDriver.Display(partDriver.GetWidget(m), filterContext.HttpContext);
-                    if (zones.ContainsKey(part.Widget.ZoneID))
-                    {
-                        zones[part.Widget.ZoneID].Add(part);
-                    }
-                    else
-                    {
-                        var partCollection = new WidgetCollection { part };
-                        zones.Add(part.Widget.ZoneID, partCollection);
-                    }
-                });
+                Layoutwidgets.Each(processWidget);
                 layout.ZoneWidgets = zones;
                 var viewResult = (filterContext.Result as ViewResult);
                 if (viewResult != null)

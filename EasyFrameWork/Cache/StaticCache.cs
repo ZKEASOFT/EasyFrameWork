@@ -138,7 +138,7 @@ namespace Easy.Cache
             }
         }
 
-        public void Do(string signal)
+        public void Trigger(string signal)
         {
             lock (SignalRela)
             {

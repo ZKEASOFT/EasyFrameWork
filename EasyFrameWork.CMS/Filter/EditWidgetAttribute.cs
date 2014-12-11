@@ -32,8 +32,7 @@ namespace Easy.Web.CMS.Filter
                 layout.Page = page;
                 WidgetService widgetService = new WidgetService();
                 IEnumerable<WidgetBase> widgets = widgetService.Get(new DataFilter().Where<WidgetBase>(m => m.PageID, OperatorType.Equal, page.ID));
-
-                widgets.Each(m =>
+                Action<WidgetBase> processWidget = m =>
                 {
                     IWidgetPartDriver partDriver = Loader.CreateInstance<IWidgetPartDriver>(m.AssemblyName, m.ServiceTypeName);
                     WidgetPart part = partDriver.Display(partDriver.GetWidget(m), filterContext.HttpContext);
@@ -47,24 +46,12 @@ namespace Easy.Web.CMS.Filter
                         partCollection.Add(part);
                         zones.Add(part.Widget.ZoneID, partCollection);
                     }
-                });
+                };
+                widgets.Each(processWidget);
 
                 IEnumerable<WidgetBase> Layoutwidgets = widgetService.Get(new Data.DataFilter().Where<WidgetBase>(m => m.LayoutID, OperatorType.Equal, page.LayoutId));
 
-                Layoutwidgets.Each(m =>
-                {
-                    var partDriver = Loader.CreateInstance<IWidgetPartDriver>(m.AssemblyName, m.ServiceTypeName);
-                    WidgetPart part = partDriver.Display(partDriver.GetWidget(m), filterContext.HttpContext);
-                    if (zones.ContainsKey(part.Widget.ZoneID))
-                    {
-                        zones[part.Widget.ZoneID].Add(part);
-                    }
-                    else
-                    {
-                        var partCollection = new WidgetCollection { part };
-                        zones.Add(part.Widget.ZoneID, partCollection);
-                    }
-                });
+                Layoutwidgets.Each(processWidget);
 
                 layout.ZoneWidgets = zones;
                 ViewResult viewResult = (filterContext.Result as ViewResult);

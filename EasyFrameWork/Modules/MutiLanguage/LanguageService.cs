@@ -28,13 +28,13 @@ namespace Easy.Modules.MutiLanguage
 
         public override bool Update(LanguageEntity item, DataFilter filter)
         {
-            new Signal().Do(SignalLanguageUpdate);
+            new Signal().Trigger(SignalLanguageUpdate);
             return base.Update(item, filter);
         }
 
         public override bool Update(LanguageEntity item, params object[] primaryKeys)
         {
-            new Signal().Do(SignalLanguageUpdate);
+            new Signal().Trigger(SignalLanguageUpdate);
             return base.Update(item, primaryKeys);
         }
     }
