@@ -33,26 +33,26 @@ namespace Easy.Web.CMS.Zone
         }
         public override int Delete(Data.DataFilter filter)
         {
-            var deletes = this.Get(filter).ToList(m => m.ID);
-            if (deletes.Any())
-            {
-                Widget.WidgetService widgetService = new Widget.WidgetService();
-                var widgets = widgetService.Get(new DataFilter().Where("ZoneId", OperatorType.In, deletes));
-                widgets.Each(m =>
-                {
-                    m.CreateServiceInstance().DeleteWidget(m.ID);
-                });
-            }
+            //var deletes = this.Get(filter).ToList(m => m.ID);
+            //if (deletes.Any())
+            //{
+            //    Widget.WidgetService widgetService = new Widget.WidgetService();
+            //    var widgets = widgetService.Get(new DataFilter().Where("ZoneId", OperatorType.In, deletes));
+            //    widgets.Each(m =>
+            //    {
+            //        m.CreateServiceInstance().DeleteWidget(m.ID);
+            //    });
+            //}
             return base.Delete(filter);
         }
         public override int Delete(params object[] primaryKeys)
         {
-            Widget.WidgetService widgetService = new Widget.WidgetService();
-            var widgets = widgetService.Get(new DataFilter().Where("ZoneId", OperatorType.Equal, primaryKeys[0]));
-            widgets.Each(m =>
-            {
-                m.CreateServiceInstance().DeleteWidget(m.ID);
-            });
+            //Widget.WidgetService widgetService = new Widget.WidgetService();
+            //var widgets = widgetService.Get(new DataFilter().Where("ZoneId", OperatorType.Equal, primaryKeys[0]));
+            //widgets.Each(m =>
+            //{
+            //    m.CreateServiceInstance().DeleteWidget(m.ID);
+            //});
             return base.Delete(primaryKeys);
         }
     }

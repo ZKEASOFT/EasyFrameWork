@@ -27,13 +27,13 @@ namespace Easy.Web.CMS.Page
             var deletes = this.Get(filter).ToList(m => m.ID);
             if (deletes.Any() && this.Get(new DataFilter().Where("ParentId", OperatorType.In, deletes)).Any())
             {
-                Widget.WidgetService widgetService = new Widget.WidgetService();
-                var widgets = widgetService.Get(new DataFilter().Where("PageID", OperatorType.In, deletes));
-                widgets.Each(m =>
-                {
-                    m.CreateServiceInstance().DeleteWidget(m.ID);
-                });
                 this.Delete(new DataFilter().Where("ParentId", OperatorType.In, deletes));
+            }
+            if (deletes.Any())
+            {
+                var widgetService = new Widget.WidgetService();
+                var widgets = widgetService.Get(new DataFilter().Where("PageID", OperatorType.In, deletes));
+                widgets.Each(m => m.CreateServiceInstance().DeleteWidget(m.ID));
             }
             return base.Delete(filter);
         }
@@ -42,12 +42,9 @@ namespace Easy.Web.CMS.Page
             PageEntity page = Get(primaryKeys);
             this.Delete(new DataFilter().Where("ParentId", OperatorType.Equal, page.ID));
 
-            Widget.WidgetService widgetService = new Widget.WidgetService();
+            var widgetService = new Widget.WidgetService();
             var widgets = widgetService.Get(new DataFilter().Where("PageID", OperatorType.Equal, page.ID));
-            widgets.Each(m =>
-            {
-                m.CreateServiceInstance().DeleteWidget(m.ID);
-            });
+            widgets.Each(m => m.CreateServiceInstance().DeleteWidget(m.ID));
             return base.Delete(primaryKeys);
         }
 

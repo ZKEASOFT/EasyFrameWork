@@ -515,6 +515,10 @@ namespace Easy.Data.DataBase
                 builder.Append(" WHERE ");
                 builder.Append(condition);
             }
+            if (keyValue.Count == 0)
+            {
+                return false;
+            }
             foreach (var paVal in filter.GetParameterValues())
             {
                 keyValue.Add(paVal);
