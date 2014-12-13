@@ -137,7 +137,7 @@ namespace Easy.HTML.Tags
             {
                 this.DisplayName = this.Name;
             }
-            string val = this.Value == null ? this.DataType.IsClass ? "" : Activator.CreateInstance(this.DataType).ToString() : this.Value.ToString().HtmlEncode();
+            string val = this.Value == null ? "" : this.Value.ToString().HtmlEncode();
             StringBuilder builder = new StringBuilder();
             if (widthLabel && this.TagType != HTMLEnumerate.HTMLTagTypes.Hidden && !this.IsHidden && !this.IsIgnore)
             {
