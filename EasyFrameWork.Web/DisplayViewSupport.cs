@@ -16,5 +16,12 @@ namespace Easy.Web
                 context.GetOverriddenUserAgent().IndexOf("android", StringComparison.OrdinalIgnoreCase) >= 0)
             });
         }
+        public static void SupportIEView()
+        {
+            DisplayModeProvider.Instance.Modes.Insert(0, new DefaultDisplayMode("ie")
+            {
+                ContextCondition = (context => context.GetOverriddenUserAgent().IndexOf("msie", StringComparison.OrdinalIgnoreCase) >= 0)
+            });
+        }
     }
 }

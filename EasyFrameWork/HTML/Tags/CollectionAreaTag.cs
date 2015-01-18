@@ -38,7 +38,7 @@ namespace Easy.HTML.Tags
                     builder.Append("<div class='row item'>");
                     attribute.GetHtmlTags(false).Each(m =>
                     {
-                        builder.Append("<div class='col-md-6'>");
+                        builder.Append("<div class='col-lg-3 col-md-4 col-sm-6'>");
                         builder.Append("<div class='input-group'>");
                         m.NamePreFix = this.Name + "[{0}].";
                         builder.AppendLine(m.ToString(widthLabel));
@@ -66,7 +66,7 @@ namespace Easy.HTML.Tags
                             builder.Append("<div class='row item'>");
                             attribute.GetHtmlTags(false).Each(m =>
                             {
-                                builder.Append("<div class='col-md-6'>");
+                                builder.Append("<div class='col-lg-3 col-md-4 col-sm-6'>");
                                 builder.Append("<div class='input-group'>");
                                 m.NamePreFix = this.Name + "[{0}].".FormatWith(index);
                                 m.SetValue(Easy.Reflection.ClassAction.GetObjPropertyValue(item, m.Name));

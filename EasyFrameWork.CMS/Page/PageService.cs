@@ -5,6 +5,7 @@ using System.Text;
 using Easy.Data;
 using Easy.RepositoryPattern;
 using Easy.Extend;
+using Easy.Constant;
 
 namespace Easy.Web.CMS.Page
 {
@@ -85,6 +86,25 @@ namespace Easy.Web.CMS.Page
                 });
             }
             this.Update(page);
+        }
+
+        public PageEntity GetByPath(string path, bool publish)
+        {
+            if (path != "/" && path.EndsWith("/"))
+            {
+                path = path.Substring(0, path.Length - 1);
+            }
+            var filter = new Data.DataFilter().Where("Url", OperatorType.Equal, "~" + path);
+            if (publish)
+            {
+                filter.Where("Status", OperatorType.Equal, (int)RecordStatus.Active).Where("IsPublish=true");
+            }
+            IEnumerable<PageEntity> pages = Get(filter);
+            if (!pages.Any() && path == "/")
+            {
+                pages = Get(new DataFilter().Where("ParentId", OperatorType.Equal, "#").Where("IsHomePage=true").Where("IsPublish=true"));
+            }
+            return pages.FirstOrDefault();
         }
     }
 }

@@ -20,10 +20,23 @@ namespace Easy.Data
         /// </summary>
         public int PageIndex { get; set; }
         public int PageIndexReal { get { return PageIndex + 1; } }
+
+        int _pageSize = 0;
         /// <summary>
         /// 分页大小
         /// </summary>
-        public int PageSize { get; set; }
+        public int PageSize
+        {
+            get { return _pageSize; }
+            set
+            {
+                _pageSize = value;
+                if (_pageSize <= 0)
+                {
+                    _pageSize = 20;
+                }
+            }
+        }
         /// <summary>
         /// 总页数
         /// </summary>

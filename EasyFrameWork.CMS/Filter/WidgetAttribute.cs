@@ -10,6 +10,7 @@ using Easy.Web.CMS.Page;
 using Easy.Web.CMS.Layout;
 using Easy.Constant;
 using Easy.Extend;
+using System.Net;
 
 namespace Easy.Web.CMS.Filter
 {
@@ -22,25 +23,21 @@ namespace Easy.Web.CMS.Filter
 
             //Page
             string path = filterContext.RequestContext.HttpContext.Request.Path;
-            if (path != "/" && path.EndsWith("/"))
+            if (path.EndsWith("/") && path.Length > 1)
             {
                 path = path.Substring(0, path.Length - 1);
+                //filterContext.HttpContext.Response.Redirect(path);
+                filterContext.Result = new RedirectResult(path);
+                return;
             }
-            var pageService = new PageService();
-
-            var filter = new Data.DataFilter().Where("Url", OperatorType.Equal, "~" + path);
-            if (filterContext.RequestContext.HttpContext.Request.QueryString[ReView.QueryKey] != ReView.Review)
+            bool publish = true;
+            if (filterContext.RequestContext.HttpContext.Request.QueryString[ReView.QueryKey] == ReView.Review)
             {
-                filter.Where("Status", OperatorType.Equal, (int)RecordStatus.Active).Where("IsPublish=true");
+                publish = false;
             }
-            IEnumerable<PageEntity> pages = pageService.Get(filter);
-            if (!pages.Any() && path == "/")
+            var page = new PageService().GetByPath(path, publish);
+            if (page != null)
             {
-                pages = pageService.Get(new DataFilter().Where("ParentId", OperatorType.Equal, "#").Where("IsHomePage=true"));
-            }
-            if (pages.Any())
-            {
-                PageEntity page = pages.First();
                 var layoutService = new LayoutService();
                 LayoutEntity layout = layoutService.Get(page.LayoutId);
                 layout.Page = page;
