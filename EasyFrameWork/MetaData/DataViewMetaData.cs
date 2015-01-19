@@ -161,18 +161,18 @@ namespace Easy.MetaData
                     return _primarykey;
                 else
                 {
-                    foreach (var item in _porpertyDataConfig)
+                    _primarykey = new Dictionary<int, string>();
+                    lock (_primarykey)
                     {
-                        if (item.Value.IsPrimaryKey)
+                        foreach (var item in _porpertyDataConfig)
                         {
-                            if (_primarykey == null)
+                            if (item.Value.IsPrimaryKey)
                             {
-                                _primarykey = new Dictionary<int, string>();
+                                _primarykey.Add(item.Value.PrimaryKeyIndex, item.Value.ColumnName);
                             }
-                            _primarykey.Add(item.Value.PrimaryKeyIndex, item.Value.ColumnName);
                         }
-                    }
-                    return _primarykey;
+                        return _primarykey;
+                    }                    
                 }
             }
         }
