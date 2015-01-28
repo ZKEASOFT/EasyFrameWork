@@ -23,6 +23,10 @@ namespace Easy.Cache
             public object Get()
             {
                 LastVisit = DateTime.Now;
+                if (this._obj is ICloneable)
+                {
+                    return (this._obj as ICloneable).Clone();
+                }
                 return this._obj;
             }
         }
