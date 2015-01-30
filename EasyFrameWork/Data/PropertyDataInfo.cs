@@ -146,8 +146,7 @@ namespace Easy.Data
         {
             if (!_dataConig.IsPrimaryKey)
             {
-                _dataConig.PrimaryKeyIndex = _viewMetaData.PrimarykeyCount;
-                _viewMetaData.PrimarykeyCount++;
+                UpdatePrimarykeyCount();
                 _dataConig.IsIncreasePrimaryKey = false;
                 _dataConig.IsPrimaryKey = true;
                 Update(false);
@@ -162,8 +161,7 @@ namespace Easy.Data
         {
             if (!_dataConig.IsPrimaryKey)
             {
-                _dataConig.PrimaryKeyIndex = _viewMetaData.PrimarykeyCount;
-                _viewMetaData.PrimarykeyCount++;
+                UpdatePrimarykeyCount();
                 _dataConig.IsIncreasePrimaryKey = true;
                 _dataConig.IsPrimaryKey = true;
                 Insert(false);
@@ -172,6 +170,14 @@ namespace Easy.Data
             return this;
         }
 
+        private void UpdatePrimarykeyCount()
+        {
+            lock (_viewMetaData)
+            {
+                _dataConig.PrimaryKeyIndex = _viewMetaData.PrimarykeyCount;
+                _viewMetaData.PrimarykeyCount++;
+            }
+        }
         public PropertyDataInfoHelper SetDbType(DbType dbType)
         {
             _dataConig.ColumnType = dbType;
