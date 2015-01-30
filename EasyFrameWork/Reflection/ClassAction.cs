@@ -102,7 +102,7 @@ namespace Easy.Reflection
             {
                 obj = Activator.CreateInstance<T>();
                 var properties = ty.GetProperties();
-                if (properties.Count() > 0)
+                if (properties.Any())
                 {
                     foreach (var item in properties)
                     {
@@ -134,8 +134,8 @@ namespace Easy.Reflection
         {
             if (data == null || data.Rows.Count == 0)
                 return default(T);
-            Type ty = Easy.Loader.GetType<T>();
-            T obj = Easy.Loader.CreateInstance<T>();
+            Type ty = Loader.GetType<T>();
+            var obj = Loader.CreateInstance<T>();
             foreach (var item in columns)
             {
                 if (!data.Columns.Contains(item.Key))
@@ -155,8 +155,7 @@ namespace Easy.Reflection
         {
             if (data == null || data.Rows.Count == 0)
                 return default(T);
-            Type ty = Easy.Loader.GetType<T>();
-            T obj = Easy.Loader.CreateInstance<T>();
+            var obj = Loader.CreateInstance<T>();
             foreach (var item in columns)
             {
                 if (!data.Columns.Contains(item.Key))
@@ -180,8 +179,8 @@ namespace Easy.Reflection
         /// <returns>返回Model对象</returns>
         public static T GetModel<T>(NameValueCollection collection) where T : class
         {
-            Type objType = Easy.Loader.GetType<T>();
-            T obj = Easy.Loader.CreateInstance<T>();
+            Type objType = Loader.GetType<T>();
+            var obj = Loader.CreateInstance<T>();
             var properties = objType.GetProperties();
             foreach (string key in collection.AllKeys)
             {
@@ -224,8 +223,8 @@ namespace Easy.Reflection
         /// <returns>Model对象</returns>
         public static T GetModel<T>(NameValueCollection collection, string replaceKey) where T : class
         {
-            Type objType = Easy.Loader.GetType<T>();
-            T obj = Easy.Loader.CreateInstance<T>();
+            Type objType = Loader.GetType<T>();
+            var obj = Loader.CreateInstance<T>();
             var properties = objType.GetProperties();
             foreach (string key in collection.AllKeys)
             {

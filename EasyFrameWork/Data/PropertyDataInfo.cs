@@ -65,12 +65,12 @@ namespace Easy.Data
 
     public class PropertyDataInfoHelper
     {
-        PropertyDataInfo _DataConig;
-        IDataViewMetaData _ViewMetaData;
-        public PropertyDataInfoHelper(PropertyDataInfo item, IDataViewMetaData ViewMetaData)
+        private readonly PropertyDataInfo _dataConig;
+        private readonly IDataViewMetaData _viewMetaData;
+        public PropertyDataInfoHelper(PropertyDataInfo item, IDataViewMetaData viewMetaData)
         {
-            _DataConig = item;
-            _ViewMetaData = ViewMetaData;
+            _dataConig = item;
+            _viewMetaData = viewMetaData;
         }
         /// <summary>
         /// 完全忽略，增改查都不管
@@ -80,7 +80,7 @@ namespace Easy.Data
         public PropertyDataInfoHelper Ignore(bool? ignore = true)
         {
             bool nore = ignore ?? true;
-            _DataConig.Ignore = nore;
+            _dataConig.Ignore = nore;
             return this;
         }
         /// <summary>
@@ -91,7 +91,7 @@ namespace Easy.Data
         public PropertyDataInfoHelper Update(bool? canUpdate = false)
         {
             bool update = canUpdate ?? false;
-            _DataConig.CanUpdate = update;
+            _dataConig.CanUpdate = update;
             return this;
         }
         /// <summary>
@@ -102,7 +102,7 @@ namespace Easy.Data
         public PropertyDataInfoHelper Insert(bool? canInsert = false)
         {
             bool insert = canInsert ?? false;
-            _DataConig.CanInsert = insert;
+            _dataConig.CanInsert = insert;
             return this;
         }
         /// <summary>
@@ -112,7 +112,7 @@ namespace Easy.Data
         /// <returns></returns>
         public PropertyDataInfoHelper Mapper(string column)
         {
-            _DataConig.ColumnName = column;
+            _dataConig.ColumnName = column;
             return this;
         }
         /// <summary>
@@ -122,8 +122,8 @@ namespace Easy.Data
         /// <returns></returns>
         public PropertyDataInfoHelper Relation(string alias)
         {
-            _DataConig.IsRelation = true;
-            _DataConig.TableAlias = alias;
+            _dataConig.IsRelation = true;
+            _dataConig.TableAlias = alias;
             this.Insert(false);
             this.Update(false);
             return this;
@@ -135,7 +135,7 @@ namespace Easy.Data
         /// <returns></returns>
         public PropertyDataInfoHelper OnSearch(Func<Condition, Condition> fun)
         {
-            _DataConig.Search = fun;
+            _dataConig.Search = fun;
             return this;
         }
         /// <summary>
@@ -144,12 +144,12 @@ namespace Easy.Data
         /// <returns></returns>
         public PropertyDataInfoHelper AsPrimaryKey()
         {
-            if (!_DataConig.IsPrimaryKey)
+            if (!_dataConig.IsPrimaryKey)
             {
-                _DataConig.PrimaryKeyIndex = _ViewMetaData.PrimarykeyCount;
-                _ViewMetaData.PrimarykeyCount++;
-                _DataConig.IsIncreasePrimaryKey = false;
-                _DataConig.IsPrimaryKey = true;
+                _dataConig.PrimaryKeyIndex = _viewMetaData.PrimarykeyCount;
+                _viewMetaData.PrimarykeyCount++;
+                _dataConig.IsIncreasePrimaryKey = false;
+                _dataConig.IsPrimaryKey = true;
                 Update(false);
             }
             return this;
@@ -160,12 +160,12 @@ namespace Easy.Data
         /// <returns></returns>
         public PropertyDataInfoHelper AsIncreasePrimaryKey()
         {
-            if (!_DataConig.IsPrimaryKey)
+            if (!_dataConig.IsPrimaryKey)
             {
-                _DataConig.PrimaryKeyIndex = _ViewMetaData.PrimarykeyCount;
-                _ViewMetaData.PrimarykeyCount++;
-                _DataConig.IsIncreasePrimaryKey = true;
-                _DataConig.IsPrimaryKey = true;
+                _dataConig.PrimaryKeyIndex = _viewMetaData.PrimarykeyCount;
+                _viewMetaData.PrimarykeyCount++;
+                _dataConig.IsIncreasePrimaryKey = true;
+                _dataConig.IsPrimaryKey = true;
                 Insert(false);
                 Update(false);
             }
@@ -174,12 +174,12 @@ namespace Easy.Data
 
         public PropertyDataInfoHelper SetDbType(DbType dbType)
         {
-            _DataConig.ColumnType = dbType;
+            _dataConig.ColumnType = dbType;
             return this;
         }
         public PropertyDataInfoHelper SetLength(int length)
         {
-            _DataConig.StringLength = length;
+            _dataConig.StringLength = length;
             return this;
         }
     }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Common;
 using System.Linq;
 using System.Text;
 using System.Data.SqlClient;
@@ -12,191 +13,42 @@ namespace Easy.Data.DataBase
 
         public SQL()
         {
-            ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["Easy"].ConnectionString;
+            ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings[ConnectionKey].ConnectionString;
         }
 
-        public SQL(string _ConnectionString)
+        public SQL(string connectionString)
         {
-            ConnectionString = _ConnectionString;
+            ConnectionString = connectionString;
         }
 
         public string ConnectionString { get; set; }
 
-        private SqlConnection GetConnection()
+
+        public override DbConnection GetDbConnection()
         {
-            SqlConnection conn = new SqlConnection(ConnectionString);
-            return conn;
+            return new SqlConnection(ConnectionString);
         }
 
 
-        private int ExecCommand(SqlCommand Comm)
+        public override DbDataAdapter GetDbDataAdapter(DbCommand command)
         {
-            Comm.Connection = GetConnection();
-            try
-            {
-                if (Comm.Connection.State != ConnectionState.Open)
-                    Comm.Connection.Open();
-                int cou = Comm.ExecuteNonQuery();
-                if (Comm.Connection.State != ConnectionState.Closed)
-                    Comm.Connection.Close();
-                return cou;
-            }
-            catch (Exception ex)
-            {
-                Logger.Info(Comm.CommandText);
-                Logger.Error(ex);
-                throw ex;
-            }
-            finally
-            {
-                if (Comm.Connection.State != ConnectionState.Closed)
-                    Comm.Connection.Close();
-                Comm.Connection.Dispose();
-                Comm.Dispose();
-            }
+            return new SqlDataAdapter(command as SqlCommand);
         }
 
-        private DataTable GetTable(SqlCommand Comm)
+        public override DbCommand GetDbCommand()
         {
-            Comm.Connection = GetConnection();
-            if (Comm.Connection.State != ConnectionState.Open)
-                Comm.Connection.Open();
-            SqlDataAdapter adapter = new SqlDataAdapter(Comm);
-            try
-            {
-                DataSet ds = new DataSet();
-                adapter.Fill(ds);
-                if (Comm.Connection.State != ConnectionState.Closed)
-                    Comm.Connection.Close();
-                return ds.Tables[0];
-            }
-            catch (Exception ex)
-            {
-                Logger.Info(Comm.CommandText);
-                Logger.Error(ex);
-                throw ex;
-            }
-            finally
-            {
-                if (Comm.Connection.State != ConnectionState.Closed)
-                    Comm.Connection.Close();
-                Comm.Connection.Dispose();
-                Comm.Dispose();
-            }
+            return new SqlCommand();
         }
 
-        public override DataTable GetTalbe(string selectCommand)
+        public override DbCommandBuilder GetDbCommandBuilder(DbDataAdapter adapter)
         {
-            SqlCommand command = new SqlCommand(selectCommand);
-            return this.GetTable(command);
+            return new SqlCommandBuilder(adapter as SqlDataAdapter);
         }
 
-        public override DataTable GetTable(string selectCommand, List<KeyValuePair<string, object>> keyValue)
+        public override DbParameter GetDbParameter(string key, object value)
         {
-            SqlCommand comm = new SqlCommand(selectCommand);
-            foreach (var item in keyValue)
-            {
-                comm.Parameters.Add(new SqlParameter(item.Key, item.Value));
-            }
-            return GetTable(comm);
+            return new SqlParameter(key, value);
         }
-
-        public override object Insert(string tableName, Dictionary<string, object> values)
-        {
-            SqlCommand Comm = new SqlCommand();
-            Comm.Connection = GetConnection();
-            string valuestr = string.Empty;
-            string fielstr = string.Empty;
-            int i = 0;
-            foreach (var item in values)
-            {
-                if (i == 0)
-                {
-                    valuestr += "@" + item.Key;
-                    fielstr += "[" + item.Key + "]";
-                }
-                else
-                {
-                    valuestr += ",@" + item.Key;
-                    fielstr += ",[" + item.Key + "]";
-                }
-                i++;
-            }
-
-
-
-            string comstr = "INSERT INTO [" + tableName + "] (" + fielstr + ") VALUES (" + valuestr + ")";
-            Comm.CommandText = comstr + " SELECT @@IDENTITY";
-            Dictionary<string, string> NewStr = new Dictionary<string, string>();
-            foreach (var itemV in values)
-            {
-                Comm.Parameters.AddWithValue("@" + itemV.Key, itemV.Value);
-            }
-            try
-            {
-                if (Comm.Connection.State != ConnectionState.Open)
-                    Comm.Connection.Open();
-                object cou = Comm.ExecuteScalar();
-                if (Comm.Connection.State != ConnectionState.Closed)
-                    Comm.Connection.Close();
-                return cou;
-            }
-            catch (Exception ex)
-            {
-                Logger.Info(Comm.CommandText);
-                Logger.Error(ex);
-                throw ex;
-            }
-            finally
-            {
-                if (Comm.Connection.State != ConnectionState.Closed)
-                    Comm.Connection.Close();
-                Comm.Connection.Dispose();
-                Comm.Dispose();
-            }
-        }
-
-        public override int Delete(string tableName, string condition, List<KeyValuePair<string, object>> keyValue)
-        {
-            SqlCommand com;
-            if (!string.IsNullOrEmpty(condition))
-            {
-                com = new SqlCommand(string.Format("DELETE TABLE [{0}] WHERE {1}", tableName, condition));
-            }
-            else
-            {
-                com = new SqlCommand(string.Format("DELETE TABLE [{0}]", tableName));
-            }
-            foreach (var item in keyValue)
-            {
-                com.Parameters.Add(new SqlParameter(item.Key, item.Value));
-            }
-            return ExecCommand(com);
-        }
-
-        public override bool Update(string tableName, string parameterString, List<KeyValuePair<string, object>> keyValue)
-        {
-            SqlCommand com = new SqlCommand();
-            com.CommandText = string.Format("UPDATE [{0}] SET {1}", tableName, parameterString);
-            foreach (var item in keyValue)
-            {
-                com.Parameters.Add(new SqlParameter(item.Key, item.Value));
-            }
-            return this.ExecCommand(com) > 0 ? true : false;
-        }
-
-        public override bool UpDateTable(DataTable table, string tableName)
-        {
-            SqlDataAdapter adapter = new SqlDataAdapter(string.Format("SELECT * FROM [{0}]", tableName), GetConnection());
-            SqlCommandBuilder builder = new SqlCommandBuilder(adapter);
-            adapter.InsertCommand = builder.GetInsertCommand();
-            adapter.DeleteCommand = builder.GetDeleteCommand();
-            adapter.UpdateCommand = builder.GetUpdateCommand();
-            int cou = adapter.Update(table);
-            adapter.Dispose();
-            return cou > 0 ? true : false;
-        }
-
         public override List<T> Get<T>(DataFilter filter, Pagination pagin)
         {
             MetaData.DataConfigureAttribute custAttribute = Easy.MetaData.DataConfigureAttribute.GetAttribute<T>();
@@ -255,25 +107,6 @@ namespace Easy.Data.DataBase
 
         }
 
-        public override CustomerSqlHelper CustomerSql(string command)
-        {
-            CustomerSqlHelper customerSql = new CustomerSqlHelper(command, CommandType.Text, this);
-            return customerSql;
-        }
-        public override CustomerSqlHelper StoredProcedures(string storedProcedures)
-        {
-            CustomerSqlHelper customerSql = new CustomerSqlHelper(storedProcedures, CommandType.StoredProcedure, this);
-            return customerSql;
-        }
-        public override int ExecuteNonQuery(string command, CommandType ct, List<KeyValuePair<string, object>> parameter)
-        {
-            SqlCommand sqlcommand = new SqlCommand(command);
-            foreach (var item in parameter)
-            {
-                sqlcommand.Parameters.AddWithValue(item.Key, item.Value);
-            }
-            return this.ExecCommand(sqlcommand);
-        }
 
         public override bool IsExistTable(string tableName)
         {

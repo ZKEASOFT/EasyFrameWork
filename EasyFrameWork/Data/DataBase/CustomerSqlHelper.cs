@@ -3,106 +3,99 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Data;
+using Easy.Extend;
 using Easy.MetaData;
 
 namespace Easy.Data.DataBase
 {
     public class CustomerSqlHelper
     {
-        string command;
-        List<KeyValuePair<string, object>> keyValue;
-        DataBasic DB;
-        CommandType Ct;
-        public CustomerSqlHelper(string command, CommandType ct, DataBasic db)
+        private string _command;
+        private readonly List<KeyValuePair<string, object>> _keyValue;
+        private readonly DataBasic _dataBase;
+        private readonly CommandType _commandType;
+        public CustomerSqlHelper(string command, CommandType commandType, DataBasic db)
         {
-            if (ct == CommandType.StoredProcedure && !command.Contains('['))
+            if (commandType == CommandType.StoredProcedure && !command.Contains('['))
             {
-                this.command = string.Format("[{0}]", command);
+                this._command = string.Format("[{0}]", command);
             }
-            else this.command = command;
-            keyValue = new List<KeyValuePair<string, object>>();
-            this.Ct = ct;
-            this.DB = db;
+            else this._command = command;
+            _keyValue = new List<KeyValuePair<string, object>>();
+            this._commandType = commandType;
+            this._dataBase = db;
         }
         private List<KeyValuePair<string, string>> GetMap<T>()
         {
             DataConfigureAttribute attribute = DataConfigureAttribute.GetAttribute<T>();
-            List<KeyValuePair<string, string>> map = new List<KeyValuePair<string, string>>();
+            var map = new List<KeyValuePair<string, string>>();
             if (attribute != null && attribute.MetaData != null && attribute.MetaData.PropertyDataConfig != null)
             {
-                foreach (var item in attribute.MetaData.PropertyDataConfig)
-                {
-                    map.Add(new KeyValuePair<string, string>(item.Value.ColumnName, item.Key));
-                }
+                attribute.MetaData.PropertyDataConfig.Each(m => map.Add(new KeyValuePair<string, string>(m.Value.ColumnName, m.Key)));
             }
             else
             {
-                var proertyInfoArray = Easy.Loader.GetType<T>().GetProperties();
-                foreach (var item in proertyInfoArray)
-                {
-                    if (item.CanWrite)
-                    {
-                        map.Add(new KeyValuePair<string, string>(item.Name, item.Name));
-                    }
-                }
+                var proertyInfoArray = Loader.GetType<T>().GetProperties();
+                proertyInfoArray.Where(m => m.CanWrite).Each(m => map.Add(new KeyValuePair<string, string>(m.Name, m.Name)));
             }
             return map;
         }
         public CustomerSqlHelper AddParameter(string name, object value)
         {
-            keyValue.Add(new KeyValuePair<string, object>(name, value));
+            _keyValue.Add(new KeyValuePair<string, object>(name, value));
             return this;
         }
         public int ExecuteNonQuery()
         {
-            return DB.ExecuteNonQuery(command, Ct, keyValue);
+            return _dataBase.ExecuteNonQuery(_command, _commandType, _keyValue);
         }
         public T To<T>()
         {
-            if (Ct == CommandType.StoredProcedure)
+            if (_commandType == CommandType.StoredProcedure)
             {
-                command = "EXEC " + command;
+                _command = "EXEC " + _command;
             }
-            DataTable table = DB.GetTable(command, keyValue);
+            DataTable table = _dataBase.GetTable(_command, _keyValue);
             var map = GetMap<T>();
             if (map.Count == 0)
             {
-                return Easy.Reflection.ClassAction.GetModel<T>(table, 0);
+                return Reflection.ClassAction.GetModel<T>(table, 0);
             }
             else
             {
-                return Easy.Reflection.ClassAction.GetModel<T>(table, 0, map);
+                return Reflection.ClassAction.GetModel<T>(table, 0, map);
             }
         }
         public List<T> ToList<T>()
         {
-            if (Ct == CommandType.StoredProcedure)
+            if (_commandType == CommandType.StoredProcedure)
             {
-                command = "EXEC " + command;
+                _command = "EXEC " + _command;
             }
-            DataTable table = DB.GetTable(command, keyValue);
-            List<T> lists = new List<T>();
+            DataTable table = _dataBase.GetTable(_command, _keyValue);
+            var lists = new List<T>();
             var map = GetMap<T>();
             for (int i = 0; i < table.Rows.Count; i++)
             {
-                if (map.Count == 0)
+                if (map.Any())
                 {
-                    lists.Add(Easy.Reflection.ClassAction.GetModel<T>(table, i));
+                    lists.Add(Reflection.ClassAction.GetModel<T>(table, i, map));
                 }
                 else
                 {
-                    lists.Add(Easy.Reflection.ClassAction.GetModel<T>(table, i, map));
+                    lists.Add(Reflection.ClassAction.GetModel<T>(table, i));
                 }
+                
             }
             return lists;
         }
         public DataTable ToDataTable()
         {
-            if (Ct == CommandType.StoredProcedure)
+            if (_commandType == CommandType.StoredProcedure)
             {
-                command = "EXEC " + command;
+                _command = "EXEC " + _command;
             }
-            return DB.GetTable(command, keyValue);
+            return _dataBase.GetTable(_command, _keyValue);
         }
 
     }

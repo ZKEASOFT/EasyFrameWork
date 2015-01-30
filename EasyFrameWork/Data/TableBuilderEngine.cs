@@ -24,20 +24,20 @@ namespace Easy.Data
             }
             if (dataBase == DataBasic.Ace)
             {
-                DB = new Access(connString);
-                (DB as Access).DbType = Access.DdTypes.Ace;
+                DataBase = new Access(connString);
+                (DataBase as Access).DbType = Access.DdTypes.Ace;
             }
             else if (dataBase == DataBasic.Jet)
             {
-                DB = new Access(connString);
-                (DB as Access).DbType = Access.DdTypes.JET;
+                DataBase = new Access(connString);
+                (DataBase as Access).DbType = Access.DdTypes.JET;
             }
             else if (dataBase == DataBasic.SQL)
             {
-                DB = new SQL(connString);
+                DataBase = new SQL(connString);
             }
         }
-        public DataBasic DB
+        public DataBasic DataBase
         {
             get;
             private set;
@@ -50,9 +50,9 @@ namespace Easy.Data
             System.Reflection.PropertyInfo[] propertys = TargeType.GetProperties();
             if (custAttribute != null)
             {
-                if (!DB.IsExistTable(custAttribute.MetaData.Table))
+                if (!DataBase.IsExistTable(custAttribute.MetaData.Table))
                 {
-                    DB.CreateTable<T>();
+                    DataBase.CreateTable<T>();
                 }
                 else
                 {
@@ -77,14 +77,14 @@ namespace Easy.Data
                                 string columnName = string.IsNullOrEmpty(config.ColumnName)
                                     ? config.PropertyName
                                     : config.ColumnName;
-                                if (!DB.IsExistColumn(custAttribute.MetaData.Table, columnName))
+                                if (!DataBase.IsExistColumn(custAttribute.MetaData.Table, columnName))
                                 {
-                                    DB.AddColumn(custAttribute.MetaData.Table, columnName, Common.ConvertToDbType(code),
+                                    DataBase.AddColumn(custAttribute.MetaData.Table, columnName, Common.ConvertToDbType(code),
                                         config.StringLength);
                                 }
                                 else
                                 {
-                                    DB.AlterColumn(custAttribute.MetaData.Table, columnName,
+                                    DataBase.AlterColumn(custAttribute.MetaData.Table, columnName,
                                         Common.ConvertToDbType(code),
                                         config.StringLength);
                                 }
@@ -92,13 +92,13 @@ namespace Easy.Data
                         }
                         else
                         {
-                            if (!DB.IsExistColumn(custAttribute.MetaData.Table, item.Name))
+                            if (!DataBase.IsExistColumn(custAttribute.MetaData.Table, item.Name))
                             {
-                                DB.AddColumn(custAttribute.MetaData.Table, item.Name, Common.ConvertToDbType(code));
+                                DataBase.AddColumn(custAttribute.MetaData.Table, item.Name, Common.ConvertToDbType(code));
                             }
                             else
                             {
-                                DB.AlterColumn(custAttribute.MetaData.Table, item.Name, Common.ConvertToDbType(code));
+                                DataBase.AlterColumn(custAttribute.MetaData.Table, item.Name, Common.ConvertToDbType(code));
                             }
                         }
 
@@ -107,9 +107,9 @@ namespace Easy.Data
             }
             else
             {
-                if (!DB.IsExistTable(TargeType.Name))
+                if (!DataBase.IsExistTable(TargeType.Name))
                 {
-                    DB.CreateTable<T>();
+                    DataBase.CreateTable<T>();
                 }
                 else
                 {
@@ -124,13 +124,13 @@ namespace Easy.Data
                         {
                             code = Type.GetTypeCode(item.PropertyType);
                         }
-                        if (!DB.IsExistColumn(TargeType.Name, item.Name))
+                        if (!DataBase.IsExistColumn(TargeType.Name, item.Name))
                         {
-                            DB.AddColumn(TargeType.Name, item.Name, Common.ConvertToDbType(code));
+                            DataBase.AddColumn(TargeType.Name, item.Name, Common.ConvertToDbType(code));
                         }
                         else
                         {
-                            DB.AlterColumn(TargeType.Name, item.Name, Common.ConvertToDbType(code));
+                            DataBase.AlterColumn(TargeType.Name, item.Name, Common.ConvertToDbType(code));
                         }
                     }
                 }

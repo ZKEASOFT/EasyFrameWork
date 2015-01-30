@@ -15,6 +15,8 @@ namespace Easy.Data
     public class Condition
     {
         readonly string _valueKey;
+        private const string ConditionFormat = " {0} {1} @{2} ";
+        private const string ConditionFormat2 = " [{0}] {1} @{2} ";
         public Condition()
         {
             this.ConditionType = ConditionType.And;
@@ -79,92 +81,44 @@ namespace Easy.Data
             else
             {
                 if (string.IsNullOrEmpty(this.Property)) return string.Empty;
+                string operatorStr = string.Empty;
                 switch (this.OperatorType)
                 {
                     case OperatorType.Equal:
                         {
-                            if (this.Property.Contains("["))
-                            {
-                                builder.AppendFormat(" {0}=@{1} ", this.Property, _valueKey);
-                            }
-                            else
-                            {
-                                builder.AppendFormat(" [{0}]=@{1} ", this.Property, _valueKey);
-                            }
+                            operatorStr = "=";
                             break;
                         }
                     case OperatorType.GreaterThan:
                         {
-                            if (this.Property.Contains("["))
-                            {
-                                builder.AppendFormat(" {0}>@{1} ", this.Property, _valueKey);
-                            }
-                            else
-                            {
-                                builder.AppendFormat(" [{0}]>@{1} ", this.Property, _valueKey);
-                            }
+                            operatorStr = ">";
                             break;
                         }
                     case OperatorType.GreaterThanOrEqualTo:
                         {
-                            if (this.Property.Contains("["))
-                            {
-                                builder.AppendFormat(" {0}>=@{1} ", this.Property, _valueKey);
-                            }
-                            else
-                            {
-                                builder.AppendFormat(" [{0}]>=@{1} ", this.Property, _valueKey);
-                            }
+                            operatorStr = ">=";
                             break;
                         }
                     case OperatorType.LessThan:
                         {
-                            if (this.Property.Contains("["))
-                            {
-                                builder.AppendFormat(" {0}<@{1} ", this.Property, _valueKey);
-                            }
-                            else
-                            {
-                                builder.AppendFormat(" [{0}]<@{1} ", this.Property, _valueKey);
-                            }
+                            operatorStr = "<";
                             break;
                         }
                     case OperatorType.LessThanOrEqualTo:
                         {
-                            if (this.Property.Contains("["))
-                            {
-                                builder.AppendFormat(" {0}<=@{1} ", this.Property, _valueKey);
-                            }
-                            else
-                            {
-                                builder.AppendFormat(" [{0}]<=@{1} ", this.Property, _valueKey);
-                            }
+                            operatorStr = "<=";
                             break;
                         }
                     case OperatorType.NotEqual:
                         {
-                            if (this.Property.Contains("["))
-                            {
-                                builder.AppendFormat(" {0}<>@{1} ", this.Property, _valueKey);
-                            }
-                            else
-                            {
-                                builder.AppendFormat(" [{0}]<>@{1} ", this.Property, _valueKey);
-                            }
+                            operatorStr = "<>";
                             break;
                         }
                     case OperatorType.StartWith:
                     case OperatorType.EndWith:
                     case OperatorType.Contains:
                         {
-                            if (this.Property.Contains("["))
-                            {
-                                builder.AppendFormat(" {0} like @{1} ", this.Property, _valueKey);
-                            }
-                            else
-                            {
-                                builder.AppendFormat(" [{0}] like @{1} ", this.Property, _valueKey);
-                            }
+                            operatorStr = "like";
                             break;
                         }
                     case OperatorType.In:
@@ -239,17 +193,23 @@ namespace Easy.Data
                         }
                     default:
                         {
-                            if (this.Property.Contains("["))
-                            {
-                                builder.AppendFormat(" {0}=@{1} ", this.Property, _valueKey);
-                            }
-                            else
-                            {
-                                builder.AppendFormat(" [{0}]=@{1} ", this.Property, _valueKey);
-                            }
+                            operatorStr = "=";
                             break;
                         }
                 }
+
+                if (!operatorStr.IsNullOrEmpty())
+                {
+                    if (this.Property.Contains("["))
+                    {
+                        builder.AppendFormat(ConditionFormat, this.Property, operatorStr, _valueKey);
+                    }
+                    else
+                    {
+                        builder.AppendFormat(ConditionFormat2, this.Property, operatorStr, _valueKey);
+                    }
+                }
+
             }
             return builder.ToString();
         }
@@ -313,8 +273,7 @@ namespace Easy.Data
                 builder.Append("(");
                 foreach (var item in Conditions)
                 {
-                    if (i == 0)
-                        builder.Append(item.ToString());
+                    if (i == 0) builder.Append(item);
                     else builder.Append(item.ToString(true));
                     i++;
                 }
@@ -333,10 +292,8 @@ namespace Easy.Data
                     default: return " AND " + ToString();
                 }
             }
-            else
-            {
-                return ToString();
-            }
+            return ToString();
+
         }
         public List<KeyValuePair<string, object>> GetKeyAndValue()
         {
@@ -397,10 +354,8 @@ namespace Easy.Data
                     default: return string.Format(" {0} Asc", Property);
                 }
             }
-            else
-            {
-                return this.ToString();
-            }
+            return this.ToString();
+
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using Easy.Constant;
+using Easy.Extend;
 using Easy.MetaData;
 using System;
 using System.Collections.Generic;
@@ -11,51 +12,48 @@ namespace Easy.Data
 
     public class DataFilter
     {
+        void init()
+        {
+            Conditions = new List<Condition>();
+            ConditionGroups = new List<ConditionGroup>();
+            Orders = new List<Order>();
+        }
         public DataFilter()
         {
-            _Conditions = new List<Condition>();
-            _ConditionGroups = new List<ConditionGroup>();
-            _Orders = new List<Order>();
+            init();
         }
         public DataFilter(List<string> updateProperties)
         {
-            _Conditions = new List<Condition>();
-            _ConditionGroups = new List<ConditionGroup>();
-            _Orders = new List<Order>();
+            init();
             this.UpdateProperties = updateProperties;
         }
-        List<Condition> _Conditions;
-
-        List<ConditionGroup> _ConditionGroups;
-
-        List<Order> _Orders;
         public List<string> UpdateProperties { get; set; }
 
         public List<ConditionGroup> ConditionGroups
         {
-            get { return _ConditionGroups; }
-            set { _ConditionGroups = value; }
+            get;
+            set;
         }
         public List<Condition> Conditions
         {
-            get { return _Conditions; }
-            set { _Conditions = value; }
+            get;
+            set;
         }
         public List<Order> Orders
         {
-            get { return _Orders; }
-            set { _Orders = value; }
+            get;
+            set;
         }
 
         #region 条件
         public DataFilter Where(Condition condition)
         {
-            _Conditions.Add(condition);
+            Conditions.Add(condition);
             return this;
         }
         public DataFilter Where(string property, OperatorType operatorType, object value)
         {
-            _Conditions.Add(new Condition(property, operatorType, value));
+            Conditions.Add(new Condition(property, operatorType, value));
             return this;
         }
         public DataFilter Where<T>(Expression<Func<T, object>> expression, OperatorType operatorType, object value)
@@ -68,19 +66,19 @@ namespace Easy.Data
                 if (!string.IsNullOrEmpty(propertyMap))
                     property = propertyMap;
             }
-            _Conditions.Add(new Condition(property, operatorType, value));
+            Conditions.Add(new Condition(property, operatorType, value));
             return this;
         }
         public DataFilter Where(string condition)
         {
             var con = new Condition(condition, ConditionType.And);
-            _Conditions.Add(con);
+            Conditions.Add(con);
             return this;
         }
         public DataFilter Where(string condition, ConditionType conditionType)
         {
             var con = new Condition(condition, conditionType);
-            _Conditions.Add(con);
+            Conditions.Add(con);
             return this;
         }
         public DataFilter Where(ConditionGroup conditionGroup)
@@ -93,20 +91,20 @@ namespace Easy.Data
         #region 排序
         public DataFilter OrderBy(Order item)
         {
-            _Orders.Add(item);
+            Orders.Add(item);
             return this;
         }
 
         public DataFilter OrderBy(string property, OrderType order)
         {
-            _Orders.Add(new Order(property, order));
+            Orders.Add(new Order(property, order));
             return this;
         }
         #endregion
 
         public override string ToString()
         {
-            StringBuilder builder = new StringBuilder();
+            var builder = new StringBuilder();
             for (int i = 0; i < ConditionGroups.Count; i++)
             {
                 if (i > 0)
@@ -115,7 +113,7 @@ namespace Easy.Data
                 }
                 else
                 {
-                    builder.Append(ConditionGroups[i].ToString());
+                    builder.Append(ConditionGroups[i]);
                 }
             }
             for (int i = 0; i < Conditions.Count; i++)
@@ -126,31 +124,31 @@ namespace Easy.Data
                 }
                 else
                 {
-                    builder.Append(Conditions[i].ToString());
+                    builder.Append(Conditions[i]);
                 }
             }
             return builder.ToString();
         }
         public string GetOrderString()
         {
-            StringBuilder builder = new StringBuilder();
+            var builder = new StringBuilder();
             foreach (var item in Orders)
             {
                 if (builder.Length == 0)
                 {
                     builder.Append(" ORDER BY ");
-                    builder.Append(item.ToString());
+                    builder.Append(item);
                 }
                 else
                 {
-                    builder.AppendFormat(",{0} ", item.ToString());
+                    builder.AppendFormat(",{0} ", item);
                 }
             }
             return builder.ToString();
         }
         public string GetContraryOrderString()
         {
-            StringBuilder builder = new StringBuilder();
+            var builder = new StringBuilder();
             foreach (var item in Orders)
             {
                 if (builder.Length == 0)
@@ -167,18 +165,9 @@ namespace Easy.Data
         }
         public List<KeyValuePair<string, object>> GetParameterValues()
         {
-            List<KeyValuePair<string, object>> values = new List<KeyValuePair<string, object>>();
-            foreach (var item in ConditionGroups)
-            {
-                values.AddRange(item.GetKeyAndValue());
-            }
-            foreach (var item in Conditions)
-            {
-                if (item.Value != null)
-                {
-                    values.Add(item.GetKeyAndValue());
-                }
-            }
+            var values = new List<KeyValuePair<string, object>>();            
+            ConditionGroups.ForEach(m => values.AddRange(m.GetKeyAndValue()));
+            Conditions.Where(m => m.Value != null).Each(m => values.Add(m.GetKeyAndValue()));
             return values;
         }
     }

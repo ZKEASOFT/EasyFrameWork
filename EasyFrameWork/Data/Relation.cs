@@ -26,7 +26,7 @@ namespace Easy.Data
         public string Conditions { get; set; }
         public override string ToString()
         {
-            StringBuilder builder = new StringBuilder();
+            var builder = new StringBuilder();
             builder.Append(" ");
             switch (RelationType)
             {
@@ -68,14 +68,14 @@ namespace Easy.Data
 
     public class RelationHelper
     {
-        List<Relation> relations;
+       private readonly List<Relation> _relations;
         public RelationHelper(List<Relation> relation)
         {
-            this.relations = relation;
+            this._relations = relation;
         }
         public RelationHelper InnerJoin(string table, string alias, string condition)
         {
-            relations.Add(new Relation()
+            _relations.Add(new Relation()
             {
                 RelationTable = table,
                 RelationType = RelationType.InnerJoin,
@@ -87,7 +87,7 @@ namespace Easy.Data
 
         public RelationHelper LeftJoin(string table, string alias, string condition)
         {
-            relations.Add(new Relation()
+            _relations.Add(new Relation()
             {
                 RelationTable = table,
                 RelationType = RelationType.LeftJoin,
@@ -98,7 +98,7 @@ namespace Easy.Data
         }
         public RelationHelper RightJoin(string table, string alias, string condition)
         {
-            relations.Add(new Relation()
+            _relations.Add(new Relation()
             {
                 RelationTable = table,
                 RelationType = RelationType.RightJoin,
@@ -109,7 +109,7 @@ namespace Easy.Data
         }
         public RelationHelper LeftOuterJoin(string table, string alias, string condition)
         {
-            relations.Add(new Relation()
+            _relations.Add(new Relation()
             {
                 RelationTable = table,
                 RelationType = RelationType.LeftOuterJoin,
@@ -120,7 +120,7 @@ namespace Easy.Data
         }
         public RelationHelper RightOuterJoin(string table, string alias, string condition)
         {
-            relations.Add(new Relation()
+            _relations.Add(new Relation()
             {
                 RelationTable = table,
                 RelationType = RelationType.RightOuterJoin,
@@ -131,7 +131,7 @@ namespace Easy.Data
         }
         public RelationHelper FullJoin(string table, string alias, string condition)
         {
-            relations.Add(new Relation()
+            _relations.Add(new Relation()
             {
                 RelationTable = table,
                 RelationType = RelationType.FullJoin,
@@ -142,7 +142,7 @@ namespace Easy.Data
         }
         public RelationHelper FullOuterJoin(string table, string alias, string condition)
         {
-            relations.Add(new Relation()
+            _relations.Add(new Relation()
             {
                 RelationTable = table,
                 RelationType = RelationType.FullOuterJoin,
