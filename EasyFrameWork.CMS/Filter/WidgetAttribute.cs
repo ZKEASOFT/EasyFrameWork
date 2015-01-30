@@ -1,4 +1,5 @@
-﻿using Easy.Data;
+﻿using System.Threading.Tasks;
+using Easy.Data;
 using Easy.Web.CMS.Widget;
 using System;
 using System.Collections.Generic;
@@ -30,19 +31,14 @@ namespace Easy.Web.CMS.Filter
                 filterContext.Result = new RedirectResult(path);
                 return;
             }
-            bool publish = true;
-            if (filterContext.RequestContext.HttpContext.Request.QueryString[ReView.QueryKey] == ReView.Review)
-            {
-                publish = false;
-            }
+            bool publish = !ReView.Review.Equals(filterContext.RequestContext.HttpContext.Request.QueryString[ReView.QueryKey], StringComparison.CurrentCultureIgnoreCase);
             var page = new PageService().GetByPath(path, publish);
             if (page != null)
             {
                 var layoutService = new LayoutService();
                 LayoutEntity layout = layoutService.Get(page.LayoutId);
                 layout.Page = page;
-                var widgetService = new WidgetService();
-                IEnumerable<WidgetBase> widgets = widgetService.Get(new DataFilter().Where("PageID", OperatorType.Equal, page.ID));
+
                 Action<WidgetBase> processWidget = m =>
                 {
                     var partDriver = Loader.CreateInstance<IWidgetPartDriver>(m.AssemblyName, m.ServiceTypeName);
@@ -57,11 +53,21 @@ namespace Easy.Web.CMS.Filter
                         zones.Add(part.Widget.ZoneID, partCollection);
                     }
                 };
-                widgets.Each(processWidget);
+                var layoutWidgetsTask = Task.Factory.StartNew(layoutId =>
+                {
+                    var widgetServiceIn = new WidgetService();
+                    IEnumerable<WidgetBase> layoutwidgets = widgetServiceIn.Get(new DataFilter().Where("LayoutID", OperatorType.Equal, layoutId));
+                    layoutwidgets.Each(processWidget);
+                }, page.LayoutId);
 
-                IEnumerable<WidgetBase> Layoutwidgets = widgetService.Get(new DataFilter().Where("LayoutID", OperatorType.Equal, page.LayoutId));
 
-                Layoutwidgets.Each(processWidget);
+                var widgetService = new WidgetService();
+                IEnumerable<WidgetBase> widgets = widgetService.Get(new DataFilter().Where("PageID", OperatorType.Equal, page.ID));
+                int middle = widgets.Count() / 2;
+                var pageWidgetsTask = Task.Factory.StartNew(() =>widgets.Skip(middle).Each(processWidget));
+                widgets.Take(middle).Each(processWidget);
+                Task.WaitAll(new[] { pageWidgetsTask, layoutWidgetsTask });
+
                 layout.ZoneWidgets = zones;
                 var viewResult = (filterContext.Result as ViewResult);
                 if (viewResult != null)

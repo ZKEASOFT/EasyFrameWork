@@ -79,6 +79,21 @@ namespace Easy.Data.DataBase
             return new OleDbParameter(key, value);
         }
 
+        public override void SetParameter(DbCommand comm, string key, object value)
+        {
+            if (value is DateTime)
+            {
+                comm.Parameters.Add(new OleDbParameter
+                {
+                    OleDbType = OleDbType.DBTimeStamp,
+                    Value = Convert.ToDateTime(value).ToString("yyyy-MM-dd HH:mm:ss")
+                });
+            }
+            else
+            {
+                base.SetParameter(comm, key, value);
+            }
+        }
 
         public override bool IsExistTable(string tableName)
         {
