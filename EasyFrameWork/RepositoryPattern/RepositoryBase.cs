@@ -10,16 +10,12 @@ namespace Easy.RepositoryPattern
 {
     public class RepositoryBase<T> : IRepository<T> where T : class
     {
-        public DataBasic DB
+        static string dataBase;
+        static string connString;
+        static RepositoryBase()
         {
-            get;
-            private set;
-        }
-        public RepositoryBase()
-        {
-            string dataBase = System.Configuration.ConfigurationManager.AppSettings[DataBasic.DataBaseAppSetingKey];
+            dataBase = System.Configuration.ConfigurationManager.AppSettings[DataBasic.DataBaseAppSetingKey];
             var con = System.Configuration.ConfigurationManager.ConnectionStrings[DataBasic.ConnectionKey];
-            string connString = string.Empty;
             if (con != null)
             {
                 connString = con.ConnectionString;
@@ -28,6 +24,14 @@ namespace Easy.RepositoryPattern
             {
                 connString = System.Configuration.ConfigurationManager.ConnectionStrings[0].ConnectionString;
             }
+        }
+        public static DataBasic DB
+        {
+            get;
+            private set;
+        }
+        public RepositoryBase()
+        {
             if (dataBase == DataBasic.Ace)
             {
                 DB = new Access(connString);

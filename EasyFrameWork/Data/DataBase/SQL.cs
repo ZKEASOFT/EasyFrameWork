@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Data.SqlClient;
 using System.Data;
+using System.Reflection;
 
 namespace Easy.Data.DataBase
 {
@@ -24,28 +25,28 @@ namespace Easy.Data.DataBase
         public string ConnectionString { get; set; }
 
 
-        public override DbConnection GetDbConnection()
+        protected override DbConnection GetDbConnection()
         {
             return new SqlConnection(ConnectionString);
         }
 
 
-        public override DbDataAdapter GetDbDataAdapter(DbCommand command)
+        protected override DbDataAdapter GetDbDataAdapter(DbCommand command)
         {
             return new SqlDataAdapter(command as SqlCommand);
         }
 
-        public override DbCommand GetDbCommand()
+        protected override DbCommand GetDbCommand()
         {
             return new SqlCommand();
         }
 
-        public override DbCommandBuilder GetDbCommandBuilder(DbDataAdapter adapter)
+        protected override DbCommandBuilder GetDbCommandBuilder(DbDataAdapter adapter)
         {
             return new SqlCommandBuilder(adapter as SqlDataAdapter);
         }
 
-        public override DbParameter GetDbParameter(string key, object value)
+        protected override DbParameter GetDbParameter(string key, object value)
         {
             return new SqlParameter(key, value);
         }
@@ -56,22 +57,12 @@ namespace Easy.Data.DataBase
             List<KeyValuePair<string, string>> comMatch;
             string selectCol = GetSelectColumn<T>(custAttribute, out comMatch);
             string condition = filter.ToString();
-            string orderby = filter.GetOrderString();
-            if (string.IsNullOrEmpty(orderby))
+            Dictionary<int, string> primaryKey = GetPrimaryKeys(custAttribute);
+            foreach (int item in primaryKey.Keys)
             {
-                Dictionary<int, string> primaryKey = new Dictionary<int, string>();
-                primaryKey.Add(0, "ID");
-                if (custAttribute != null)
-                {
-                    primaryKey = custAttribute.MetaData.Primarykey == null ? primaryKey : custAttribute.MetaData.Primarykey;
-                }
-                orderby = "Order by ";
-                foreach (int item in primaryKey.Keys)
-                {
-                    orderby += string.Format("[{0}] Asc,", primaryKey[item]);
-                }
-                orderby = orderby.Trim(',');
+                filter.OrderBy(primaryKey[item], OrderType.Ascending);
             }
+            string orderby = filter.GetOrderString();
             StringBuilder builder = new StringBuilder();
             builder.Append("WITH T AS( ");
             builder.AppendFormat("SELECT TOP {0} ", pagin.PageSize * (pagin.PageIndex + 1));
@@ -93,11 +84,12 @@ namespace Easy.Data.DataBase
             DataTable table = this.GetTable(builder.ToString(), filter.GetParameterValues());
             if (table == null) return new List<T>();
             List<T> list = new List<T>();
+            Dictionary<string, PropertyInfo> properties = GetProperties<T>(custAttribute);
             for (int i = 0; i < table.Rows.Count; i++)
             {
-                list.Add(Reflection.ClassAction.GetModel<T>(table, i, comMatch));
+                list.Add(Reflection.ClassAction.GetModel<T>(table, i, comMatch, properties));
             }
-            DataTable recordCound = this.GetTable(string.Format("SELECT COUNT(*) FROM [{0}] {3} {2} {1}",
+            DataTable recordCound = this.GetTable(string.Format("SELECT COUNT(1) FROM [{0}] {3} {2} {1}",
                 tableName,
                 string.IsNullOrEmpty(condition) ? "" : "WHERE " + condition,
                 builderRela.ToString(),

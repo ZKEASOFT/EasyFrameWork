@@ -201,15 +201,13 @@ namespace Easy.Data.DataBase
 
         #endregion
 
-        public abstract DbDataAdapter GetDbDataAdapter(DbCommand command);
-        public abstract DbConnection GetDbConnection();
-        public abstract DbCommand GetDbCommand();
-        public abstract DbCommandBuilder GetDbCommandBuilder(DbDataAdapter adapter);
-        public abstract DbParameter GetDbParameter(string key, object value);
-        public abstract bool IsExistTable(string tableName);
-        public abstract bool IsExistColumn(string tableName, string columnName);
+        protected abstract DbDataAdapter GetDbDataAdapter(DbCommand command);
+        protected abstract DbConnection GetDbConnection();
+        protected abstract DbCommand GetDbCommand();
+        protected abstract DbCommandBuilder GetDbCommandBuilder(DbDataAdapter adapter);
+        protected abstract DbParameter GetDbParameter(string key, object value);
 
-        public virtual int ExecCommand(DbCommand command)
+        protected virtual int ExecCommand(DbCommand command)
         {
             command.Connection = GetDbConnection();
             try
@@ -233,7 +231,13 @@ namespace Easy.Data.DataBase
                 command.Dispose();
             }
         }
+        protected virtual void SetParameter(DbCommand comm, string key, object value)
+        {
+            comm.Parameters.Add(GetDbParameter(key, value));
+        }
 
+        public abstract bool IsExistTable(string tableName);
+        public abstract bool IsExistColumn(string tableName, string columnName);
         public virtual int ExecuteNonQuery(string command, CommandType ct, List<KeyValuePair<string, object>> parameter)
         {
             DbCommand comm = GetDbCommand();
@@ -244,10 +248,6 @@ namespace Easy.Data.DataBase
                 SetParameter(comm, item.Key, item.Value);
             }
             return this.ExecCommand(comm);
-        }
-        public virtual void SetParameter(DbCommand comm, string key, object value)
-        {
-            comm.Parameters.Add(GetDbParameter(key, value));
         }
         public virtual object Insert(string tableName, Dictionary<string, object> values)
         {

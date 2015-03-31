@@ -53,10 +53,6 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\EasyFrameWork.Modules\Easy.Modules.csproj">
-      <Project>{0fa7bbc5-6676-4b03-b161-7f7a3f1a33c7}</Project>
-      <Name>Easy.Modules</Name>
-    </ProjectReference>
     <ProjectReference Include="..\EasyFrameWork.Web\Easy.Web.csproj">
       <Project>{a1228125-f5c4-4001-ac7d-1accf1679828}</Project>
       <Name>Easy.Web</Name>

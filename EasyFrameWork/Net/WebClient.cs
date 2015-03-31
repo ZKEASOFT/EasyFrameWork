@@ -6,10 +6,10 @@ using System.Text;
 
 namespace Easy.Net
 {
-    public class ExtWebClient : WebClient
+    public class WebClient : System.Net.WebClient
     {
         CookieContainer cookieContainer;
-        public ExtWebClient()
+        public WebClient()
         {
             this.cookieContainer = new CookieContainer();
         }

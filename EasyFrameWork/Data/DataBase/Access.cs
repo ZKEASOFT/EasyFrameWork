@@ -45,12 +45,12 @@ namespace Easy.Data.DataBase
         public DdTypes DbType { get; set; }
         private string DataPath { get; set; }
 
-        public override DbDataAdapter GetDbDataAdapter(DbCommand command)
+        protected override DbDataAdapter GetDbDataAdapter(DbCommand command)
         {
             return new OleDbDataAdapter(command as OleDbCommand);
         }
 
-        public override DbConnection GetDbConnection()
+        protected override DbConnection GetDbConnection()
         {
             if (this.DbType == DdTypes.JET)
             {
@@ -64,22 +64,22 @@ namespace Easy.Data.DataBase
             }
         }
 
-        public override DbCommand GetDbCommand()
+        protected override DbCommand GetDbCommand()
         {
             return new OleDbCommand();
         }
 
-        public override DbCommandBuilder GetDbCommandBuilder(DbDataAdapter adapter)
+        protected override DbCommandBuilder GetDbCommandBuilder(DbDataAdapter adapter)
         {
             return new OleDbCommandBuilder(adapter as OleDbDataAdapter);
         }
 
-        public override DbParameter GetDbParameter(string key, object value)
+        protected override DbParameter GetDbParameter(string key, object value)
         {
             return new OleDbParameter(key, value);
         }
 
-        public override void SetParameter(DbCommand comm, string key, object value)
+        protected override void SetParameter(DbCommand comm, string key, object value)
         {
             if (value is DateTime)
             {

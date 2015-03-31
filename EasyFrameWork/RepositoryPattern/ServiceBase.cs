@@ -9,8 +9,8 @@ namespace Easy.RepositoryPattern
 {
     public abstract class ServiceBase<Entity> : IService, IServiceBase<Entity> where Entity : class
     {
-        RepositoryBase<Entity> repBase;
-        IApplicationContext applicationContext;
+        private readonly RepositoryBase<Entity> repBase;
+        private readonly IApplicationContext applicationContext;
         public ServiceBase()
         {
             repBase = new RepositoryBase<Entity>();

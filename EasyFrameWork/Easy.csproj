@@ -141,10 +141,10 @@
     <Compile Include="Modules\User\Service\Impl\UserService.cs" />
     <Compile Include="Modules\User\Service\IUserService.cs" />
     <Compile Include="Modules\User\UserModule.cs" />
-    <Compile Include="Net\ExtWebClient.cs">
+    <Compile Include="Net\Ftp.cs" />
+    <Compile Include="Net\WebClient.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Net\Ftp.cs" />
     <Compile Include="Net\WebPage.cs" />
     <Compile Include="RepositoryPattern\IRepository.cs" />
     <Compile Include="RepositoryPattern\IServiceBase.cs" />
