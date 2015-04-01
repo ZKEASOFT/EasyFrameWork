@@ -141,6 +141,8 @@
     <Compile Include="Modules\User\Service\Impl\UserService.cs" />
     <Compile Include="Modules\User\Service\IUserService.cs" />
     <Compile Include="Modules\User\UserModule.cs" />
+    <Compile Include="Net\Email\EmailContentBase.cs" />
+    <Compile Include="Net\Email\IEmailContent.cs" />
     <Compile Include="Net\Ftp.cs" />
     <Compile Include="Net\WebClient.cs">
       <SubType>Component</SubType>
@@ -164,8 +166,7 @@
     <Compile Include="MathEx\Formula.cs" />
     <Compile Include="Data\PropertyDataInfo.cs" />
     <Compile Include="Models\HumanBase.cs" />
-    <Compile Include="Net\Email.cs" />
-    <Compile Include="Net\Http.cs" />
+    <Compile Include="Net\Email\EmailSender.cs" />
     <Compile Include="Common.cs" />
     <Compile Include="RepositoryPattern\IService.cs" />
     <Compile Include="Data\DataBase\Access.cs" />

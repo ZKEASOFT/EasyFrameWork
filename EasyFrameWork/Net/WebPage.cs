@@ -49,17 +49,17 @@ namespace Easy.Net
         public Uri PageUrl { get; set; }
         public Methods Method { get; set; }
         public bool Scccess { get; private set; }
-        public System.Net.WebProxy Proxy { get; set; }
+        public WebProxy Proxy { get; set; }
         public bool Success { get; private set; }
         public int TimeOut { get; set; }
         public string Referer { get; set; }
-        private void ReSetCookie(System.Net.HttpWebResponse response)
+        private void ReSetCookie(HttpWebResponse response)
         {
             if (response.Cookies != null)
             {
                 foreach (Cookie item in response.Cookies)
                 {
-                    if (Cookies.Where(p => p.Name == item.Name).Count() == 0)
+                    if (Cookies.All(p => p.Name != item.Name))
                     {
                         Cookies.Add(item);
                     }
@@ -79,7 +79,7 @@ namespace Easy.Net
 
         private void InitWebRequest()
         {
-            webRequest = System.Net.WebRequest.Create(this.PageUrl) as HttpWebRequest;
+            webRequest = WebRequest.Create(PageUrl) as HttpWebRequest;
             webRequest.Accept = "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8";
             webRequest.UserAgent = "Mozilla/5.0 (Windows NT 6.3; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/33.0.1750.154 Safari/537.36";
             webRequest.AllowWriteStreamBuffering = true;
@@ -129,8 +129,8 @@ namespace Easy.Net
             {
                 try
                 {
-                    System.Net.HttpWebRequest inReq = (res.AsyncState as System.Net.HttpWebRequest);
-                    System.Net.HttpWebResponse response = (HttpWebResponse)inReq.EndGetResponse(res);
+                    HttpWebRequest inReq = (res.AsyncState as HttpWebRequest);
+                    HttpWebResponse response = (HttpWebResponse)inReq.EndGetResponse(res);
                     System.IO.Stream stream = response.GetResponseStream();
                     System.IO.StreamReader reader = new System.IO.StreamReader(stream);
                     string re = reader.ReadToEnd();
@@ -148,7 +148,7 @@ namespace Easy.Net
         public string GetHtml()
         {
             InitWebRequest();
-            System.Net.HttpWebResponse response = (HttpWebResponse)webRequest.GetResponse();
+            HttpWebResponse response = (HttpWebResponse)webRequest.GetResponse();
             System.IO.Stream stream = response.GetResponseStream();
             System.IO.StreamReader reader = new System.IO.StreamReader(stream);
             string re = reader.ReadToEnd();
@@ -160,8 +160,8 @@ namespace Easy.Net
             InitWebRequest();
             IAsyncResult result = webRequest.BeginGetResponse(new AsyncCallback((iResult) =>
             {
-                System.Net.HttpWebRequest inReq = (iResult.AsyncState as System.Net.HttpWebRequest);
-                System.Net.HttpWebResponse response = (HttpWebResponse)inReq.EndGetResponse(iResult);
+                HttpWebRequest inReq = (iResult.AsyncState as HttpWebRequest);
+                HttpWebResponse response = (HttpWebResponse)inReq.EndGetResponse(iResult);
                 System.IO.Stream streamRe = response.GetResponseStream();
                 ReSetCookie(response);
                 action(streamRe, this);
@@ -171,7 +171,7 @@ namespace Easy.Net
         public System.IO.Stream GetResponseStream()
         {
             InitWebRequest();
-            System.Net.HttpWebResponse response = (HttpWebResponse)webRequest.GetResponse();
+            HttpWebResponse response = (HttpWebResponse)webRequest.GetResponse();
             System.IO.Stream streamRe = response.GetResponseStream();
             ReSetCookie(response);
             return streamRe;
@@ -182,7 +182,7 @@ namespace Easy.Net
             InitWebRequest();
             webRequest.BeginGetRequestStream(new AsyncCallback((asyncResult) =>
             {
-                System.Net.HttpWebRequest inReq = (asyncResult.AsyncState as System.Net.HttpWebRequest);
+                HttpWebRequest inReq = (asyncResult.AsyncState as HttpWebRequest);
                 using (System.IO.Stream stream = inReq.EndGetRequestStream(asyncResult))
                 {
                     byte[] buffer = Encoding.UTF8.GetBytes(data);
@@ -190,9 +190,8 @@ namespace Easy.Net
                 }
                 inReq.BeginGetResponse(new AsyncCallback((asyncResultPo) =>
                 {
-                    System.Net.HttpWebRequest inReqIn = (asyncResultPo.AsyncState as System.Net.HttpWebRequest);
-
-                    System.Net.HttpWebResponse response = (HttpWebResponse)inReqIn.EndGetResponse(asyncResultPo);
+                    HttpWebRequest inReqIn = (asyncResultPo.AsyncState as HttpWebRequest);
+                    HttpWebResponse response = (HttpWebResponse)inReqIn.EndGetResponse(asyncResultPo);
                     System.IO.Stream streamResponse = response.GetResponseStream();
                     System.IO.StreamReader reader = new System.IO.StreamReader(streamResponse);
                     string re = reader.ReadToEnd();
@@ -212,7 +211,7 @@ namespace Easy.Net
                 byte[] buffer = Encoding.UTF8.GetBytes(data);
                 stream.Write(buffer, 0, buffer.Length);
             }
-            System.Net.HttpWebResponse response = (HttpWebResponse)webRequest.GetResponse();
+            HttpWebResponse response = (HttpWebResponse)webRequest.GetResponse();
             System.IO.Stream streamResponse = response.GetResponseStream();
             System.IO.StreamReader reader = new System.IO.StreamReader(streamResponse);
             string re = reader.ReadToEnd();

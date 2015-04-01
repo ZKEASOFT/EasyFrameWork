@@ -8,15 +8,15 @@ namespace Easy.Net
 {
     public class WebClient : System.Net.WebClient
     {
-        CookieContainer cookieContainer;
+        CookieContainer _cookieContainer;
         public WebClient()
         {
-            this.cookieContainer = new CookieContainer();
+            this._cookieContainer = new CookieContainer();
         }
         public CookieContainer Cookies
         {
-            get { return this.cookieContainer; }
-            set { this.cookieContainer = value; }
+            get { return this._cookieContainer; }
+            set { this._cookieContainer = value; }
         }
         protected override WebRequest GetWebRequest(Uri address)
         {
@@ -24,7 +24,7 @@ namespace Easy.Net
             if (request is HttpWebRequest)
             {
                 HttpWebRequest httpRequest = request as HttpWebRequest;
-                httpRequest.CookieContainer = cookieContainer;
+                httpRequest.CookieContainer = _cookieContainer;
             }
             return request;
         }

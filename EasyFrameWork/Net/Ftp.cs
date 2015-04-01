@@ -9,10 +9,10 @@ namespace Easy.Net
 {
     public class Ftp
     {
-        FtpWebRequest _Ftp;
-        string _ftpUrl;
-        string _userName;
-        string _passWord;
+        FtpWebRequest _ftp;
+        readonly string _ftpUrl;
+        readonly string _userName;
+        readonly string _passWord;
         public Ftp(string ftpUrl, string userName, string passWord)
         {
             this._ftpUrl = ftpUrl;
@@ -22,28 +22,27 @@ namespace Easy.Net
         }
         void Connect()
         {
-            _Ftp = (FtpWebRequest)FtpWebRequest.Create(new Uri(this._ftpUrl));
-            _Ftp.UseBinary = true;
-            _Ftp.Credentials = new NetworkCredential(this._userName, this._passWord);
+            _ftp = (FtpWebRequest)WebRequest.Create(new Uri(this._ftpUrl));
+            _ftp.UseBinary = true;
+            _ftp.Credentials = new NetworkCredential(this._userName, this._passWord);
         }
         public bool UpLoad(string file)
         {
-            FtpWebRequest Ftp = null;
             FileInfo copyfile = new FileInfo(file);
-            Ftp.Method = WebRequestMethods.Ftp.UploadFile;
-            int bufflength = 2048;
+            _ftp.Method = WebRequestMethods.Ftp.UploadFile;
+            const int bufflength = 2048;
             byte[] buff = new byte[bufflength];
-            FileStream Upstream = copyfile.OpenRead();
-            int FileOnce;
+            FileStream upstream = copyfile.OpenRead();
             try
             {
-                Stream Ftpstream = Ftp.GetRequestStream();
-                while ((FileOnce = Upstream.Read(buff, 0, bufflength)) > 0)
+                Stream ftpstream = _ftp.GetRequestStream();
+                int readLength;
+                while ((readLength = upstream.Read(buff, 0, bufflength)) > 0)
                 {
-                    Ftpstream.Write(buff, 0, FileOnce);
+                    ftpstream.Write(buff, 0, readLength);
                 }
-                Upstream.Close();
-                Ftpstream.Close();
+                upstream.Close();
+                ftpstream.Close();
                 return true;
             }
             catch
