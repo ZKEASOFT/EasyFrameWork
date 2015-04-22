@@ -127,16 +127,8 @@ namespace Easy.Data.DataBase
             var result = new List<string>();
             foreach (var item in propertys)
             {
-                TypeCode code;
                 string isNull = "null";
-                if (item.PropertyType.Name == "Nullable`1")
-                {
-                    code = Type.GetTypeCode(item.PropertyType.GetGenericArguments()[0]);
-                }
-                else
-                {
-                    code = Type.GetTypeCode(item.PropertyType);
-                }
+                var code = Type.GetTypeCode(item.PropertyType.Name == "Nullable`1" ? item.PropertyType.GetGenericArguments()[0] : item.PropertyType);
                 if (custAttribute != null)
                 {
                     if (custAttribute.MetaData.PropertyDataConfig.ContainsKey(item.Name))
@@ -377,7 +369,7 @@ namespace Easy.Data.DataBase
             }
             return GetTable(comm);
         }
-        
+
         public virtual void AlterColumn(string tableName, string columnName, DbType columnType, int length = 255)
         {
             CustomerSql(string.Format("ALTER TABLE [{0}] ALTER COLUMN [{1}] {2}", tableName, columnName, GetDBTypeStr(columnType, length)))
@@ -415,7 +407,7 @@ namespace Easy.Data.DataBase
         }
 
 
-        
+
         public virtual int Delete<T>(DataFilter filter) where T : class
         {
             DataConfigureAttribute custAttribute = DataConfigureAttribute.GetAttribute<T>();
@@ -677,28 +669,15 @@ namespace Easy.Data.DataBase
                 }
                 if (value != null)
                 {
-                    if (builder.Length == 0)
-                    {
-                        builder.AppendFormat("[{0}]=@{0}", name);
-                    }
-                    else
-                    {
-                        builder.AppendFormat(",[{0}]=@{0}", name);
-                    }
+                    builder.AppendFormat(builder.Length == 0 ? "[{0}]=@{0}" : ",[{0}]=@{0}", name);
                     KeyValuePair<string, object> kv = new KeyValuePair<string, object>(name, value);
                     keyValue.Add(kv);
                 }
                 else
                 {
-                    if (builder.Length == 0)
-                    {
-                        builder.AppendFormat("[{0}]=NULL", name);
-                    }
-                    else
-                    {
-                        builder.AppendFormat(",[{0}]=NULL", name);
-                    }
+                    builder.AppendFormat(builder.Length == 0 ? "[{0}]=NULL" : ",[{0}]=NULL", name);
                 }
+
             }
             string condition = filter.ToString();
             if (!string.IsNullOrEmpty(condition))
@@ -706,14 +685,7 @@ namespace Easy.Data.DataBase
                 builder.Append(" WHERE ");
                 builder.Append(condition);
             }
-            if (keyValue.Count == 0)
-            {
-                return false;
-            }
-            foreach (var paVal in filter.GetParameterValues())
-            {
-                keyValue.Add(paVal);
-            }
+            keyValue.AddRange(filter.GetParameterValues());
             return Update(tableName, builder.ToString(), keyValue);
 
         }
@@ -725,7 +697,7 @@ namespace Easy.Data.DataBase
             DataConfigureAttribute custAttribute = DataConfigureAttribute.GetAttribute<T>();
             if (custAttribute != null)
             {
-                primaryKey = custAttribute.MetaData.Primarykey == null ? primaryKey : custAttribute.MetaData.Primarykey;
+                primaryKey = custAttribute.MetaData.Primarykey ?? primaryKey;
             }
             if (primaryKeys.Length != primaryKey.Count && primaryKeys.Length > 0)
             {
