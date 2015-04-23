@@ -75,8 +75,8 @@ namespace Easy.Data.DataBase
             {
                 foreach (var item in custAttribute.MetaData.DataRelations)
                 {
-                    builder.Append(item.ToString());
-                    builderRela.Append(item.ToString());
+                    builder.Append(item);
+                    builderRela.Append(item);
                 }
             }
             builder.Append(string.IsNullOrEmpty(condition) ? "" : " WHERE " + condition);

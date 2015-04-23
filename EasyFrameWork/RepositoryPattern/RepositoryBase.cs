@@ -46,6 +46,10 @@ namespace Easy.RepositoryPattern
             {
                 DB = new SQL(connString);
             }
+            else
+            {
+                DB = new SQL(connString);
+            }
         }
 
         public T Get(params object[] primaryKeys)

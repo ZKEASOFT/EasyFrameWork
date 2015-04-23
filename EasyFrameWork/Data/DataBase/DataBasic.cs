@@ -138,16 +138,15 @@ namespace Easy.Data.DataBase
                         {
                             isNull = "not null";
                         }
-                        if (!config.Ignore && !config.IsRelation)
+                        if (config.Ignore || config.IsRelation) continue;
+
+                        if (!string.IsNullOrEmpty(config.ColumnName))
                         {
-                            if (!string.IsNullOrEmpty(config.ColumnName))
-                            {
-                                result.Add(string.Format("[{0}] {1} {2},", config.ColumnName, config.IsIncreasePrimaryKey ? "INT IDENTITY" : GetDBTypeStr(Common.ConvertToDbType(code), config.StringLength), isNull));
-                            }
-                            else
-                            {
-                                result.Add(string.Format("[{0}] {1} {2},", config.PropertyName, GetDBTypeStr(Common.ConvertToDbType(code), config.StringLength), isNull));
-                            }
+                            result.Add(string.Format("[{0}] {1} {2},", config.ColumnName, config.IsIncreasePrimaryKey ? "INT IDENTITY" : GetDBTypeStr(Common.ConvertToDbType(code), config.StringLength), isNull));
+                        }
+                        else
+                        {
+                            result.Add(string.Format("[{0}] {1} {2},", config.PropertyName, GetDBTypeStr(Common.ConvertToDbType(code), config.StringLength), isNull));
                         }
                     }
                     else
@@ -243,27 +242,19 @@ namespace Easy.Data.DataBase
         }
         public virtual object Insert(string tableName, Dictionary<string, object> values)
         {
+            if (values.Count == 0) return null;
             DbCommand command = GetDbCommand();
             command.Connection = GetDbConnection();
-            string valuestr = string.Empty;
-            string fielstr = string.Empty;
-            int i = 0;
+            StringBuilder valueBuilder = new StringBuilder();
+            StringBuilder fieldBuilder = new StringBuilder();
+
             foreach (var item in values)
             {
-                if (i == 0)
-                {
-                    valuestr += "@" + item.Key;
-                    fielstr += "[" + item.Key + "]";
-                }
-                else
-                {
-                    valuestr += ",@" + item.Key;
-                    fielstr += ",[" + item.Key + "]";
-                }
-                i++;
+                valueBuilder.AppendFormat(",{0}", item.Value == null ? "NULL" : "@" + item.Key);
+                fieldBuilder.AppendFormat(",[{0}]", item.Key);
             }
             const string comInsertFormat = "INSERT INTO [{0}] ({1}) VALUES ({2})";
-            command.CommandText = comInsertFormat.FormatWith(tableName, fielstr, valuestr);
+            command.CommandText = comInsertFormat.FormatWith(tableName, fieldBuilder.ToString().Trim(','), valueBuilder.ToString().Trim(','));
             foreach (var itemV in values)
             {
                 SetParameter(command, itemV.Key, itemV.Value);
@@ -295,14 +286,7 @@ namespace Easy.Data.DataBase
         public virtual int Delete(string tableName, string condition, List<KeyValuePair<string, object>> keyValue)
         {
             DbCommand comm = GetDbCommand();
-            if (!string.IsNullOrEmpty(condition))
-            {
-                comm.CommandText = string.Format("DELETE FROM [{0}] WHERE {1}", tableName, condition);
-            }
-            else
-            {
-                comm.CommandText = string.Format("DELETE FROM [{0}]", tableName);
-            }
+            comm.CommandText = !string.IsNullOrEmpty(condition) ? string.Format("DELETE FROM [{0}] WHERE {1}", tableName, condition) : string.Format("DELETE FROM [{0}]", tableName);
             foreach (var item in keyValue)
             {
                 SetParameter(comm, item.Key, item.Value);
@@ -594,7 +578,7 @@ namespace Easy.Data.DataBase
 
             string tableName = GetTableName<T>(custAttribute);
             Dictionary<string, object> allValues = Reflection.ClassAction.GetPropertieValues<T>(item);
-            Dictionary<string, object> InsertValues = new Dictionary<string, object>();
+            Dictionary<string, object> insertValues = new Dictionary<string, object>();
             if (custAttribute != null)
             {
                 foreach (var valueitem in allValues)
@@ -605,21 +589,21 @@ namespace Easy.Data.DataBase
 
                         if (!config.Ignore && config.CanInsert)
                         {
-                            InsertValues.Add(config.ColumnName, valueitem.Value);
+                            insertValues.Add(config.ColumnName, valueitem.Value);
                         }
                     }
                     else
                     {
-                        InsertValues.Add(valueitem.Key, valueitem.Value);
+                        insertValues.Add(valueitem.Key, valueitem.Value);
                     }
                 }
             }
             else
             {
-                InsertValues = allValues;
+                insertValues = allValues;
             }
-            object resu = this.Insert(tableName, InsertValues);
-            if (custAttribute != null && resu != null && resu.ToString() != "0")
+            object resu = this.Insert(tableName, insertValues);
+            if (custAttribute != null && resu != null && resu.Equals(0))
             {
                 if (custAttribute.MetaData.Primarykey != null && custAttribute.MetaData.Primarykey.Count == 1)
                 {
@@ -679,6 +663,7 @@ namespace Easy.Data.DataBase
                 }
 
             }
+            if (builder.Length == 0) return false;
             string condition = filter.ToString();
             if (!string.IsNullOrEmpty(condition))
             {
