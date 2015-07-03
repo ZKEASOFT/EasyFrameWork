@@ -9,7 +9,9 @@ using Easy.Data;
 using Easy.Constant;
 using Easy.Models;
 using System.ComponentModel;
+using System.Reflection;
 using Easy;
+using Easy.Extend;
 
 namespace Easy.MetaData
 {
@@ -172,8 +174,23 @@ namespace Easy.MetaData
                             }
                         }
                         return _primarykey;
-                    }                    
+                    }
                 }
+            }
+        }
+
+        private Dictionary<string, PropertyInfo> _properties;
+
+        public Dictionary<string, PropertyInfo> Properties
+        {
+            get
+            {
+                if (_properties == null)
+                {
+                    _properties = new Dictionary<string, PropertyInfo>();
+                    TargetType.GetProperties().Each(m => _properties.Add(m.Name, m));
+                }
+                return _properties;
             }
         }
 

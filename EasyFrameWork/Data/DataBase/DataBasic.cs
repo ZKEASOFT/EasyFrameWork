@@ -181,7 +181,7 @@ namespace Easy.Data.DataBase
             var properties = new Dictionary<string, PropertyInfo>();
             if (custAttribute != null)
             {
-                custAttribute.MetaData.TargetType.GetProperties().Each(m => properties.Add(m.Name, m));
+                properties = custAttribute.MetaData.Properties;
             }
             else
             {
