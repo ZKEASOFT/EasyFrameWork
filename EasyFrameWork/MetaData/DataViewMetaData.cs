@@ -9,7 +9,9 @@ using Easy.Data;
 using Easy.Constant;
 using Easy.Models;
 using System.ComponentModel;
+using System.Reflection;
 using Easy;
+using Easy.Extend;
 
 namespace Easy.MetaData
 {
@@ -23,7 +25,7 @@ namespace Easy.MetaData
         {
             Init();
         }
-        public virtual void Init()
+        public void Init()
         {
 
             this.Alias = "T0";
@@ -111,18 +113,8 @@ namespace Easy.MetaData
             {
                 IgnoreBase();
             }
-            OnInited();
             this.DataConfigure();
             this.ViewConfigure();
-            OnCustomerInited();
-        }
-        public virtual void OnInited()
-        {
-
-        }
-        public virtual void OnCustomerInited()
-        {
-
         }
         Dictionary<string, HtmlTagBase> _htmlTags = new Dictionary<string, HtmlTagBase>();
         Dictionary<string, PropertyDataInfo> _porpertyDataConfig = new Dictionary<string, PropertyDataInfo>();
@@ -171,19 +163,34 @@ namespace Easy.MetaData
                     return _primarykey;
                 else
                 {
-                    foreach (var item in _porpertyDataConfig)
+                    _primarykey = new Dictionary<int, string>();
+                    lock (_primarykey)
                     {
-                        if (item.Value.IsPrimaryKey)
+                        foreach (var item in _porpertyDataConfig)
                         {
-                            if (_primarykey == null)
+                            if (item.Value.IsPrimaryKey)
                             {
-                                _primarykey = new Dictionary<int, string>();
+                                _primarykey.Add(item.Value.PrimaryKeyIndex, item.Value.ColumnName);
                             }
-                            _primarykey.Add(item.Value.PrimaryKeyIndex, item.Value.ColumnName);
                         }
+                        return _primarykey;
                     }
-                    return _primarykey;
                 }
+            }
+        }
+
+        private Dictionary<string, PropertyInfo> _properties;
+
+        public Dictionary<string, PropertyInfo> Properties
+        {
+            get
+            {
+                if (_properties == null)
+                {
+                    _properties = new Dictionary<string, PropertyInfo>();
+                    TargetType.GetProperties().Each(m => _properties.Add(m.Name, m));
+                }
+                return _properties;
             }
         }
 
@@ -296,21 +303,6 @@ namespace Easy.MetaData
             {
                 DataConfig(item.Name).Ignore();
                 ViewConfig(item.Name).AsHidden();
-            }
-        }
-
-
-        public virtual void InitDisplayName()
-        {
-            Dictionary<string, string> lan = new Dictionary<string, string>();
-            foreach (var item in this.HtmlTags)
-            {
-                lan.Add(item.Key, item.Value.ModelType.Name + "@" + item.Key);
-            }
-            lan = Localization.InitLan(lan);
-            foreach (var item in lan)
-            {
-                this.HtmlTags[item.Key].DisplayName = item.Value;
             }
         }
     }

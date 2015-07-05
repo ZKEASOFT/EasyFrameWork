@@ -3,6 +3,7 @@ using Easy.HTML.Tags;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using Easy.Data;
 using Easy.Models;
@@ -13,6 +14,7 @@ namespace Easy.MetaData
     {
         Dictionary<string, HtmlTagBase> HtmlTags { get; }
         Dictionary<string, PropertyDataInfo> PropertyDataConfig { get; }
+        Dictionary<string, PropertyInfo> Properties { get; }
         List<Relation> DataRelations { get; }
         Type TargetType { get; }
         /// <summary>

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Mail;
 using System.Net.Mime;
+using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -18,26 +19,16 @@ namespace Test
     {
         static void Main(string[] args)
         {
-            Permission p = Permission.View | Permission.Create;
-            //p 包含 View 也包含 Create 以下验证
-            if (p.HasFlag(Permission.View))
+            string math = "http://media.kingston.com/hyperx/sidekick/sidekick-support-landing_6b7d8f.jpg";
+
+           Regex reg=new Regex(@"[-|_]([a-fA-F0-9]{6})\.(?:jpg|png)$");
+            reg.Replace(math, (v) =>
             {
-                Console.WriteLine("It has View");
-            }
-            if (p.HasFlag(Permission.Create))
-            {
-                Console.WriteLine("It has Create");
-            }
+                return "";
+            });
+           Console.WriteLine(reg.IsMatch(math));
+            Console.ReadKey();
         }
-
     }
 
-    [Flags]
-    public enum Permission
-    {
-        View = 1,
-        Create = 2,
-        Edit = 4,
-        Delete = 8
-    }
 }
