@@ -23,7 +23,7 @@ namespace Easy.MetaData
         {
             Init();
         }
-        public void Init()
+        public virtual void Init()
         {
 
             this.Alias = "T0";
@@ -111,8 +111,18 @@ namespace Easy.MetaData
             {
                 IgnoreBase();
             }
+            OnInited();
             this.DataConfigure();
             this.ViewConfigure();
+            OnCustomerInited();
+        }
+        public virtual void OnInited()
+        {
+
+        }
+        public virtual void OnCustomerInited()
+        {
+
         }
         Dictionary<string, HtmlTagBase> _htmlTags = new Dictionary<string, HtmlTagBase>();
         Dictionary<string, PropertyDataInfo> _porpertyDataConfig = new Dictionary<string, PropertyDataInfo>();
@@ -161,18 +171,18 @@ namespace Easy.MetaData
                     return _primarykey;
                 else
                 {
-                    _primarykey = new Dictionary<int, string>();
-                    lock (_primarykey)
+                    foreach (var item in _porpertyDataConfig)
                     {
-                        foreach (var item in _porpertyDataConfig)
+                        if (item.Value.IsPrimaryKey)
                         {
-                            if (item.Value.IsPrimaryKey)
+                            if (_primarykey == null)
                             {
-                                _primarykey.Add(item.Value.PrimaryKeyIndex, item.Value.ColumnName);
+                                _primarykey = new Dictionary<int, string>();
                             }
+                            _primarykey.Add(item.Value.PrimaryKeyIndex, item.Value.ColumnName);
                         }
-                        return _primarykey;
-                    }                    
+                    }
+                    return _primarykey;
                 }
             }
         }
@@ -286,6 +296,21 @@ namespace Easy.MetaData
             {
                 DataConfig(item.Name).Ignore();
                 ViewConfig(item.Name).AsHidden();
+            }
+        }
+
+
+        public virtual void InitDisplayName()
+        {
+            Dictionary<string, string> lan = new Dictionary<string, string>();
+            foreach (var item in this.HtmlTags)
+            {
+                lan.Add(item.Key, item.Value.ModelType.Name + "@" + item.Key);
+            }
+            lan = Localization.InitLan(lan);
+            foreach (var item in lan)
+            {
+                this.HtmlTags[item.Key].DisplayName = item.Value;
             }
         }
     }

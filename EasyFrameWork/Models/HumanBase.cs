@@ -75,5 +75,7 @@ namespace Easy.Models
         /// QQ
         /// </summary>
         public string QQ { get; set; }
+
+        public string Email { get; set; }
     }
 }

@@ -12,7 +12,9 @@ namespace Easy.Net.Email
         public void Send(IEmailContent email)
         {
             MailMessage mailmsg = new MailMessage();
-            email.GetReceivers().Each(mailmsg.To.Add);
+            IEnumerable<MailAddress> rec = email.GetReceivers();
+            if (rec == null || !rec.Any()) return;
+            rec.Each(mailmsg.To.Add);
             var cc = email.GetCCReceivers();
             if (cc != null)
             {
@@ -39,6 +41,7 @@ namespace Easy.Net.Email
             mailmsg.Attachments.Each(m => m.Dispose());
             mailmsg.Dispose();
             smtp.Dispose();
+            email.OnSendComplete(email);
         }
     }
 }

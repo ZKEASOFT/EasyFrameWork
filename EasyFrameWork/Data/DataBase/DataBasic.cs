@@ -603,7 +603,7 @@ namespace Easy.Data.DataBase
                 insertValues = allValues;
             }
             object resu = this.Insert(tableName, insertValues);
-            if (custAttribute != null && resu != null && resu.Equals(0))
+            if (custAttribute != null && resu != null && !resu.Equals(0))
             {
                 if (custAttribute.MetaData.Primarykey != null && custAttribute.MetaData.Primarykey.Count == 1)
                 {

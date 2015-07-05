@@ -54,12 +54,12 @@ namespace Easy.Data.DataBase
         {
             if (this.DbType == DdTypes.JET)
             {
-                var conn = new OleDbConnection(string.Format("{1};Data Source={0};persist security info=false;Jet OLEDB:Database Password=wayne19881112", DataPath, JetOleDb));
+                var conn = new OleDbConnection(string.Format("{1};Data Source={0};persist security info=false;Jet OLEDB:Database Password=waynewei123", DataPath, JetOleDb));
                 return conn;
             }
             else
             {
-                var conn = new OleDbConnection(string.Format("{1};Data Source={0};persist security info=false;Jet OLEDB:Database Password=wayne19881112", DataPath, AceOleDb));
+                var conn = new OleDbConnection(string.Format("{1};Data Source={0};persist security info=false;Jet OLEDB:Database Password=waynewei123", DataPath, AceOleDb));
                 return conn;
             }
         }
