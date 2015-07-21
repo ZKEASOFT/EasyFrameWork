@@ -6,7 +6,7 @@ using System.Text;
 namespace Easy.Constant
 {
 
-    
+
     public enum SourceType
     {
         Dictionary,
@@ -24,6 +24,7 @@ namespace Easy.Constant
         Delete = 3,
         Design = 4,
         Publish = 5,
-        Unattached = 6
+        Unattached = 6,
+        Continue = 7
     }
 }
