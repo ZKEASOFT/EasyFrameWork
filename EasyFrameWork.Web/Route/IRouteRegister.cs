@@ -8,6 +8,6 @@ namespace Easy.Web.Route
 {
     public interface IRouteRegister
     {
-        IEnumerable<RouteDescriptor> Regist();
+        IEnumerable<RouteDescriptor> RegistRoute();
     }
 }

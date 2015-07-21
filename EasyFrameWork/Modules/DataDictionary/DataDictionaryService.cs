@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Easy.Data;
 using Easy.Extend;
 
 namespace Easy.Modules.DataDictionary
@@ -12,7 +13,7 @@ namespace Easy.Modules.DataDictionary
         DataDictionaryRepository rep = new DataDictionaryRepository();
         public IEnumerable<DataDictionaryEntity> GetDictionaryByType(string dicType)
         {
-            return Get(new Data.DataFilter().Where(string.Format("T0.DicValue<>'0' and T0.DicType='{0}'", dicType)));
+            return Get(new DataFilter().Where("DicValue", OperatorType.NotEqual, "0").Where("DicName", OperatorType.Equal, dicType));
         }
         public IEnumerable<string> GetDictionaryType()
         {

@@ -12,9 +12,7 @@ namespace Easy.Modules.DataDictionary
     {
         public long ID { get; set; }
         public string DicName { get; set; }
-
-        public string DicType { get; set; }
-
+        
         public string DicValue { get; set; }
 
         public int Order { get; set; }
