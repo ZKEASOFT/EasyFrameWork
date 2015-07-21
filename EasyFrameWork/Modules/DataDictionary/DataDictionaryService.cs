@@ -12,7 +12,7 @@ namespace Easy.Modules.DataDictionary
         DataDictionaryRepository rep = new DataDictionaryRepository();
         public IEnumerable<DataDictionaryEntity> GetDictionaryByType(string dicType)
         {
-            return Get(new Data.DataFilter().Where(string.Format("T0.DicValue<>'0' and T0.DicName='{0}'", dicType)));
+            return Get(new Data.DataFilter().Where(string.Format("T0.DicValue<>'0' and T0.DicType='{0}'", dicType)));
         }
         public IEnumerable<string> GetDictionaryType()
         {

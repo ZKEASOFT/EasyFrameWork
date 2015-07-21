@@ -16,6 +16,7 @@ namespace Easy.HTML.Tags
             Validator = new List<ValidatorBase>();
             this.ModelType = modelType;
             this.Name = property;
+            this.DisplayName = this.Name;
             this.OrderIndex = 100;
             this.AddClass("form-control");
         }

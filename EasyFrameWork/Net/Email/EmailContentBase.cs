@@ -9,7 +9,7 @@ namespace Easy.Net.Email
 {
     public abstract class EmailContentBase : IEmailContent
     {
-        private SmtpClient _smtpClient;
+        protected SmtpClient SmtpClient;
         public abstract string GetSubject();
 
         public abstract string GetBody();
@@ -44,11 +44,17 @@ namespace Easy.Net.Email
 
         public virtual SmtpClient GetSmtpClient()
         {
-            return _smtpClient ?? (_smtpClient = new SmtpClient
+            return SmtpClient ?? (SmtpClient = new SmtpClient
             {
                 Host = GetSmtpHost(),
                 Credentials = GetCredential()
             });
+        }
+
+
+        public virtual void OnSendComplete(IEmailContent content)
+        {
+
         }
     }
 }

@@ -22,5 +22,7 @@ namespace Easy.Net.Email
         NetworkCredential GetCredential();
 
         SmtpClient GetSmtpClient();
+
+        void OnSendComplete(IEmailContent content);
     }
 }
