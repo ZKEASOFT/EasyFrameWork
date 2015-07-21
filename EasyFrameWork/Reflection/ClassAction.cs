@@ -18,17 +18,9 @@ namespace Easy.Reflection
         /// <returns>返回字典</returns>
         public static Dictionary<string, object> GetPropertieValues<T>(T obj)
         {
-            Type obj_Type = obj.GetType();
-            var properties = obj_Type.GetProperties();
-            Dictionary<string, object> values = new Dictionary<string, object>();
-            foreach (var item in properties)
-            {
-                if (item.GetValue(obj, null) != null)
-                {
-                    values.Add(item.Name, item.GetValue(obj, null));
-                }
-            }
-            return values;
+            Type objType = typeof(T);
+            var properties = objType.GetProperties();
+            return properties.Where(item => item.GetValue(obj, null) != null).ToDictionary(item => item.Name, item => item.GetValue(obj, null));
         }
         /// <summary>
         /// 获取属性值
@@ -39,7 +31,7 @@ namespace Easy.Reflection
         /// <returns>属性值</returns>
         public static object GetPropertyValue<T>(T item, string property)
         {
-            Type entityType = Easy.Loader.GetType<T>();
+            Type entityType = Loader.GetType<T>();
             PropertyInfo proper = entityType.GetProperty(property);
             if (proper != null && proper.CanRead)
             {
@@ -68,7 +60,7 @@ namespace Easy.Reflection
         /// <param name="value"></param>
         public static void SetPropertyValue<T>(T item, string property, object value)
         {
-            Type entityType = Easy.Loader.GetType<T>();
+            Type entityType = Loader.GetType<T>();
             PropertyInfo proper = entityType.GetProperty(property);
             if (proper != null && proper.CanWrite)
             {
@@ -96,11 +88,11 @@ namespace Easy.Reflection
         {
             if (data == null || data.Rows.Count == 0)
                 return default(T);
-            Type ty = Easy.Loader.GetType<T>();
+            Type ty = Loader.GetType<T>();
             T obj;
             if (ty.IsClass && ty.Name != "String")
             {
-                obj = Activator.CreateInstance<T>();
+                obj = Loader.CreateInstance<T>();
                 var properties = ty.GetProperties();
                 if (properties.Any())
                 {
