@@ -6,13 +6,13 @@
 
 简单示例
 ------
-###数据库的设置:
-                public override void DataConfigure()
-                {
-                      DataTable("Advertisement");
-                      DataConfig(m => m.ID).AsIncreasePrimaryKey(); 
-                }
-###UI的配置，如何呈现，一切随你简单配置。
+### 数据库的设置:
+     public override void DataConfigure()
+     {
+       DataTable("Advertisement");
+       DataConfig(m => m.ID).AsIncreasePrimaryKey(); 
+     }
+### UI的配置，如何呈现，一切随你简单配置。
                 public override void ViewConfigure()
                 {
                        ViewConfig(m => m.ID).AsHidden();
@@ -31,7 +31,7 @@
 
 界面（UI）
 ------
-####列表：
+#### 列表：
                 @(
                 Html.Grid().Name("AdvertisementList")
                         .SetAsToolBar("#toolBar")
