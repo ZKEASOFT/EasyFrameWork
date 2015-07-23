@@ -159,22 +159,21 @@ namespace Easy.MetaData
         {
             get
             {
-                if (_primarykey != null)
-                    return _primarykey;
-                else
+                lock (_primarykey)
                 {
-                    _primarykey = new Dictionary<int, string>();
-                    lock (_primarykey)
-                    {
-                        foreach (var item in _porpertyDataConfig)
-                        {
-                            if (item.Value.IsPrimaryKey)
-                            {
-                                _primarykey.Add(item.Value.PrimaryKeyIndex, item.Value.ColumnName);
-                            }
-                        }
+                    if (_primarykey != null)
                         return _primarykey;
+
+                    _primarykey = new Dictionary<int, string>();
+                    foreach (var item in _porpertyDataConfig)
+                    {
+                        if (item.Value.IsPrimaryKey)
+                        {
+                            _primarykey.Add(item.Value.PrimaryKeyIndex, item.Value.ColumnName);
+                        }
                     }
+                    return _primarykey;
+
                 }
             }
         }
@@ -185,12 +184,15 @@ namespace Easy.MetaData
         {
             get
             {
-                if (_properties == null)
+                lock (_properties)
                 {
-                    _properties = new Dictionary<string, PropertyInfo>();
-                    TargetType.GetProperties().Each(m => _properties.Add(m.Name, m));
+                    if (_properties == null)
+                    {
+                        _properties = new Dictionary<string, PropertyInfo>();
+                        TargetType.GetProperties().Each(m => _properties.Add(m.Name, m));
+                    }
+                    return _properties;
                 }
-                return _properties;
             }
         }
 

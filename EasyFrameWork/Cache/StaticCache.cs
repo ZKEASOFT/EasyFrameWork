@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
 using Easy.Extend;
 
 namespace Easy.Cache
@@ -32,11 +33,12 @@ namespace Easy.Cache
         }
 
         internal static Dictionary<string, CacheObject> Cache;
+        private static Task _timer;
 
         static StaticCache()
         {
             Cache = new Dictionary<string, CacheObject>();
-            var thr = new Thread(new ThreadStart(() =>
+            _timer = new Task(() =>
             {
                 while (true)
                 {
@@ -54,9 +56,8 @@ namespace Easy.Cache
                         needRemove.Each(item => Cache.Remove(item));
                     }
                 }
-            }));
-            thr.IsBackground = true;
-            thr.Start();
+            });
+            _timer.Start();
         }
 
 
