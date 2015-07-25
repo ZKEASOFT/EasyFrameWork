@@ -5,6 +5,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using Microsoft.Practices.ServiceLocation;
 
 namespace Easy.Reflection
 {
@@ -31,7 +32,7 @@ namespace Easy.Reflection
         /// <returns>属性值</returns>
         public static object GetPropertyValue<T>(T item, string property)
         {
-            Type entityType = Loader.GetType<T>();
+            Type entityType = typeof(T);
             PropertyInfo proper = entityType.GetProperty(property);
             if (proper != null && proper.CanRead)
             {
@@ -60,7 +61,7 @@ namespace Easy.Reflection
         /// <param name="value"></param>
         public static void SetPropertyValue<T>(T item, string property, object value)
         {
-            Type entityType = Loader.GetType<T>();
+            Type entityType = typeof(T);
             PropertyInfo proper = entityType.GetProperty(property);
             if (proper != null && proper.CanWrite)
             {
@@ -88,11 +89,11 @@ namespace Easy.Reflection
         {
             if (data == null || data.Rows.Count == 0)
                 return default(T);
-            Type ty = Loader.GetType<T>();
+            Type ty = typeof(T);
             T obj;
             if (ty.IsClass && ty.Name != "String")
             {
-                obj = Loader.CreateInstance<T>();
+                obj = ServiceLocator.Current.GetInstance<T>();
                 var properties = ty.GetProperties();
                 if (properties.Any())
                 {
@@ -126,8 +127,8 @@ namespace Easy.Reflection
         {
             if (data == null || data.Rows.Count == 0)
                 return default(T);
-            Type ty = Loader.GetType<T>();
-            var obj = Loader.CreateInstance<T>();
+            Type ty = typeof(T);
+            var obj = ServiceLocator.Current.GetInstance<T>();
             foreach (var item in columns)
             {
                 if (!data.Columns.Contains(item.Key))
@@ -147,7 +148,7 @@ namespace Easy.Reflection
         {
             if (data == null || data.Rows.Count == 0)
                 return default(T);
-            var obj = Loader.CreateInstance<T>();
+            var obj = ServiceLocator.Current.GetInstance<T>();
             foreach (var item in columns)
             {
                 if (!data.Columns.Contains(item.Key))
@@ -171,8 +172,8 @@ namespace Easy.Reflection
         /// <returns>返回Model对象</returns>
         public static T GetModel<T>(NameValueCollection collection) where T : class
         {
-            Type objType = Loader.GetType<T>();
-            var obj = Loader.CreateInstance<T>();
+            Type objType = typeof(T);
+            var obj = ServiceLocator.Current.GetInstance<T>();
             var properties = objType.GetProperties();
             foreach (string key in collection.AllKeys)
             {
@@ -215,8 +216,8 @@ namespace Easy.Reflection
         /// <returns>Model对象</returns>
         public static T GetModel<T>(NameValueCollection collection, string replaceKey) where T : class
         {
-            Type objType = Loader.GetType<T>();
-            var obj = Loader.CreateInstance<T>();
+            Type objType = typeof(T);
+            var obj = ServiceLocator.Current.GetInstance<T>();
             var properties = objType.GetProperties();
             foreach (string key in collection.AllKeys)
             {
@@ -235,7 +236,7 @@ namespace Easy.Reflection
 
         public static object GetModel(Type target, NameValueCollection collection, string replaceKey)
         {
-            object obj = Loader.CreateInstance(target);
+            object obj = ServiceLocator.Current.GetInstance(target);
             var properties = target.GetProperties();
             foreach (string key in collection.AllKeys)
             {

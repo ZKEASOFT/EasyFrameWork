@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Easy.Models
 {
-    public interface IImage
+    public interface IImage : IEntity
     {
         string ImageUrl { get; set; }
         string ImageThumbUrl { get; set; }

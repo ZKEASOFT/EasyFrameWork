@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Easy.Modules.SystemSetting;
+using Microsoft.Practices.ServiceLocation;
 
 namespace Easy
 {
@@ -10,22 +12,22 @@ namespace Easy
     /// </summary>
     public static class SystemSetting
     {
-        static Modules.SystemSetting.SystemSettingService service;
+        static SystemSettingService Service;
         static SystemSetting()
         {
-            service = Loader.CreateInstance<Modules.SystemSetting.SystemSettingService>();
+            Service = ServiceLocator.Current.GetInstance<SystemSettingService>();
         }
-        public static Modules.SystemSetting.SystemSettingBase Get()
+        public static SystemSettingBase Get()
         {
-            return service.Get();
+            return Service.Get();
         }
-        public static T Get<T>() where T : Modules.SystemSetting.SystemSettingBase
+        public static T Get<T>() where T : SystemSettingBase
         {
-            return service.Get() as T;
+            return Service.Get() as T;
         }
-        public static void Update(Modules.SystemSetting.SystemSettingBase setting)
+        public static void Update(SystemSettingBase setting)
         {
-            service.Update(setting);
+            Service.Update(setting);
         }
     }
 }

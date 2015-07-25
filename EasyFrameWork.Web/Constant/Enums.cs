@@ -7,10 +7,6 @@ namespace Easy.Web.Constant
 {
     public class Enums
     {
-        public enum ControllerFactoryType
-        {
-            None = 0,
-            DefaultIndexControllerFactory = 1
-        }
+       
     }
 }

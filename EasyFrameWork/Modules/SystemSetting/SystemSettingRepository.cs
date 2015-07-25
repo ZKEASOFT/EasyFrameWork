@@ -5,6 +5,7 @@ using System.Data;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using Microsoft.Practices.ServiceLocation;
 
 namespace Easy.Modules.SystemSetting
 {
@@ -13,8 +14,8 @@ namespace Easy.Modules.SystemSetting
         public SystemSettingBase Get()
         {
             DataTable table = DB.CustomerSql("select Property,Val from SystemSetting").ToDataTable();
-            Type setType = Easy.Loader.GetType<SystemSettingBase>();
-            SystemSettingBase setting = Easy.Loader.CreateInstance<SystemSettingBase>();
+            SystemSettingBase setting = ServiceLocator.Current.GetInstance<SystemSettingBase>();
+            Type setType = setting.GetType();
             foreach (DataRow item in table.Rows)
             {
                 string property = item["Property"].ToString();
@@ -29,7 +30,7 @@ namespace Easy.Modules.SystemSetting
         }
         public void Update(SystemSettingBase setting)
         {
-            Type setType = Easy.Loader.GetType<SystemSettingBase>();
+            Type setType = setting.GetType();
             PropertyInfo[] propertys = setType.GetProperties();
             DB.CustomerSql("Delete From SystemSetting").ExecuteNonQuery();
             foreach (PropertyInfo item in propertys)

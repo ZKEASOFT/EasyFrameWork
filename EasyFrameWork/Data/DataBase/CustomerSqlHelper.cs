@@ -35,7 +35,7 @@ namespace Easy.Data.DataBase
             }
             else
             {
-                var proertyInfoArray = Loader.GetType<T>().GetProperties();
+                var proertyInfoArray = typeof(T).GetProperties();
                 proertyInfoArray.Where(m => m.CanWrite).Each(m => map.Add(new KeyValuePair<string, string>(m.Name, m.Name)));
             }
             return map;
@@ -85,7 +85,7 @@ namespace Easy.Data.DataBase
                 {
                     lists.Add(Reflection.ClassAction.GetModel<T>(table, i));
                 }
-                
+
             }
             return lists;
         }

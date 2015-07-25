@@ -6,7 +6,7 @@ using Easy.MetaData;
 
 namespace Easy.Models
 {
-    public class EditorEntity
+    public class EditorEntity : IEntity
     {
 
         public string Title { get; set; }

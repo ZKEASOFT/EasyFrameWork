@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Easy.Models
 {
-    public interface IUser
+    public interface IUser : IEntity
     {
         string UserID { get; set; }
         string NickName { get; set; }

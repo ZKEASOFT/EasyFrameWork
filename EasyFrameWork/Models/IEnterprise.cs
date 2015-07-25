@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Easy.Models
 {
-    public interface IEnterprise
+    public interface IEnterprise : IEntity
     {
         long ID { get; set; }
         /// <summary>

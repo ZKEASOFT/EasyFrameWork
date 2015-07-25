@@ -5,10 +5,11 @@ using System.Linq;
 using System.Text;
 using Easy.Data.DataBase;
 using Easy.Data;
+using Easy.Models;
 
 namespace Easy.RepositoryPattern
 {
-    public class RepositoryBase<T> : IRepository<T> where T : class
+    public class RepositoryBase<T> : IRepository<T>, IAdapterRepository where T : class
     {
         static string dataBase;
         static string connString;
@@ -52,39 +53,39 @@ namespace Easy.RepositoryPattern
             }
         }
 
-        public T Get(params object[] primaryKeys)
+        public virtual T Get(params object[] primaryKeys)
         {
             return DB.Get<T>(primaryKeys);
         }
-        public List<T> Get(DataFilter filter)
+        public virtual List<T> Get(DataFilter filter)
         {
             return DB.Get<T>(filter);
         }
-        public List<T> Get(DataFilter filter, Pagination pagin)
+        public virtual List<T> Get(DataFilter filter, Pagination pagin)
         {
             return DB.Get<T>(filter, pagin);
         }
-        public void Add(T item)
+        public virtual void Add(T item)
         {
             DB.Add<T>(item);
         }
-        public int Delete(params object[] primaryKeys)
+        public virtual int Delete(params object[] primaryKeys)
         {
             return DB.Delete<T>(primaryKeys);
         }
-        public int Delete(DataFilter filter)
+        public virtual int Delete(DataFilter filter)
         {
             return DB.Delete<T>(filter);
         }
-        public bool Update(T item, DataFilter filter)
+        public virtual bool Update(T item, DataFilter filter)
         {
             return DB.Update<T>(item, filter);
         }
-        public bool Update(T item, params object[] primaryKeys)
+        public virtual bool Update(T item, params object[] primaryKeys)
         {
             return DB.Update<T>(item, primaryKeys);
         }
-        public long Count(DataFilter filter)
+        public virtual long Count(DataFilter filter)
         {
             return DB.Count<T>(filter);
         }

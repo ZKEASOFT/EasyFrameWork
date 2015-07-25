@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using Microsoft.Practices.ServiceLocation;
 
 namespace Easy.Web.ModelBinder
 {
@@ -12,7 +13,7 @@ namespace Easy.Web.ModelBinder
         {
             if (bindingContext.ModelType.IsInterface || bindingContext.ModelType.IsAbstract)
             {
-                return Easy.Reflection.ClassAction.GetModel(Easy.Loader.GetType(bindingContext.ModelType), controllerContext.RequestContext.HttpContext.Request.Form);
+                return Easy.Reflection.ClassAction.GetModel(ServiceLocator.Current.GetInstance(bindingContext.ModelType).GetType(), controllerContext.RequestContext.HttpContext.Request.Form);
             }
             else
             {

@@ -6,38 +6,41 @@ using Easy.MetaData;
 using Easy.Reflection;
 using System.Web;
 using Easy.HTML.Tags;
+using Microsoft.Practices.ServiceLocation;
 
 namespace Easy.HTML
 {
     public class ViewModelDecode<T>
     {
-        DataConfigureAttribute attribute;
-        T entity;
-        bool WithValue = false;
-        Type EntityType;
+        private readonly DataConfigureAttribute _attribute;
+        private readonly T _entity;
+        private readonly bool _withValue = false;
+
         public ViewModelDecode()
         {
-            EntityType = Loader.GetType<T>();
-            attribute = DataConfigureAttribute.GetAttribute<T>();
+            var entityType = typeof (T);
+            _attribute = DataConfigureAttribute.GetAttribute<T>();
         }
+
         public ViewModelDecode(T Entity)
         {
+            Type entityType;
             if (Entity != null)
             {
-                entity = Entity;
-                WithValue = true;
-                EntityType = entity.GetType();
-                attribute = DataConfigureAttribute.GetAttribute(EntityType);
+                _entity = Entity;
+                _withValue = true;
+                entityType = _entity.GetType();
+                _attribute = DataConfigureAttribute.GetAttribute(entityType);
             }
             else
             {
-                entity = Loader.CreateInstance<T>();
-                EntityType = Loader.GetType<T>();
-                attribute = DataConfigureAttribute.GetAttribute<T>();
+                _entity = ServiceLocator.Current.GetInstance<T>();
+                entityType = typeof (T);
+                _attribute = DataConfigureAttribute.GetAttribute<T>();
             }
-            if (attribute == null)
+            if (_attribute == null)
             {
-                throw new Exception(EntityType.FullName + "未使用特性,请在其上使用[EasyFrameWork.Attribute.DataConfigureAttribute]特性！");
+                throw new Exception(entityType.FullName + "未使用特性,请在其上使用[EasyFrameWork.Attribute.DataConfigureAttribute]特性！");
             }
         }
         public IDictionary<string, object> ExtendPropertyValue { get; set; }
@@ -49,9 +52,9 @@ namespace Easy.HTML
         public List<string> GetViewModelPropertyHtmlTag(bool widthLabel)
         {
             List<string> lists = new List<string>();
-            foreach (var item in attribute.GetHtmlTags(false))
+            foreach (var item in _attribute.GetHtmlTags(false))
             {
-                if (WithValue)
+                if (_withValue)
                 {
                     if (item is DropDownListHtmlTag)
                     {
@@ -65,7 +68,7 @@ namespace Easy.HTML
                             }
                         }
                     }
-                    object Val = ClassAction.GetObjPropertyValue(entity, item.Name);
+                    object Val = ClassAction.GetObjPropertyValue(_entity, item.Name);
                     item.SetValue(Val);
                 }
                 lists.Add(item.ToString(widthLabel));
@@ -75,9 +78,9 @@ namespace Easy.HTML
         public List<HtmlTagBase> GetViewModelPropertyHtmlTag()
         {
             List<HtmlTagBase> results = new List<HtmlTagBase>();
-            foreach (var item in attribute.GetHtmlTags(false))
+            foreach (var item in _attribute.GetHtmlTags(false))
             {
-                object val = ClassAction.GetObjPropertyValue(entity, item.Name);
+                object val = ClassAction.GetObjPropertyValue(_entity, item.Name);
                 item.SetValue(val);
                 results.Add(item);
             }
@@ -90,11 +93,11 @@ namespace Easy.HTML
         public List<string> GetViewModelHiddenTargets()
         {
             List<string> lists = new List<string>();
-            foreach (var item in attribute.GetHtmlHiddenTags())
+            foreach (var item in _attribute.GetHtmlHiddenTags())
             {
-                if (this.WithValue)
+                if (this._withValue)
                 {
-                    object Val = ClassAction.GetObjPropertyValue(this.entity, item.Name);
+                    object Val = ClassAction.GetObjPropertyValue(this._entity, item.Name);
                     item.SetValue(Val);
                 }
                 lists.Add(item.ToString(false));
@@ -108,8 +111,8 @@ namespace Easy.HTML
         /// <returns></returns>
         public string GetViewModelPropertyHtmlTag(string property)
         {
-            object Val = ClassAction.GetObjPropertyValue(this.entity, property);
-            var html = attribute.GetHtmlTag(property);
+            object Val = ClassAction.GetObjPropertyValue(this._entity, property);
+            var html = _attribute.GetHtmlTag(property);
             html.SetValue(Val);
             return html.ToString();
         }
@@ -120,7 +123,7 @@ namespace Easy.HTML
         /// <returns></returns>
         public string GetPropertyDisplayName(string property)
         {
-            return attribute.GetDisplayName(property);
+            return _attribute.GetDisplayName(property);
         }
         
     }

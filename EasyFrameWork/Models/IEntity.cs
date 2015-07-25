@@ -3,10 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Easy.IOCAdapter
+namespace Easy.Models
 {
-    public interface IModule
+    public interface IEntity
     {
-        void Load();
     }
 }

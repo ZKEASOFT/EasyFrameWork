@@ -1,10 +1,10 @@
-﻿using Easy.IOCAdapter;
-using Easy.Modules.DataDictionary;
+﻿using Easy.Modules.DataDictionary;
 using Easy.Modules.MutiLanguage;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Microsoft.Practices.ServiceLocation;
 
 namespace Easy
 {
@@ -19,7 +19,7 @@ namespace Easy
             get
             {
                 if (!string.IsNullOrEmpty(appPath)) return appPath;
-                IApplicationContext app = Easy.Loader.CreateInstance<IApplicationContext>();
+                IApplicationContext app = ServiceLocator.Current.GetInstance<IApplicationContext>();
                 if (app != null)
                 {
                     appPath = app.VirtualPath;

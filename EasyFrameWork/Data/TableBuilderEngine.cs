@@ -46,7 +46,7 @@ namespace Easy.Data
         public void Buid<T>() where T : class
         {
             DataConfigureAttribute custAttribute = DataConfigureAttribute.GetAttribute<T>();
-            TargeType = Loader.GetType<T>();
+            TargeType = typeof(T);
             System.Reflection.PropertyInfo[] propertys = TargeType.GetProperties();
             if (custAttribute != null)
             {

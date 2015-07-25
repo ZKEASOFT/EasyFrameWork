@@ -59,7 +59,7 @@ namespace Easy.Data.DataBase
 
         protected string GetSelectColumn<T>(DataConfigureAttribute custAttribute, out List<KeyValuePair<string, string>> comMatch) where T : class
         {
-            PropertyInfo[] propertys = Loader.GetType<T>().GetProperties();
+            PropertyInfo[] propertys = typeof(T).GetProperties();
             var selectCom = new StringBuilder();
             comMatch = new List<KeyValuePair<string, string>>();
             foreach (var item in propertys)
@@ -123,7 +123,7 @@ namespace Easy.Data.DataBase
 
         private IEnumerable<string> GetCulumnSchema<T>(DataConfigureAttribute custAttribute) where T : class
         {
-            PropertyInfo[] propertys = Loader.GetType<T>().GetProperties();
+            PropertyInfo[] propertys = typeof(T).GetProperties();
             var result = new List<string>();
             foreach (var item in propertys)
             {
@@ -185,7 +185,7 @@ namespace Easy.Data.DataBase
             }
             else
             {
-                Loader.GetType<T>().GetProperties().Each(m => properties.Add(m.Name, m));
+                typeof(T).GetProperties().Each(m => properties.Add(m.Name, m));
             }
             return properties;
         }
@@ -611,7 +611,7 @@ namespace Easy.Data.DataBase
                     {
                         if (dataConfig.Value.IsPrimaryKey && dataConfig.Value.IsIncreasePrimaryKey)
                         {
-                            PropertyInfo pro = Easy.Loader.GetType<T>().GetProperty(dataConfig.Value.PropertyName);
+                            PropertyInfo pro = typeof(T).GetProperty(dataConfig.Value.PropertyName);
                             if (pro != null && pro.CanWrite)
                             {
                                 pro.SetValue(item, Easy.Reflection.ClassAction.ValueConvert(pro, resu), null);
@@ -626,7 +626,7 @@ namespace Easy.Data.DataBase
         {
             DataConfigureAttribute custAttribute = DataConfigureAttribute.GetAttribute<T>();
             string tableName = GetTableName<T>(custAttribute);
-            System.Reflection.PropertyInfo[] propertys = Easy.Loader.GetType<T>().GetProperties();
+            PropertyInfo[] propertys = typeof(T).GetProperties();
             StringBuilder builder = new StringBuilder();
             List<KeyValuePair<string, object>> keyValue = new List<KeyValuePair<string, object>>();
             foreach (var property in propertys)
@@ -677,8 +677,7 @@ namespace Easy.Data.DataBase
         public virtual bool Update<T>(T item, params object[] primaryKeys) where T : class
         {
             DataFilter filter = new DataFilter();
-            Dictionary<int, string> primaryKey = new Dictionary<int, string>();
-            primaryKey.Add(0, "ID");
+            Dictionary<int, string> primaryKey = new Dictionary<int, string> {{0, "ID"}};
             DataConfigureAttribute custAttribute = DataConfigureAttribute.GetAttribute<T>();
             if (custAttribute != null)
             {
@@ -697,7 +696,7 @@ namespace Easy.Data.DataBase
             }
             else
             {
-                Type entityType = Easy.Loader.GetType<T>();
+                Type entityType = typeof(T);
                 foreach (int primary in primaryKey.Keys)
                 {
                     string proPerty = primaryKey[primary];

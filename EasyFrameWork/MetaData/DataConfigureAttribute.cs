@@ -129,7 +129,7 @@ namespace Easy.MetaData
         /// <returns></returns>
         public static DataConfigureAttribute GetAttribute<T>()
         {
-            Type targetType = Easy.Loader.GetType<T>();
+            Type targetType = typeof(T);
             StaticCache cache = new StaticCache();
             string typeName = targetType.FullName;
             var attribute = cache.Get("DataConfigureAttribute_" + typeName, m =>

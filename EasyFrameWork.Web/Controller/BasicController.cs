@@ -12,6 +12,7 @@ using System.Web.Mvc;
 using Easy.Web.Extend;
 using Easy.Constant;
 using Easy.HTML.Tags;
+using Microsoft.Practices.ServiceLocation;
 
 namespace Easy.Web.Controller
 {
@@ -37,9 +38,9 @@ namespace Easy.Web.Controller
         /// 业务Service
         /// </summary>
         public S Service;
-        public BasicController()
+        public BasicController(S service)
         {
-            Service = Easy.Loader.CreateInstance<S>();
+            Service = service;
         }
         protected IImage UpLoadImage(IImage entity)
         {
@@ -71,11 +72,6 @@ namespace Easy.Web.Controller
                 primaryKeys[i] = Reflection.ClassAction.GetPropertyValue<T>(entity, primaryKey[i]);
             }
             return primaryKeys;
-        }
-
-        public BasicController(S service)
-        {
-            this.Service = service;
         }
 
         protected void QueryStringBindToEntity(T entity)

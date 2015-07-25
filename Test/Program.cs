@@ -10,8 +10,8 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Easy;
 using Easy.Extend;
-using Easy.IOCAdapter;
 using Easy.Net.Email;
+using Microsoft.Practices.ServiceLocation;
 
 namespace Test
 {
@@ -19,16 +19,28 @@ namespace Test
     {
         static void Main(string[] args)
         {
+           
             string math = "http://media.kingston.com/hyperx/sidekick/sidekick-support-landing_6b7d8f.jpg";
 
-           Regex reg=new Regex(@"[-|_]([a-fA-F0-9]{6})\.(?:jpg|png)$");
+            Regex reg = new Regex(@"[-|_]([a-fA-F0-9]{6})\.(?:jpg|png)$");
             reg.Replace(math, (v) =>
             {
                 return "";
             });
-           Console.WriteLine(reg.IsMatch(math));
+            Console.WriteLine(reg.IsMatch(math));
             Console.ReadKey();
+
         }
+    }
+
+    public interface ITest
+    {
+
+    }
+
+    public class Test : ITest
+    {
+
     }
 
 }

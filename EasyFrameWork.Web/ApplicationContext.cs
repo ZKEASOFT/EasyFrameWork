@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Microsoft.Practices.ServiceLocation;
 
 namespace Easy.Web
 {
@@ -18,7 +19,7 @@ namespace Easy.Web
                 {
                     if (_CurrentUser == null)
                     {
-                        IUserService userService = Easy.Loader.CreateInstance<IUserService>();
+                        IUserService userService = ServiceLocator.Current.GetInstance<IUserService>();
                         if (userService != null)
                         {
                             _CurrentUser = userService.GetGeneric<Easy.Modules.User.Models.UserEntity>(System.Web.HttpContext.Current.User.Identity.Name);

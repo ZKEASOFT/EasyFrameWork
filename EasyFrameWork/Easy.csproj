@@ -49,6 +49,22 @@
     </AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Autofac, Version=3.5.0.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
+      <HintPath>..\packages\Autofac.3.5.2\lib\net40\Autofac.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Practices.ServiceLocation, Version=1.3.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\CommonServiceLocator.1.3\lib\portable-net4+sl5+netcore45+wpa81+wp8\Microsoft.Practices.ServiceLocation.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Practices.Unity, Version=2.1.505.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Unity.2.1.505.2\lib\NET35\Microsoft.Practices.Unity.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Practices.Unity.Configuration, Version=2.1.505.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Unity.2.1.505.2\lib\NET35\Microsoft.Practices.Unity.Configuration.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Newtonsoft.Json.6.0.6\lib\net40\Newtonsoft.Json.dll</HintPath>
@@ -71,10 +87,12 @@
     <Compile Include="Extend\ExtIEnumerable.cs" />
     <Compile Include="HTML\jsTree\ContextmenuItem.cs" />
     <Compile Include="HTML\Tags\CollectionAreaTag.cs" />
-    <Compile Include="IOCAdapter\Exceptions\UnregisteredException.cs" />
-    <Compile Include="IOCAdapter\ImplType.cs" />
+    <Compile Include="IOC\AutofacRegister.cs" />
+    <Compile Include="IOC\Autofac\AutofacServiceLocator.cs" />
+    <Compile Include="IOC\UnityRegister.cs" />
     <Compile Include="Models\AutoComplete.cs" />
     <Compile Include="Models\EditorEntity.cs" />
+    <Compile Include="Models\IAdapter.cs" />
     <Compile Include="Models\IImage.cs" />
     <Compile Include="Models\IUser.cs" />
     <Compile Include="Cache\StaticCache.cs" />
@@ -121,18 +139,12 @@
     <Compile Include="HTML\jsTree\Setting.cs" />
     <Compile Include="HTML\jsTree\Tree.cs" />
     <Compile Include="IApplicationContext.cs" />
-    <Compile Include="IOCAdapter\Container.cs" />
-    <Compile Include="IOCAdapter\IModule.cs" />
-    <Compile Include="IOCAdapter\Loader.cs" />
     <Compile Include="Localization.cs" />
-    <Compile Include="Modules\DataDictionary\DataDicttionaryModule.cs" />
     <Compile Include="Modules\DataDictionary\IDataDictionaryService.cs" />
-    <Compile Include="Modules\Manager.cs" />
     <Compile Include="Modules\MutiLanguage\ILanguageService.cs" />
     <Compile Include="Modules\MutiLanguage\LanguageEntity.cs" />
     <Compile Include="Modules\MutiLanguage\LanguageRepository.cs" />
     <Compile Include="Modules\MutiLanguage\LanguageService.cs" />
-    <Compile Include="Modules\MutiLanguage\MutiLanguageModule.cs" />
     <Compile Include="Modules\SystemSetting\SystemSetting.cs" />
     <Compile Include="Modules\SystemSetting\SystemSettingBase.cs" />
     <Compile Include="Modules\SystemSetting\SystemSettingRepository.cs" />
@@ -140,7 +152,6 @@
     <Compile Include="Modules\User\Models\UserEntity.cs" />
     <Compile Include="Modules\User\Service\Impl\UserService.cs" />
     <Compile Include="Modules\User\Service\IUserService.cs" />
-    <Compile Include="Modules\User\UserModule.cs" />
     <Compile Include="Net\Email\EmailContentBase.cs" />
     <Compile Include="Net\Email\IEmailContent.cs" />
     <Compile Include="Net\Ftp.cs" />
@@ -179,10 +190,12 @@
     <Compile Include="WinApi\OpenApi.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="app.config" />
     <None Include="packages.config">
       <SubType>Designer</SubType>
     </None>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

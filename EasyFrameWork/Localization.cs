@@ -1,10 +1,10 @@
 ﻿using Easy.Cache;
-using Easy.IOCAdapter.Exceptions;
 using Easy.Modules.MutiLanguage;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Microsoft.Practices.ServiceLocation;
 
 namespace Easy
 {
@@ -16,7 +16,7 @@ namespace Easy
             LanguageEntity lan = lanCache.Get(lanKey, m =>
             {
                 m.When(LanguageService.SignalLanguageUpdate);
-                var lanService = Loader.CreateInstance<ILanguageService>();
+                var lanService = ServiceLocator.Current.GetInstance<ILanguageService>();
                 if (lanService == null)
                     return new LanguageEntity { LanKey = lanKey, LanValue = lanKey };
                 var language = lanService.GetGeneric<LanguageEntity>(lanKey, GetCurrentLanID());
@@ -39,7 +39,7 @@ namespace Easy
                         LanType = LanType,
                         Module = Module
                     };
-                    lanService.AddGeneric<LanguageEntity>(language);
+                    lanService.AddGeneric(language);
                 }
                 return language;
             });
@@ -47,29 +47,17 @@ namespace Easy
         }
         public static Dictionary<string, string> InitLan(Dictionary<string, string> source)
         {
-            ILanguageService lanService;
-            try
-            {
-                lanService = Easy.Loader.CreateInstance<ILanguageService>();
-            }
-            catch (UnregisteredException ex)
-            {
-                foreach (string item in source.Keys.ToArray<string>())
-                {
-                    source[item] = item;
-                }
-                return source;
-            }
+            var lanService = ServiceLocator.Current.GetInstance<ILanguageService>();
+
             if (lanService != null)
                 return lanService.InitLan(source);
-            else
+
+            foreach (string item in source.Keys.ToArray<string>())
             {
-                foreach (string item in source.Keys.ToArray<string>())
-                {
-                    source[item] = item;
-                }
-                return source;
+                source[item] = item;
             }
+            return source;
+
         }
         public static int GetCurrentLanID()
         {

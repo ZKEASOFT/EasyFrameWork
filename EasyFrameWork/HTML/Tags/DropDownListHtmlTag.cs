@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
+using Microsoft.Practices.ServiceLocation;
 
 namespace Easy.HTML.Tags
 {
@@ -160,7 +161,7 @@ namespace Easy.HTML.Tags
             this.SourceType = sourceType;
             if (sourceType == SourceType.Dictionary)
             {
-                IDataDictionaryService dicService = Easy.Loader.CreateInstance<IDataDictionaryService>();
+                IDataDictionaryService dicService = ServiceLocator.Current.GetInstance<IDataDictionaryService>();
                 if (dicService != null)
                 {
                     if (this._data == null)
@@ -185,7 +186,7 @@ namespace Easy.HTML.Tags
             string dictionaryType = this.ModelType.Name + "_" + this.Name;
             if (type == SourceType.Dictionary)
             {
-                var dicService = Loader.CreateInstance<IDataDictionaryService>();
+                var dicService = ServiceLocator.Current.GetInstance<IDataDictionaryService>();
                 if (dicService != null)
                 {
                     if (this._data == null)

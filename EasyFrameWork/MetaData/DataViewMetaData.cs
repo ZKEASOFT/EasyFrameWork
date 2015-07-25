@@ -12,6 +12,7 @@ using System.ComponentModel;
 using System.Reflection;
 using Easy;
 using Easy.Extend;
+using Microsoft.Practices.ServiceLocation;
 
 namespace Easy.MetaData
 {
@@ -119,7 +120,7 @@ namespace Easy.MetaData
         Dictionary<string, HtmlTagBase> _htmlTags = new Dictionary<string, HtmlTagBase>();
         Dictionary<string, PropertyDataInfo> _porpertyDataConfig = new Dictionary<string, PropertyDataInfo>();
         List<Relation> _dataRelations = new List<Relation>();
-        Dictionary<int, string> _primarykey;
+
         public Dictionary<string, HtmlTagBase> HtmlTags
         {
             get { return this._htmlTags; }
@@ -141,7 +142,7 @@ namespace Easy.MetaData
         {
             get
             {
-                var app = Loader.CreateInstance<IApplicationContext>();
+                var app = ServiceLocator.Current.GetInstance<IApplicationContext>();
                 if (app != null)
                 {
                     _user = app.CurrentUser;
@@ -159,40 +160,20 @@ namespace Easy.MetaData
         {
             get
             {
-                lock (_primarykey)
-                {
-                    if (_primarykey != null)
-                        return _primarykey;
-
-                    _primarykey = new Dictionary<int, string>();
-                    foreach (var item in _porpertyDataConfig)
-                    {
-                        if (item.Value.IsPrimaryKey)
-                        {
-                            _primarykey.Add(item.Value.PrimaryKeyIndex, item.Value.ColumnName);
-                        }
-                    }
-                    return _primarykey;
-
-                }
+                return _porpertyDataConfig.Where(item => item.Value.IsPrimaryKey).ToDictionary(item => item.Value.PrimaryKeyIndex, item => item.Value.ColumnName);
             }
         }
 
-        private Dictionary<string, PropertyInfo> _properties;
+
 
         public Dictionary<string, PropertyInfo> Properties
         {
             get
             {
-                lock (_properties)
-                {
-                    if (_properties == null)
-                    {
-                        _properties = new Dictionary<string, PropertyInfo>();
-                        TargetType.GetProperties().Each(m => _properties.Add(m.Name, m));
-                    }
-                    return _properties;
-                }
+                var properties = new Dictionary<string, PropertyInfo>();
+                TargetType.GetProperties().Each(m => properties.Add(m.Name, m));
+                return properties;
+
             }
         }
 
