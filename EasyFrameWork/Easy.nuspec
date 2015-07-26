@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>EasyFrameWork</id>
+    <version>$version$</version>
+    <title>$title$</title>
+    <authors>SeriaWei</authors>
+    <owners>SeriaWei</owners>
+    <licenseUrl>http://www.apache.org/licenses/LICENSE-2.0.html</licenseUrl>
+    <projectUrl>https://github.com/SeriaWei/EasyFrameWork</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Easy to work</description>
+    <releaseNotes>V1.0</releaseNotes>
+    <copyright>Copyright 2015</copyright>
+    <tags>SeriaWei EasyFrameWork FrameWork</tags>
+  </metadata>
+</package>
