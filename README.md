@@ -6,6 +6,14 @@
 简单示例
 ------
 ### 数据库的设置:
+### Web.Config:
+    <connectionStrings>
+        <add name="Easy" connectionString="App_Data\DataBase.mdb" />
+    </connectionStrings>
+    <appSettings>
+        <add key="DataBase" value="Ace"/> //可选值：Ace(Access 2007),Jet(Access 2003),SQL
+    </appSettings>
+### EntityConfig    
     public override void DataConfigure()
     {
         DataTable("Advertisement");
