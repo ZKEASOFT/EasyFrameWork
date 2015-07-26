@@ -6,12 +6,12 @@
     <title>$title$</title>
     <authors>SeriaWei</authors>
     <owners>SeriaWei</owners>
-    <licenseUrl>http://www.apache.org/licenses/LICENSE-2.0.html</licenseUrl>
+    <licenseUrl>http://opensource.org/licenses/Apache-2.0</licenseUrl>
     <projectUrl>https://github.com/SeriaWei/EasyFrameWork</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>Easy to work</description>
     <releaseNotes>V1.0</releaseNotes>
-    <copyright>zKea Copyright 2015</copyright>
-    <tags>SeriaWei EasyFrameWork FrameWork</tags>
+    <copyright>© zKea. All rights reserved.</copyright>
+    <tags>EasyFrameWork</tags>
   </metadata>
 </package>

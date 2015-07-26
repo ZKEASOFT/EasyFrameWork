@@ -6,12 +6,12 @@
     <title>$title$</title>
     <authors>SeriaWei</authors>
     <owners>SeriaWei</owners>
-    <licenseUrl>http://www.apache.org/licenses/LICENSE-2.0.html</licenseUrl>
+    <licenseUrl>http://opensource.org/licenses/Apache-2.0</licenseUrl>
     <projectUrl>https://github.com/SeriaWei/EasyFrameWork</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>EasyFrameWork.Web For Mvc</description>
     <releaseNotes>V1.0</releaseNotes>
-    <copyright>Copyright 2015</copyright>
+    <copyright>© zKea. All rights reserved.</copyright>
     <tags>EasyFrameWork MVC</tags>
   </metadata>
 </package>
