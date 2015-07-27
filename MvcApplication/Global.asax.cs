@@ -5,7 +5,10 @@ using System.Web;
 using System.Web.Http;
 using System.Web.Mvc;
 using System.Web.Routing;
-using Easy.Web;
+using Easy.StartTask;
+using Easy.Web.Application;
+using Microsoft.Practices.Unity;
+using MvcApplication.Controllers;
 
 namespace MvcApplication
 {
@@ -16,6 +19,15 @@ namespace MvcApplication
     {
         public override void Application_StartUp()
         {
+            TaskManager
+                .Include<ConfigTask>()
+                .Include<ResourceTask>();
+        }
+    }
+    public class ConfigTask : IStartTask
+    {
+        public void Excute()
+        {
             AreaRegistration.RegisterAllAreas();
 
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
@@ -23,4 +35,14 @@ namespace MvcApplication
             AuthConfig.RegisterAuth();
         }
     }
+    public class ResourceTask : IStartTask
+    {
+        public void Excute()
+        {
+            var mgr = new ResourceManager();
+            mgr.InitScript();
+            mgr.InitStyle();
+        }
+    }
+
 }

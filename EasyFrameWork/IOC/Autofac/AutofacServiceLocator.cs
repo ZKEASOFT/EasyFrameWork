@@ -20,15 +20,28 @@ namespace Easy.IOC.Autofac
 
         protected override object DoGetInstance(Type serviceType, string key)
         {
-            return key != null ? _container.ResolveNamed(key, serviceType) : _container.Resolve(serviceType);
+            try
+            {
+                return key != null ? _container.ResolveNamed(key, serviceType) : _container.Resolve(serviceType);
+            }
+            catch
+            {
+                return null;
+            }
         }
 
         protected override IEnumerable<object> DoGetAllInstances(Type serviceType)
         {
-            var enumerableType = typeof(IEnumerable<>).MakeGenericType(serviceType);
-
-            object instance = _container.Resolve(enumerableType);
-            return ((IEnumerable)instance).Cast<object>();
+            try
+            {
+                var enumerableType = typeof (IEnumerable<>).MakeGenericType(serviceType);
+                object instance = _container.Resolve(enumerableType);
+                return ((IEnumerable) instance).Cast<object>();
+            }
+            catch
+            {
+                return new List<object>();
+            }
         }
     }
 }

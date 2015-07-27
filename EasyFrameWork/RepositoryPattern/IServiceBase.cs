@@ -3,10 +3,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Easy.Models;
 
 namespace Easy.RepositoryPattern
 {
-    public interface IServiceBase<Entity>
+    public interface IServiceBase<Entity> : IAdapterService
     {
         Entity Get(params object[] primaryKeys);
         IEnumerable<Entity> Get();

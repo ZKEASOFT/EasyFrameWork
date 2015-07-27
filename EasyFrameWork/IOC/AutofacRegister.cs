@@ -18,7 +18,6 @@ namespace Easy.IOC
 
         public AutofacRegister(ContainerBuilder builder)
         {
-            List<Type> adapterServiceTypes = new List<Type>();
             AppDomain.CurrentDomain.GetAssemblies().Each(m => m.GetTypes().Each(p =>
             {
                 if (p.IsClass && !p.IsAbstract && !p.IsInterface && !p.IsGenericType)

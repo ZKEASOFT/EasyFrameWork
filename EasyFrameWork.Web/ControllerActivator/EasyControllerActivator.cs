@@ -8,7 +8,7 @@ namespace Easy.Web.ControllerActivator
 
         public IController Create(System.Web.Routing.RequestContext requestContext, System.Type controllerType)
         {
-            return System.Web.Mvc.DependencyResolver.Current.GetService(controllerType) as IController;
+            return ServiceLocator.Current.GetInstance(controllerType) as IController;
         }
     }
 }

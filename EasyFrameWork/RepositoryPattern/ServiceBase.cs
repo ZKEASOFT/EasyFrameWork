@@ -8,7 +8,7 @@ using Microsoft.Practices.ServiceLocation;
 
 namespace Easy.RepositoryPattern
 {
-    public abstract class ServiceBase<Entity> : IService, IAdapterService, IServiceBase<Entity> where Entity : class
+    public abstract class ServiceBase<Entity> : IService, IServiceBase<Entity> where Entity : class
     {
         private readonly RepositoryBase<Entity> repBase;
         private readonly IApplicationContext applicationContext;

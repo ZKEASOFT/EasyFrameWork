@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Easy.Extend;
 using Easy.Models;
 using Microsoft.Practices.ServiceLocation;
@@ -31,7 +32,8 @@ namespace Easy.IOC
                         {
                             foreach (var inter in p.GetInterfaces())
                             {
-                                _container.RegisterType(inter, p, p.FullName);
+                                _container.RegisterType(inter, p);
+                                _container.RegisterType(inter, p, inter.Name + p.FullName);
                             }
                         }
                     }
@@ -42,7 +44,7 @@ namespace Easy.IOC
 
         public void Regist()
         {
-            var locator = new UnityServiceLocator(_container);
+            var locator = new Unity.UnityServiceLocator(_container);
             ServiceLocator.SetLocatorProvider(() => locator);
         }
     }

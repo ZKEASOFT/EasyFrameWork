@@ -89,6 +89,7 @@
     <Compile Include="IOC\AutofacRegister.cs" />
     <Compile Include="IOC\Autofac\AutofacServiceLocator.cs" />
     <Compile Include="IOC\UnityRegister.cs" />
+    <Compile Include="IOC\Unity\UnityServiceLocator.cs" />
     <Compile Include="Models\AutoComplete.cs" />
     <Compile Include="Models\EditorEntity.cs" />
     <Compile Include="Models\IAdapter.cs" />

@@ -43,14 +43,6 @@
       <HintPath>..\packages\Autofac.3.5.2\lib\net40\Autofac.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Easy, Version=1.0.0.2, Culture=neutral, PublicKeyToken=1964c83ce4e03f58, processorArchitecture=MSIL">
-      <HintPath>..\packages\EasyFrameWork.1.0.0.2\lib\net40\Easy.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Easy.Web, Version=1.0.0.2, Culture=neutral, PublicKeyToken=3aaa4da33a984374, processorArchitecture=MSIL">
-      <HintPath>..\packages\EasyFrameWork.Web.1.0.0.2\lib\net40\Easy.Web.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Microsoft.Practices.ServiceLocation, Version=1.3.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\CommonServiceLocator.1.3\lib\portable-net4+sl5+netcore45+wpa81+wp8\Microsoft.Practices.ServiceLocation.dll</HintPath>
@@ -146,7 +138,11 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\Example.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ResourceManager.cs" />
+    <Compile Include="Service\ExampleService.cs" />
+    <Compile Include="Service\IExampleService.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\themes\base\images\ui-bg_flat_0_aaaaaa_40x100.png" />
@@ -206,6 +202,109 @@
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
     <None Include="Scripts\jquery-1.8.2.intellisense.js" />
+    <Content Include="JavaScripts\EasyPlug\Css\Animate.css" />
+    <Content Include="JavaScripts\EasyPlug\Css\Base.css" />
+    <Content Include="JavaScripts\EasyPlug\Css\Easy.css" />
+    <Content Include="JavaScripts\EasyPlug\Css\Easy.Grid.css" />
+    <Content Include="JavaScripts\EasyPlug\Css\Easy.Tab.css" />
+    <Content Include="JavaScripts\EasyPlug\Css\Easy.UI.css" />
+    <Content Include="JavaScripts\EasyPlug\Css\Icon.css" />
+    <Content Include="JavaScripts\EasyPlug\Css\Images\add.png" />
+    <Content Include="JavaScripts\EasyPlug\Css\Images\bgPoint.png" />
+    <Content Include="JavaScripts\EasyPlug\Css\Images\buttons.png" />
+    <Content Include="JavaScripts\EasyPlug\Css\Images\checkbox.png" />
+    <Content Include="JavaScripts\EasyPlug\Css\Images\checkboxNo.png" />
+    <Content Include="JavaScripts\EasyPlug\Css\Images\close.gif" />
+    <Content Include="JavaScripts\EasyPlug\Css\Images\close.png" />
+    <Content Include="JavaScripts\EasyPlug\Css\Images\errorLayer_Bottom.gif" />
+    <Content Include="JavaScripts\EasyPlug\Css\Images\errorLayer_Cen.gif" />
+    <Content Include="JavaScripts\EasyPlug\Css\Images\errorLayer_Top.gif" />
+    <Content Include="JavaScripts\EasyPlug\Css\Images\Grid\ajax-loader.gif" />
+    <Content Include="JavaScripts\EasyPlug\Css\Images\Grid\bg.png" />
+    <Content Include="JavaScripts\EasyPlug\Css\Images\Grid\remove.png" />
+    <Content Include="JavaScripts\EasyPlug\Css\Images\Grid\triangle.png" />
+    <Content Include="JavaScripts\EasyPlug\Css\Images\Grid\triangle2.png" />
+    <Content Include="JavaScripts\EasyPlug\Css\Images\Icons\add.png" />
+    <Content Include="JavaScripts\EasyPlug\Css\Images\Icons\attachment.png" />
+    <Content Include="JavaScripts\EasyPlug\Css\Images\Icons\audio.png" />
+    <Content Include="JavaScripts\EasyPlug\Css\Images\Icons\autocomplete.png" />
+    <Content Include="JavaScripts\EasyPlug\Css\Images\Icons\calendar.png" />
+    <Content Include="JavaScripts\EasyPlug\Css\Images\Icons\checkbox_no.png" />
+    <Content Include="JavaScripts\EasyPlug\Css\Images\Icons\checkbox_yes.png" />
+    <Content Include="JavaScripts\EasyPlug\Css\Images\Icons\conversation.png" />
+    <Content Include="JavaScripts\EasyPlug\Css\Images\Icons\copy.png" />
+    <Content Include="JavaScripts\EasyPlug\Css\Images\Icons\cut.png" />
+    <Content Include="JavaScripts\EasyPlug\Css\Images\Icons\date.png" />
+    <Content Include="JavaScripts\EasyPlug\Css\Images\Icons\delete.png" />
+    <Content Include="JavaScripts\EasyPlug\Css\Images\Icons\diagram.png" />
+    <Content Include="JavaScripts\EasyPlug\Css\Images\Icons\dragger.png" />
+    <Content Include="JavaScripts\EasyPlug\Css\Images\Icons\Email.png" />
+    <Content Include="JavaScripts\EasyPlug\Css\Images\Icons\filter.png" />
+    <Content Include="JavaScripts\EasyPlug\Css\Images\Icons\graph.png" />
+    <Content Include="JavaScripts\EasyPlug\Css\Images\Icons\information.png" />
+    <Content Include="JavaScripts\EasyPlug\Css\Images\Icons\list.png" />
+    <Content Include="JavaScripts\EasyPlug\Css\Images\Icons\log.png" />
+    <Content Include="JavaScripts\EasyPlug\Css\Images\Icons\mail.png" />
+    <Content Include="JavaScripts\EasyPlug\Css\Images\Icons\message.png" />
+    <Content Include="JavaScripts\EasyPlug\Css\Images\Icons\minus.png" />
+    <Content Include="JavaScripts\EasyPlug\Css\Images\Icons\net.png" />
+    <Content Include="JavaScripts\EasyPlug\Css\Images\Icons\new.png" />
+    <Content Include="JavaScripts\EasyPlug\Css\Images\Icons\no_sound.png" />
+    <Content Include="JavaScripts\EasyPlug\Css\Images\Icons\number.png" />
+    <Content Include="JavaScripts\EasyPlug\Css\Images\Icons\open.png" />
+    <Content Include="JavaScripts\EasyPlug\Css\Images\Icons\paste.png" />
+    <Content Include="JavaScripts\EasyPlug\Css\Images\Icons\photo.png" />
+    <Content Include="JavaScripts\EasyPlug\Css\Images\Icons\picture%281%29.png" />
+    <Content Include="JavaScripts\EasyPlug\Css\Images\Icons\picture.png" />
+    <Content Include="JavaScripts\EasyPlug\Css\Images\Icons\plus.png" />
+    <Content Include="JavaScripts\EasyPlug\Css\Images\Icons\pointer.png" />
+    <Content Include="JavaScripts\EasyPlug\Css\Images\Icons\print.png" />
+    <Content Include="JavaScripts\EasyPlug\Css\Images\Icons\profile.png" />
+    <Content Include="JavaScripts\EasyPlug\Css\Images\Icons\radiobutton_no.png" />
+    <Content Include="JavaScripts\EasyPlug\Css\Images\Icons\radiobutton_yes.png" />
+    <Content Include="JavaScripts\EasyPlug\Css\Images\Icons\redo.png" />
+    <Content Include="JavaScripts\EasyPlug\Css\Images\Icons\remove.png" />
+    <Content Include="JavaScripts\EasyPlug\Css\Images\Icons\save.png" />
+    <Content Include="JavaScripts\EasyPlug\Css\Images\Icons\save_as.png" />
+    <Content Include="JavaScripts\EasyPlug\Css\Images\Icons\search.png" />
+    <Content Include="JavaScripts\EasyPlug\Css\Images\Icons\settings.png" />
+    <Content Include="JavaScripts\EasyPlug\Css\Images\Icons\sound.png" />
+    <Content Include="JavaScripts\EasyPlug\Css\Images\Icons\star_empty.png" />
+    <Content Include="JavaScripts\EasyPlug\Css\Images\Icons\star_full.png" />
+    <Content Include="JavaScripts\EasyPlug\Css\Images\Icons\table.png" />
+    <Content Include="JavaScripts\EasyPlug\Css\Images\Icons\tiles.png" />
+    <Content Include="JavaScripts\EasyPlug\Css\Images\Icons\undo.png" />
+    <Content Include="JavaScripts\EasyPlug\Css\Images\Icons\user.png" />
+    <Content Include="JavaScripts\EasyPlug\Css\Images\Icons\video.png" />
+    <Content Include="JavaScripts\EasyPlug\Css\Images\Icons\wireless.png" />
+    <Content Include="JavaScripts\EasyPlug\Css\Images\Icons\women.png" />
+    <Content Include="JavaScripts\EasyPlug\Css\Images\Icons\zoom_in.png" />
+    <Content Include="JavaScripts\EasyPlug\Css\Images\Icons\zoom_out.png" />
+    <Content Include="JavaScripts\EasyPlug\Css\Images\Info.png" />
+    <Content Include="JavaScripts\EasyPlug\Css\Images\left1.png" />
+    <Content Include="JavaScripts\EasyPlug\Css\Images\lightbox-btn-close.gif" />
+    <Content Include="JavaScripts\EasyPlug\Css\Images\lightbox-loader.gif" />
+    <Content Include="JavaScripts\EasyPlug\Css\Images\loader.gif" />
+    <Content Include="JavaScripts\EasyPlug\Css\Images\main_left_bottom2.gif" />
+    <Content Include="JavaScripts\EasyPlug\Css\Images\main_left_bottom2.png" />
+    <Content Include="JavaScripts\EasyPlug\Css\Images\main_right_bottom2.gif" />
+    <Content Include="JavaScripts\EasyPlug\Css\Images\main_right_bottom2.png" />
+    <Content Include="JavaScripts\EasyPlug\Css\Images\radiobutton_no.png" />
+    <Content Include="JavaScripts\EasyPlug\Css\Images\tool_bg.gif" />
+    <Content Include="JavaScripts\EasyPlug\Css\Images\top1.png" />
+    <Content Include="JavaScripts\EasyPlug\Css\Images\top_left2.gif" />
+    <Content Include="JavaScripts\EasyPlug\Css\Images\top_left2.png" />
+    <Content Include="JavaScripts\EasyPlug\Css\Images\top_right2.gif" />
+    <Content Include="JavaScripts\EasyPlug\Css\Images\top_right2.png" />
+    <Content Include="JavaScripts\EasyPlug\Css\Images\triangle.png" />
+    <Content Include="JavaScripts\EasyPlug\Css\Images\triangle2.png" />
+    <Content Include="JavaScripts\EasyPlug\Css\Images\undo.png" />
+    <Content Include="JavaScripts\EasyPlug\Easy.FocusImage.js" />
+    <Content Include="JavaScripts\EasyPlug\Easy.Grid.js" />
+    <Content Include="JavaScripts\EasyPlug\Easy.js" />
+    <Content Include="JavaScripts\EasyPlug\Easy.Tab.js" />
+    <Content Include="JavaScripts\EasyPlug\Easy.UI.js" />
+    <Content Include="JavaScripts\EasyPlug\jquery.js" />
     <Content Include="Scripts\jquery-1.8.2.js" />
     <Content Include="Scripts\jquery-1.8.2.min.js" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
@@ -251,10 +350,19 @@
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Filters\" />
-    <Folder Include="Models\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\EasyFrameWork.Web\Easy.Web.csproj">
+      <Project>{a1228125-f5c4-4001-ac7d-1accf1679828}</Project>
+      <Name>Easy.Web</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\EasyFrameWork\Easy.csproj">
+      <Project>{edb1baa7-ec61-4292-bbe5-3bc39eb171e4}</Project>
+      <Name>Easy</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
