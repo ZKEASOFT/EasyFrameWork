@@ -143,6 +143,8 @@
     <Compile Include="ResourceManager.cs" />
     <Compile Include="Service\ExampleService.cs" />
     <Compile Include="Service\IExampleService.cs" />
+    <Compile Include="Tasks\ConfigTask.cs" />
+    <Compile Include="Tasks\ResourceTask.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\themes\base\images\ui-bg_flat_0_aaaaaa_40x100.png" />
