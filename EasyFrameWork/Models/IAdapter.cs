@@ -3,12 +3,8 @@
     public interface IEntity
     {
     }
-    public interface IAdapterService
+    public interface IDependency
     {
          
-    }
-    public interface IAdapterRepository
-    {
-
     }
 }

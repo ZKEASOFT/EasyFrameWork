@@ -5,9 +5,9 @@ using System.Text;
 using Easy.RepositoryPattern;
 using MvcApplication.Models;
 
-namespace MvcApplication.Service
+namespace MvcApplication.Repository
 {
-    public interface IExampleService : IServiceBase<Example>
+    public class ExampleRepository : RepositoryBase<Example>, IExampleRepository
     {
     }
 }

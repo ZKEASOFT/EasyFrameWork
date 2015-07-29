@@ -6,13 +6,15 @@ using System.Text;
 using Easy.Data.DataBase;
 using Easy.Data;
 using Easy.Models;
+using Microsoft.Practices.ServiceLocation;
 
 namespace Easy.RepositoryPattern
 {
-    public class RepositoryBase<T> : IRepository<T>, IAdapterRepository where T : class
+    public class RepositoryBase<T> : IRepository<T>, IDependency where T : class
     {
         static string dataBase;
         static string connString;
+        public IApplicationContext ApplicationContext { get; private set; }
         static RepositoryBase()
         {
             dataBase = System.Configuration.ConfigurationManager.AppSettings[DataBasic.DataBaseAppSetingKey];
@@ -51,6 +53,7 @@ namespace Easy.RepositoryPattern
             {
                 DB = new SQL(connString);
             }
+            ApplicationContext = ServiceLocator.Current.GetInstance<IApplicationContext>();
         }
 
         public virtual T Get(params object[] primaryKeys)

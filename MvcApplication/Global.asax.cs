@@ -1,10 +1,11 @@
-﻿using Easy.Web.Application;
+﻿using Easy.IOC;
+using Easy.Web.Application;
 using MvcApplication.Tasks;
 
 namespace MvcApplication
 {
 
-    public class MvcApplication : UnityMvcApplication
+    public class MvcApplication : AutofacMvcApplication
     {
         public override void Application_StartUp()
         {
@@ -13,6 +14,13 @@ namespace MvcApplication
                 .Include<ResourceTask>();
         }
     }
-    
+
+    public class WebModule : IModule
+    {
+        public void Load(IContainerAdapter adapter)
+        {
+            
+        }
+    }
 
 }

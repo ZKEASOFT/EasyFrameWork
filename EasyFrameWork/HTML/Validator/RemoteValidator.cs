@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Microsoft.Practices.ServiceLocation;
 
 namespace Easy.HTML.Validator
 {
@@ -20,9 +21,10 @@ namespace Easy.HTML.Validator
                 {
                     url = string.Format("/{0}/{1}", Area, url);
                 }
-                if (!string.IsNullOrEmpty(Easy.Module.ApplicationName))
+                var app = ServiceLocator.Current.GetInstance<IApplicationContext>();
+                if (app != null)
                 {
-                    url = string.Format("{0}{1}", Easy.Module.ApplicationName, url);
+                    url = string.Format("{0}{1}", app.VirtualPath, url);
                 }
                 return url;
             }

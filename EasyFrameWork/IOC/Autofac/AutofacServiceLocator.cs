@@ -9,20 +9,27 @@ namespace Easy.IOC.Autofac
 {
     public class AutofacServiceLocator : ServiceLocatorImplBase
     {
-        readonly IComponentContext _container;
+        readonly IContainer _container;
 
-        public AutofacServiceLocator(IComponentContext container)
+        public AutofacServiceLocator(IContainer container)
         {
             if (container == null)
                 throw new ArgumentNullException("container");
             _container = container;
+            LifetimeScopeProvider = new RequestLifetimeScopeProvider(container);
         }
+        public ILifetimeScopeProvider LifetimeScopeProvider { get; private set; }
 
         protected override object DoGetInstance(Type serviceType, string key)
         {
             try
             {
-                return key != null ? _container.ResolveNamed(key, serviceType) : _container.Resolve(serviceType);
+                if (_container.IsRegistered(serviceType))
+                {
+                    var scope = LifetimeScopeProvider.GetLifetimeScope();
+                    return key != null ? scope.ResolveNamed(key, serviceType) : scope.Resolve(serviceType);
+                }
+                return null;
             }
             catch
             {
@@ -34,9 +41,14 @@ namespace Easy.IOC.Autofac
         {
             try
             {
-                var enumerableType = typeof (IEnumerable<>).MakeGenericType(serviceType);
-                object instance = _container.Resolve(enumerableType);
-                return ((IEnumerable) instance).Cast<object>();
+                if (_container.IsRegistered(serviceType))
+                {
+                    var scope = LifetimeScopeProvider.GetLifetimeScope();
+                    var enumerableType = typeof(IEnumerable<>).MakeGenericType(serviceType);
+                    object instance = scope.Resolve(enumerableType);
+                    return ((IEnumerable)instance).Cast<object>();
+                }
+                return new List<object>();
             }
             catch
             {

@@ -5,23 +5,22 @@ using Easy.Extend;
 using Easy.Models;
 using Microsoft.Practices.ServiceLocation;
 using Microsoft.Practices.Unity;
+using Easy.Reflection;
 namespace Easy.IOC
 {
-    public class UnityRegister
+    public sealed class UnityRegister : AssemblyInfo
     {
-        private readonly Type _adapterServiceType = typeof(IAdapterService);
-        private readonly Type _adapterRepositoryType = typeof(IAdapterRepository);
+        private readonly Type _dependencyType = typeof(IDependency);
         private readonly Type _entityType = typeof(IEntity);
         private readonly IUnityContainer _container;
         public UnityRegister(IUnityContainer container)
         {
             _container = container;
-            AppDomain.CurrentDomain.GetAssemblies().Each(m => m.GetTypes().Each(p =>
+            PublicTypes.Each(p =>
             {
                 if (p.IsClass && !p.IsAbstract && !p.IsInterface && !p.IsGenericType)
                 {
-                    if (_adapterServiceType.IsAssignableFrom(p) ||
-                        _adapterRepositoryType.IsAssignableFrom(p) ||
+                    if (_dependencyType.IsAssignableFrom(p) ||
                         _entityType.IsAssignableFrom(p))
                     {
                         if (_entityType.IsAssignableFrom(p))
@@ -39,7 +38,7 @@ namespace Easy.IOC
                     }
 
                 }
-            }));
+            });
         }
 
         public void Regist()

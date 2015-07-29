@@ -3,6 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using Easy;
+using Easy.Data;
+using Easy.IOC.Unity;
+using Easy.Modules.DataDictionary;
 using Easy.Web.Controller;
 using Microsoft.Practices.ServiceLocation;
 using MvcApplication.Models;
@@ -15,7 +19,8 @@ namespace MvcApplication.Controllers
         public HomeController(IExampleService service) :
             base(service)
         {
-            
+           int a= ServiceLocator.Current.GetInstance<IHttpItemsValueProvider>().GetHashCode();
+           int b = ServiceLocator.Current.GetInstance<IHttpItemsValueProvider>().GetHashCode();
         }
         public ActionResult Index()
         {

@@ -9,5 +9,10 @@ namespace MvcApplication.Service
 {
     public class ExampleService : ServiceBase<Example>, IExampleService
     {
+        public override void Add(Example item)
+        {
+
+            base.Add(item);
+        }
     }
 }

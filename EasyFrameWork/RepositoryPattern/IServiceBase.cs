@@ -7,7 +7,7 @@ using Easy.Models;
 
 namespace Easy.RepositoryPattern
 {
-    public interface IServiceBase<Entity> : IAdapterService
+    public interface IServiceBase<Entity> : IDependency
     {
         Entity Get(params object[] primaryKeys);
         IEnumerable<Entity> Get();

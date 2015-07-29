@@ -104,6 +104,7 @@
   <ItemGroup>
     <Compile Include="AjaxState.cs" />
     <Compile Include="ApplicationContext.cs" />
+    <Compile Include="Application\HttpItemsValueProvider.cs" />
     <Compile Include="Application\TaskApplication.cs" />
     <Compile Include="Attribute\PopUpAttribute.cs" />
     <Compile Include="Attribute\AdminThemeAttribute.cs" />

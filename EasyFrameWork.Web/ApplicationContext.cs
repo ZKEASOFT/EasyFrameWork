@@ -5,6 +5,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Microsoft.Practices.ServiceLocation;
+using System.Web;
+using System.Collections;
 
 namespace Easy.Web
 {
@@ -15,14 +17,14 @@ namespace Easy.Web
         {
             get
             {
-                if (System.Web.HttpContext.Current != null && System.Web.HttpContext.Current.User.Identity.IsAuthenticated)
+                if (HttpContext.Current != null && HttpContext.Current.User.Identity.IsAuthenticated)
                 {
                     if (_CurrentUser == null)
                     {
                         IUserService userService = ServiceLocator.Current.GetInstance<IUserService>();
                         if (userService != null)
                         {
-                            _CurrentUser = userService.GetGeneric<Easy.Modules.User.Models.UserEntity>(System.Web.HttpContext.Current.User.Identity.Name);
+                            _CurrentUser = userService.GetGeneric<Easy.Modules.User.Models.UserEntity>(HttpContext.Current.User.Identity.Name);
                         }
                     }
                 }
@@ -35,9 +37,9 @@ namespace Easy.Web
         {
             get
             {
-                if (System.Web.HttpContext.Current != null)
+                if (HttpContext.Current != null)
                 {
-                    return System.Web.HttpContext.Current.Request.ApplicationPath;
+                    return HttpContext.Current.Request.ApplicationPath;
                 }
                 else
                 {

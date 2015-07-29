@@ -10,97 +10,97 @@ namespace Easy.RepositoryPattern
 {
     public abstract class ServiceBase<Entity> : IService, IServiceBase<Entity> where Entity : class
     {
-        private readonly RepositoryBase<Entity> repBase;
-        private readonly IApplicationContext applicationContext;
+        public RepositoryBase<Entity> Repository { get; private set; }
+        public IApplicationContext ApplicationContext { get; private set; }
         public ServiceBase()
         {
-            repBase = new RepositoryBase<Entity>();
-            applicationContext = ServiceLocator.Current.GetInstance<IApplicationContext>();
+            Repository = new RepositoryBase<Entity>();
+            ApplicationContext = ServiceLocator.Current.GetInstance<IApplicationContext>();
         }
         public virtual Entity Get(params object[] primaryKeys)
         {
-            return repBase.Get(primaryKeys);
+            return Repository.Get(primaryKeys);
         }
         public virtual IEnumerable<Entity> Get()
         {
-            return repBase.Get(new DataFilter());
+            return Repository.Get(new DataFilter());
         }
         public virtual IEnumerable<Entity> Get(DataFilter filter)
         {
-            return repBase.Get(filter);
+            return Repository.Get(filter);
         }
         public virtual IEnumerable<Entity> Get(DataFilter filter, Pagination pagin)
         {
-            return repBase.Get(filter, pagin);
+            return Repository.Get(filter, pagin);
         }
         public virtual IEnumerable<Entity> Get(string property, OperatorType operatorType, object value)
         {
-            return repBase.Get(new DataFilter().Where(property, operatorType, value));
+            return Repository.Get(new DataFilter().Where(property, operatorType, value));
         }
         public virtual void Add(Entity item)
         {
             if (item is EditorEntity)
             {
                 EditorEntity entity = item as EditorEntity;
-                if (applicationContext != null && applicationContext.CurrentUser != null)
+                if (ApplicationContext != null && ApplicationContext.CurrentUser != null)
                 {
                     if (string.IsNullOrEmpty(entity.CreateBy))
-                        entity.CreateBy = applicationContext.CurrentUser.UserID;
+                        entity.CreateBy = ApplicationContext.CurrentUser.UserID;
                     if (string.IsNullOrEmpty(entity.CreatebyName))
-                        entity.CreatebyName = applicationContext.CurrentUser.NickName;
+                        entity.CreatebyName = ApplicationContext.CurrentUser.NickName;
                     if (string.IsNullOrEmpty(entity.LastUpdateBy))
-                        entity.LastUpdateBy = applicationContext.CurrentUser.UserID;
+                        entity.LastUpdateBy = ApplicationContext.CurrentUser.UserID;
                     if (string.IsNullOrEmpty(entity.LastUpdateByName))
-                        entity.LastUpdateByName = applicationContext.CurrentUser.NickName;
+                        entity.LastUpdateByName = ApplicationContext.CurrentUser.NickName;
                 }
                 entity.CreateDate = DateTime.Now;
                 entity.LastUpdateDate = DateTime.Now;
             }
-            repBase.Add(item);
+            Repository.Add(item);
         }
         public virtual int Delete(params object[] primaryKeys)
         {
-            return repBase.Delete(primaryKeys);
+            return Repository.Delete(primaryKeys);
         }
         public virtual int Delete(DataFilter filter)
         {
-            return repBase.Delete(filter);
+            return Repository.Delete(filter);
         }
         public virtual bool Update(Entity item, DataFilter filter)
         {
             if (item is EditorEntity)
             {
                 EditorEntity entity = item as EditorEntity;
-                if (applicationContext != null && applicationContext.CurrentUser != null)
+                if (ApplicationContext != null && ApplicationContext.CurrentUser != null)
                 {
                     if (string.IsNullOrEmpty(entity.LastUpdateBy))
-                        entity.LastUpdateBy = applicationContext.CurrentUser.UserID;
+                        entity.LastUpdateBy = ApplicationContext.CurrentUser.UserID;
                     if (string.IsNullOrEmpty(entity.LastUpdateByName))
-                        entity.LastUpdateByName = applicationContext.CurrentUser.NickName;
+                        entity.LastUpdateByName = ApplicationContext.CurrentUser.NickName;
                 }
                 entity.LastUpdateDate = DateTime.Now;
             }
-            return repBase.Update(item, filter);
+            return Repository.Update(item, filter);
         }
         public virtual bool Update(Entity item, params object[] primaryKeys)
         {
             if (item is EditorEntity)
             {
                 EditorEntity entity = item as EditorEntity;
-                if (applicationContext != null && applicationContext.CurrentUser != null)
+                if (ApplicationContext != null && ApplicationContext.CurrentUser != null)
                 {
                     if (string.IsNullOrEmpty(entity.LastUpdateBy))
-                        entity.LastUpdateBy = applicationContext.CurrentUser.UserID;
+                        entity.LastUpdateBy = ApplicationContext.CurrentUser.UserID;
                     if (string.IsNullOrEmpty(entity.LastUpdateByName))
-                        entity.LastUpdateByName = applicationContext.CurrentUser.NickName;
+                        entity.LastUpdateByName = ApplicationContext.CurrentUser.NickName;
                 }
                 entity.LastUpdateDate = DateTime.Now;
             }
-            return repBase.Update(item, primaryKeys);
+            return Repository.Update(item, primaryKeys);
         }
         public virtual long Count(DataFilter filter)
         {
-            return repBase.Count(filter);
+            return Repository.Count(filter);
         }
 
         public virtual void AddGeneric<T>(T item) where T : class

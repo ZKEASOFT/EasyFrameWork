@@ -1,4 +1,5 @@
-﻿using System.Web;
+﻿using System;
+using System.Web;
 using System.Web.Mvc;
 using Easy.Modules.DataDictionary;
 using Easy.Modules.MutiLanguage;
@@ -7,6 +8,9 @@ using Easy.Web.DependencyResolver;
 using Easy.Web.MetadataProvider;
 using Easy.Web.ValidatorProvider;
 using Microsoft.Practices.Unity;
+using Easy.Extend;
+using Easy.IOC;
+using Easy.IOC.Unity;
 
 namespace Easy.Web.Application
 {
@@ -22,9 +26,22 @@ namespace Easy.Web.Application
 
             Container = new UnityContainer();
             Container.RegisterType<IControllerActivator, EasyControllerActivator>();
-            Container.RegisterType<IApplicationContext, ApplicationContext>();
+            Container.RegisterType<IHttpItemsValueProvider, HttpItemsValueProvider>(new ContainerControlledLifetimeManager());
+            Container.RegisterType<IApplicationContext, ApplicationContext>(new PerRequestLifetimeManager());
             Container.RegisterType<IDataDictionaryService, DataDictionaryService>();
             Container.RegisterType<ILanguageService, LanguageService>();
+            var moduleType = typeof(IModule);
+            PublicTypes.Each(t =>
+            {
+                if (!t.IsInterface && !t.IsAbstract && t.IsPublic && !t.IsGenericType)
+                {
+                    if (moduleType.IsAssignableFrom(t))
+                    {
+                        ((IModule)Activator.CreateInstance(t)).Load(new UnityContainerAdapter(Container));
+                    }
+                }
+
+            });
 
             System.Web.Mvc.DependencyResolver.SetResolver(new EasyDependencyResolver());
 
