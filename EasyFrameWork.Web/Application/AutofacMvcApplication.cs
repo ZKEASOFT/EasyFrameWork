@@ -47,6 +47,7 @@ namespace Easy.Web.Application
 
             AutofacContainerBuilder = new ContainerBuilder();
             AutofacContainerBuilder.RegisterType<HttpItemsValueProvider>().As<IHttpItemsValueProvider>().SingleInstance();
+            AutofacContainerBuilder.RegisterType<RequestLifetimeScopeProvider>().As<ILifetimeScopeProvider>().SingleInstance();
             AutofacContainerBuilder.RegisterType<EasyControllerActivator>().As<IControllerActivator>();
             AutofacContainerBuilder.RegisterType<ApplicationContext>().As<IApplicationContext>().InstancePerLifetimeScope();
             AutofacContainerBuilder.RegisterType<DataDictionaryService>().As<IDataDictionaryService>();

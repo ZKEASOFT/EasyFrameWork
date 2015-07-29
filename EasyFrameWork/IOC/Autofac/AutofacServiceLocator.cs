@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Autofac;
+using Autofac.Core;
 using Microsoft.Practices.ServiceLocation;
 
 namespace Easy.IOC.Autofac
@@ -16,7 +17,12 @@ namespace Easy.IOC.Autofac
             if (container == null)
                 throw new ArgumentNullException("container");
             _container = container;
-            LifetimeScopeProvider = new RequestLifetimeScopeProvider(container);
+            if (container.IsRegistered<ILifetimeScopeProvider>())
+            {
+                LifetimeScopeProvider =
+                    container.Resolve<ILifetimeScopeProvider>(new NamedParameter("container", container));
+            }
+
         }
         public ILifetimeScopeProvider LifetimeScopeProvider { get; private set; }
 
@@ -26,8 +32,15 @@ namespace Easy.IOC.Autofac
             {
                 if (_container.IsRegistered(serviceType))
                 {
-                    var scope = LifetimeScopeProvider.GetLifetimeScope();
-                    return key != null ? scope.ResolveNamed(key, serviceType) : scope.Resolve(serviceType);
+                    if (LifetimeScopeProvider != null)
+                    {
+                        var scope = LifetimeScopeProvider.GetLifetimeScope();
+                        return key != null ? scope.ResolveNamed(key, serviceType) : scope.Resolve(serviceType);
+                    }
+                    else
+                    {
+                        return key != null ? _container.ResolveNamed(key, serviceType) : _container.Resolve(serviceType);
+                    }
                 }
                 return null;
             }
@@ -43,10 +56,19 @@ namespace Easy.IOC.Autofac
             {
                 if (_container.IsRegistered(serviceType))
                 {
-                    var scope = LifetimeScopeProvider.GetLifetimeScope();
-                    var enumerableType = typeof(IEnumerable<>).MakeGenericType(serviceType);
-                    object instance = scope.Resolve(enumerableType);
-                    return ((IEnumerable)instance).Cast<object>();
+                    if (LifetimeScopeProvider != null)
+                    {
+                        var scope = LifetimeScopeProvider.GetLifetimeScope();
+                        var enumerableType = typeof(IEnumerable<>).MakeGenericType(serviceType);
+                        object instance = scope.Resolve(enumerableType);
+                        return ((IEnumerable)instance).Cast<object>();
+                    }
+                    else
+                    {
+                        var enumerableType = typeof(IEnumerable<>).MakeGenericType(serviceType);
+                        object instance = _container.Resolve(enumerableType);
+                        return ((IEnumerable)instance).Cast<object>();
+                    }
                 }
                 return new List<object>();
             }

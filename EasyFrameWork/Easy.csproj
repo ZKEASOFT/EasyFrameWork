@@ -91,7 +91,6 @@
     <Compile Include="IOC\Autofac\AutofacContainerAdapter.cs" />
     <Compile Include="IOC\Autofac\AutofacServiceLocator.cs" />
     <Compile Include="IOC\Autofac\ILifetimeScopeProvider.cs" />
-    <Compile Include="IOC\Autofac\RequestLifetimeScopeProvider.cs" />
     <Compile Include="IOC\DependencyLifeTime.cs" />
     <Compile Include="IOC\IContainerAdapter.cs" />
     <Compile Include="IOC\IModule.cs" />

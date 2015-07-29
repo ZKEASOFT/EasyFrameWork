@@ -1,9 +1,8 @@
 ﻿using System;
 using Autofac;
-using Easy.IOC.Unity;
-using Microsoft.Practices.ServiceLocation;
+using Easy.IOC.Autofac;
 
-namespace Easy.IOC.Autofac
+namespace Easy.Web.Application
 {
     public class RequestLifetimeScopeProvider : ILifetimeScopeProvider
     {
