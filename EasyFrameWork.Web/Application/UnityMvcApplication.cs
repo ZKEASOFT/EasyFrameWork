@@ -16,7 +16,20 @@ namespace Easy.Web.Application
 {
     public abstract class UnityMvcApplication : TaskApplication
     {
+        public override void Init()
+        {
+            base.Init();
+        }
+
         public IUnityContainer Container { get; private set; }
+
+        private IContainerAdapter _containerAdapter;
+
+        public override IContainerAdapter ContainerAdapter
+        {
+            get { return _containerAdapter ?? (_containerAdapter = new UnityContainerAdapter(Container)); }
+        }
+
         protected void Application_Start()
         {
             ModelValidatorProviders.Providers.Clear();
@@ -29,7 +42,7 @@ namespace Easy.Web.Application
             Container.RegisterType<IHttpItemsValueProvider, HttpItemsValueProvider>(new ContainerControlledLifetimeManager());
             Container.RegisterType<IApplicationContext, ApplicationContext>(new PerRequestLifetimeManager());
             Container.RegisterType<IDataDictionaryService, DataDictionaryService>();
-            Container.RegisterType<ILanguageService, LanguageService>();
+            Container.RegisterType<ILanguageService, LanguageService>(new ContainerControlledLifetimeManager());
             var moduleType = typeof(IModule);
             PublicTypes.Each(t =>
             {
@@ -47,7 +60,7 @@ namespace Easy.Web.Application
 
             Application_StartUp();
 
-            new IOC.UnityRegister(Container).Regist();
+            new UnityRegister(Container).Regist();
             TaskManager.ExcuteAll();
         }
     }

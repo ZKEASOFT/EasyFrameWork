@@ -11,24 +11,42 @@ namespace Easy.IOC.Unity
         {
             _container = container;
         }
+        public IContainerAdapter RegisterType(Type type)
+        {
+            return RegisterType(type, DependencyLifeTime.PerDependency);
+        }
+        public IContainerAdapter RegisterType(Type type, DependencyLifeTime lifeTime)
+        {
+            _container.RegisterType(type, GetLifetimeManager(lifeTime));
+            _container.RegisterType(type, type.FullName, GetLifetimeManager(lifeTime));
+            return this;
+        }
+
         public IContainerAdapter RegisterType(Type itype, Type type)
         {
             return RegisterType(itype, type, DependencyLifeTime.PerDependency);
         }
 
-        public IContainerAdapter RegisterType<TIt, T>() where T : TIt
-        {
-
-            return RegisterType<TIt, T>(DependencyLifeTime.PerDependency);
-        }
-
 
         public IContainerAdapter RegisterType(Type itype, Type type, DependencyLifeTime lifeTime)
         {
-
             _container.RegisterType(itype, type, GetLifetimeManager(lifeTime));
             _container.RegisterType(itype, type, itype.Name + type.FullName, GetLifetimeManager(lifeTime));
             return this;
+        }
+        public IContainerAdapter RegisterType<T>()
+        {
+            return RegisterType<T>(DependencyLifeTime.PerDependency);
+        }
+        public IContainerAdapter RegisterType<T>(DependencyLifeTime lifeTime)
+        {
+            _container.RegisterType<T>(GetLifetimeManager(lifeTime));
+            _container.RegisterType<T>(typeof(T).FullName, GetLifetimeManager(lifeTime));
+            return this;
+        }
+        public IContainerAdapter RegisterType<TIt, T>() where T : TIt
+        {
+            return RegisterType<TIt, T>(DependencyLifeTime.PerDependency);
         }
 
         public IContainerAdapter RegisterType<TIt, T>(DependencyLifeTime lifeTime) where T : TIt

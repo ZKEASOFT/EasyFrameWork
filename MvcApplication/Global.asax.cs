@@ -14,13 +14,4 @@ namespace MvcApplication
                 .Include<ResourceTask>();
         }
     }
-
-    public class WebModule : IModule
-    {
-        public void Load(IContainerAdapter adapter)
-        {
-            
-        }
-    }
-
 }

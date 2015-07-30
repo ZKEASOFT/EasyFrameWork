@@ -4,9 +4,8 @@ namespace Easy.IOC.Autofac
 {
     public interface ILifetimeScopeProvider
     {
+        ILifetimeScope LifetimeScope { get; }
         ILifetimeScope BeginLifetimeScope();
-        ILifetimeScope GetLifetimeScope();
-
         void EndLifetimeScope(); 
     }
 }

@@ -15,7 +15,9 @@ namespace Easy.IOC.Unity
         private readonly string _key = typeof(PerRequestLifetimeManager).FullName;
         IDictionary<PerRequestLifetimeManager, object> GetPerRequestLifetimeManagers()
         {
-            IDictionary backingStore = ServiceLocator.Current.GetInstance<IHttpItemsValueProvider>().Items;
+            var valueProvider = ServiceLocator.Current.GetInstance<IHttpItemsValueProvider>();
+            if (valueProvider == null) return null;
+            IDictionary backingStore = valueProvider.Items;
             IDictionary<PerRequestLifetimeManager, object> instances;
 
             if (backingStore.Contains(_key))
@@ -42,6 +44,7 @@ namespace Easy.IOC.Unity
         public override object GetValue()
         {
             IDictionary<PerRequestLifetimeManager, object> lifetimeManagers = GetPerRequestLifetimeManagers();
+            if (lifetimeManagers == null) return null;
             object value;
 
             lifetimeManagers.TryGetValue(this, out value);
@@ -58,6 +61,8 @@ namespace Easy.IOC.Unity
             }
 
             IDictionary<PerRequestLifetimeManager, object> lifetimeManagers = GetPerRequestLifetimeManagers();
+            if (lifetimeManagers == null) return;
+
             object value;
 
             if (lifetimeManagers.TryGetValue(this, out value))
@@ -76,7 +81,7 @@ namespace Easy.IOC.Unity
         public override void RemoveValue()
         {
             IDictionary<PerRequestLifetimeManager, object> lifetimeManagers = GetPerRequestLifetimeManagers();
-
+            if (lifetimeManagers == null) return;
             object value;
 
             if (!lifetimeManagers.TryGetValue(this, out value))

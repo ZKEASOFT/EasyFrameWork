@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Web;
 using Autofac;
 using Easy.IOC.Autofac;
 
@@ -7,35 +8,32 @@ namespace Easy.Web.Application
     public class RequestLifetimeScopeProvider : ILifetimeScopeProvider
     {
         private readonly IContainer _container;
-        private ILifetimeScope _lifetimeScope;
+        private readonly Type _requestLifetimeScopeProviderKey = typeof(RequestLifetimeScopeProvider);
 
         public RequestLifetimeScopeProvider(IContainer container)
         {
             this._container = container;
         }
 
-        #region ILifetimeScopeProvider Members
-
+        public ILifetimeScope LifetimeScope
+        {
+            get { return HttpContext.Current.Items[_requestLifetimeScopeProviderKey] as ILifetimeScope; }
+            private set { HttpContext.Current.Items[_requestLifetimeScopeProviderKey] = value; }
+        }
+       
         public ILifetimeScope BeginLifetimeScope()
         {
-            return _lifetimeScope ?? (_lifetimeScope = _container.BeginLifetimeScope());
+            return LifetimeScope ?? (LifetimeScope = _container.BeginLifetimeScope());
         }
 
         public void EndLifetimeScope()
         {
-            if (_lifetimeScope != null)
+            if (LifetimeScope != null)
             {
-                _lifetimeScope.Dispose();
-                _lifetimeScope = null;
+                LifetimeScope.Dispose();
+                LifetimeScope = null;
             }
         }
-
-        #endregion
-
-
-        public ILifetimeScope GetLifetimeScope()
-        {
-            return _lifetimeScope;
-        }
+       
     }
 }

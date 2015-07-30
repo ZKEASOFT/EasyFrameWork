@@ -6,6 +6,7 @@ using System.Web;
 using System.Web.Compilation;
 using Easy.Extend;
 using Easy.StartTask;
+using Easy.IOC;
 
 namespace Easy.Web.Application
 {
@@ -38,6 +39,7 @@ namespace Easy.Web.Application
         {
             get { return _publicTypes ?? (_publicTypes = Assemblies.PublicTypes()); }
         }
+        public abstract IContainerAdapter ContainerAdapter { get;  }
         public abstract void Application_StartUp();
     }
 }

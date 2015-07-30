@@ -18,6 +18,7 @@ namespace Easy.Web.Application
     public abstract class AutofacMvcApplication : TaskApplication
     {
         private static ILifetimeScopeProvider _lifetimeScopeProvider;
+
         public override void Init()
         {
             base.Init();
@@ -37,6 +38,12 @@ namespace Easy.Web.Application
 
         public ContainerBuilder AutofacContainerBuilder { get; private set; }
 
+        private IContainerAdapter _containerAdapter;
+        public override IContainerAdapter ContainerAdapter
+        {
+            get { return _containerAdapter ?? (_containerAdapter = new AutofacContainerAdapter(AutofacContainerBuilder)); }
+        }
+
 
         protected void Application_Start()
         {
@@ -51,7 +58,7 @@ namespace Easy.Web.Application
             AutofacContainerBuilder.RegisterType<EasyControllerActivator>().As<IControllerActivator>();
             AutofacContainerBuilder.RegisterType<ApplicationContext>().As<IApplicationContext>().InstancePerLifetimeScope();
             AutofacContainerBuilder.RegisterType<DataDictionaryService>().As<IDataDictionaryService>();
-            AutofacContainerBuilder.RegisterType<LanguageService>().As<ILanguageService>();
+            AutofacContainerBuilder.RegisterType<LanguageService>().As<ILanguageService>().SingleInstance();
 
             //register controller
             var controllerType = typeof(System.Web.Mvc.Controller);
@@ -80,5 +87,6 @@ namespace Easy.Web.Application
 
             TaskManager.ExcuteAll();
         }
+
     }
 }
