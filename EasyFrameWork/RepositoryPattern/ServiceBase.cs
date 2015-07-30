@@ -8,36 +8,36 @@ using Microsoft.Practices.ServiceLocation;
 
 namespace Easy.RepositoryPattern
 {
-    public abstract class ServiceBase<Entity> : IService, IServiceBase<Entity> where Entity : class
+    public abstract class ServiceBase<T> : IService, IServiceBase<T> where T : class
     {
-        public RepositoryBase<Entity> Repository { get; private set; }
+        public RepositoryBase<T> Repository { get; private set; }
         public IApplicationContext ApplicationContext { get; private set; }
         public ServiceBase()
         {
-            Repository = new RepositoryBase<Entity>();
+            Repository = new RepositoryBase<T>();
             ApplicationContext = ServiceLocator.Current.GetInstance<IApplicationContext>();
         }
-        public virtual Entity Get(params object[] primaryKeys)
+        public virtual T Get(params object[] primaryKeys)
         {
             return Repository.Get(primaryKeys);
         }
-        public virtual IEnumerable<Entity> Get()
+        public virtual IEnumerable<T> Get()
         {
             return Repository.Get(new DataFilter());
         }
-        public virtual IEnumerable<Entity> Get(DataFilter filter)
+        public virtual IEnumerable<T> Get(DataFilter filter)
         {
             return Repository.Get(filter);
         }
-        public virtual IEnumerable<Entity> Get(DataFilter filter, Pagination pagin)
+        public virtual IEnumerable<T> Get(DataFilter filter, Pagination pagin)
         {
             return Repository.Get(filter, pagin);
         }
-        public virtual IEnumerable<Entity> Get(string property, OperatorType operatorType, object value)
+        public virtual IEnumerable<T> Get(string property, OperatorType operatorType, object value)
         {
             return Repository.Get(new DataFilter().Where(property, operatorType, value));
         }
-        public virtual void Add(Entity item)
+        public virtual void Add(T item)
         {
             if (item is EditorEntity)
             {
@@ -66,7 +66,7 @@ namespace Easy.RepositoryPattern
         {
             return Repository.Delete(filter);
         }
-        public virtual bool Update(Entity item, DataFilter filter)
+        public virtual bool Update(T item, DataFilter filter)
         {
             if (item is EditorEntity)
             {
@@ -82,7 +82,7 @@ namespace Easy.RepositoryPattern
             }
             return Repository.Update(item, filter);
         }
-        public virtual bool Update(Entity item, params object[] primaryKeys)
+        public virtual bool Update(T item, params object[] primaryKeys)
         {
             if (item is EditorEntity)
             {

@@ -10,87 +10,80 @@ using Microsoft.Practices.ServiceLocation;
 
 namespace Easy.RepositoryPattern
 {
-    public class RepositoryBase<T> : IRepository<T>, IDependency where T : class
+    public class RepositoryBase<T> : IRepository<T> where T : class
     {
-        static string dataBase;
-        static string connString;
+        private static readonly string DataBaseCategory;
+        private static readonly string ConnectionString;
         public IApplicationContext ApplicationContext { get; private set; }
         static RepositoryBase()
         {
-            dataBase = System.Configuration.ConfigurationManager.AppSettings[DataBasic.DataBaseAppSetingKey];
+            DataBaseCategory = System.Configuration.ConfigurationManager.AppSettings[DataBasic.DataBaseAppSetingKey];
             var con = System.Configuration.ConfigurationManager.ConnectionStrings[DataBasic.ConnectionKey];
-            if (con != null)
-            {
-                connString = con.ConnectionString;
-            }
-            else
-            {
-                connString = System.Configuration.ConfigurationManager.ConnectionStrings[0].ConnectionString;
-            }
+            ConnectionString = con != null ? con.ConnectionString : System.Configuration.ConfigurationManager.ConnectionStrings[0].ConnectionString;
         }
-        public static DataBasic DB
+        public DataBasic Database
         {
             get;
             private set;
         }
         public RepositoryBase()
         {
-            if (dataBase == DataBasic.Ace)
+            if (DataBaseCategory == DataBasic.Ace)
             {
-                DB = new Access(connString);
-                (DB as Access).DbType = Access.DdTypes.Ace;
+                Database = new Access(ConnectionString);
+                ((Access) Database).DbType = Access.DdTypes.Ace;
             }
-            else if (dataBase == DataBasic.Jet)
+            else if (DataBaseCategory == DataBasic.Jet)
             {
-                DB = new Access(connString);
-                (DB as Access).DbType = Access.DdTypes.JET;
+                Database = new Access(ConnectionString);
+                ((Access) Database).DbType = Access.DdTypes.JET;
             }
-            else if (dataBase == DataBasic.SQL)
+            else if (DataBaseCategory == DataBasic.SQL)
             {
-                DB = new SQL(connString);
+                Database = new SQL(ConnectionString);
             }
             else
             {
-                DB = new SQL(connString);
+                Database = new SQL(ConnectionString);
             }
             ApplicationContext = ServiceLocator.Current.GetInstance<IApplicationContext>();
         }
 
         public virtual T Get(params object[] primaryKeys)
         {
-            return DB.Get<T>(primaryKeys);
+            return Database.Get<T>(primaryKeys);
         }
         public virtual List<T> Get(DataFilter filter)
         {
-            return DB.Get<T>(filter);
+            return Database.Get<T>(filter);
         }
         public virtual List<T> Get(DataFilter filter, Pagination pagin)
         {
-            return DB.Get<T>(filter, pagin);
+            return Database.Get<T>(filter, pagin);
         }
         public virtual void Add(T item)
         {
-            DB.Add<T>(item);
+            Database.Add<T>(item);
         }
         public virtual int Delete(params object[] primaryKeys)
         {
-            return DB.Delete<T>(primaryKeys);
+            return Database.Delete<T>(primaryKeys);
         }
         public virtual int Delete(DataFilter filter)
         {
-            return DB.Delete<T>(filter);
+            return Database.Delete<T>(filter);
         }
         public virtual bool Update(T item, DataFilter filter)
         {
-            return DB.Update<T>(item, filter);
+            return Database.Update<T>(item, filter);
         }
         public virtual bool Update(T item, params object[] primaryKeys)
         {
-            return DB.Update<T>(item, primaryKeys);
+            return Database.Update<T>(item, primaryKeys);
         }
         public virtual long Count(DataFilter filter)
         {
-            return DB.Count<T>(filter);
+            return Database.Count<T>(filter);
         }
     }
 }

@@ -4,15 +4,17 @@ using System.Linq;
 using System.Web;
 using Easy.RepositoryPattern;
 using MvcApplication.Models;
+using MvcApplication.Repository;
 
 namespace MvcApplication.Service
 {
     public class ExampleService : ServiceBase<Example>, IExampleService
     {
-        public override void Add(Example item)
-        {
+        private readonly IExampleRepository _exampleRepository;
 
-            base.Add(item);
+        public ExampleService(IExampleRepository exampleRepository)
+        {
+            _exampleRepository = exampleRepository;
         }
     }
 }

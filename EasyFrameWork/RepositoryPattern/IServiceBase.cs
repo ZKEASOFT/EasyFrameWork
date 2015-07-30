@@ -7,18 +7,18 @@ using Easy.Models;
 
 namespace Easy.RepositoryPattern
 {
-    public interface IServiceBase<Entity> : IDependency
+    public interface IServiceBase<T> : IDependency
     {
-        Entity Get(params object[] primaryKeys);
-        IEnumerable<Entity> Get();
-        IEnumerable<Entity> Get(DataFilter filter);
-        IEnumerable<Entity> Get(DataFilter filter, Pagination pagin);
-        IEnumerable<Entity> Get(string property, OperatorType operatorType, object value);
-        void Add(Entity item);
+        T Get(params object[] primaryKeys);
+        IEnumerable<T> Get();
+        IEnumerable<T> Get(DataFilter filter);
+        IEnumerable<T> Get(DataFilter filter, Pagination pagin);
+        IEnumerable<T> Get(string property, OperatorType operatorType, object value);
+        void Add(T item);
         int Delete(params object[] primaryKeys);
         int Delete(DataFilter filter);
-        bool Update(Entity item, DataFilter filter);
-        bool Update(Entity item, params object[] primaryKeys);
+        bool Update(T item, DataFilter filter);
+        bool Update(T item, params object[] primaryKeys);
         long Count(DataFilter filter);
     }
 }

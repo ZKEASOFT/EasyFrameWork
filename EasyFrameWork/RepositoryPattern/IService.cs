@@ -1,9 +1,10 @@
 ﻿using Easy.Data;
+using Easy.Models;
 using System;
 using System.Collections.Generic;
 namespace Easy.RepositoryPattern
 {
-    public interface IService
+    public interface IService : IDependency
     {
         void AddGeneric<T>(T item) where T : class;
         IEnumerable<T> GetGeneric<T>() where T : class;

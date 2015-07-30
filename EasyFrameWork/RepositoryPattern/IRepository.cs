@@ -1,10 +1,11 @@
 ﻿using Easy.Data;
+using Easy.Models;
 using System;
 using System.Collections.Generic;
 
 namespace Easy.RepositoryPattern
 {
-    public interface IRepository<T> where T : class
+    public interface IRepository<T> : IDependency where T : class
     {
         void Add(T item);
         int Delete(DataFilter filter);

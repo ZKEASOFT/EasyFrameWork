@@ -7,4 +7,8 @@
     {
          
     }
+    public interface IFreeDependency
+    {
+
+    }
 }

@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using Easy.RepositoryPattern;
+using Easy.Models;
 namespace Easy.Modules.DataDictionary
 {
-    public interface IDataDictionaryService : IService
+    public interface IDataDictionaryService : IService, IFreeDependency
     {
         /// <summary>
         /// 根据类别获取数据字典

@@ -10,7 +10,7 @@ namespace Easy.Modules.MutiLanguage
     {
         public IEnumerable<LanguageEntity> GetAllTypes()
         {
-            return DB.CustomerSql("SELECT [Module] FROM [Language] group by [Module]").ToList<LanguageEntity>();
+            return Database.CustomerSql("SELECT [Module] FROM [Language] group by [Module]").ToList<LanguageEntity>();
         }
         public Dictionary<string, string> InitLan(Dictionary<string, string> source)
         {
@@ -20,7 +20,7 @@ namespace Easy.Modules.MutiLanguage
             {
                 condition.AppendFormat("'{0}',", item.Value);
             }
-            System.Data.DataTable talbe = DB.CustomerSql(string.Format("SELECT [LanKey],[LanValue] FROM [Language] where [LanKey] in ({0})", condition.ToString().Trim(','))).ToDataTable();
+            System.Data.DataTable talbe = Database.CustomerSql(string.Format("SELECT [LanKey],[LanValue] FROM [Language] where [LanKey] in ({0})", condition.ToString().Trim(','))).ToDataTable();
             Dictionary<string, string> result = new Dictionary<string, string>();
             Dictionary<string, string> newLan = new Dictionary<string, string>();
             foreach (var item in source)
@@ -37,7 +37,7 @@ namespace Easy.Modules.MutiLanguage
             }
             foreach (var item in newLan)
             {
-                var sql = DB.CustomerSql("INSERT INTO [Language] ([LanKey],[LanID],[LanValue],[Module],[LanType]) VALUES (@LanKey,@LanID,@LanValue,@Module,@LanType)")
+                var sql = Database.CustomerSql("INSERT INTO [Language] ([LanKey],[LanID],[LanValue],[Module],[LanType]) VALUES (@LanKey,@LanID,@LanValue,@Module,@LanType)")
                      .AddParameter("LanKey", item.Value)
                      .AddParameter("LanID", Localization.GetCurrentLanID())
                      .AddParameter("LanValue", item.Key);

@@ -22,6 +22,8 @@ namespace MvcApplication.Models
         {
             DataTable("Example");
             DataConfig(m => m.Id).AsIncreasePrimaryKey();
+            DataConfig(m => m.Value).Mapper("ValueText");
+            DataConfig(m => m.Title).Ignore();
         }
 
         protected override void ViewConfigure()

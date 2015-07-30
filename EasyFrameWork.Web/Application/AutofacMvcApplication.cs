@@ -57,8 +57,8 @@ namespace Easy.Web.Application
             AutofacContainerBuilder.RegisterType<RequestLifetimeScopeProvider>().As<ILifetimeScopeProvider>().SingleInstance();
             AutofacContainerBuilder.RegisterType<EasyControllerActivator>().As<IControllerActivator>();
             AutofacContainerBuilder.RegisterType<ApplicationContext>().As<IApplicationContext>().InstancePerLifetimeScope();
-            AutofacContainerBuilder.RegisterType<DataDictionaryService>().As<IDataDictionaryService>();
-            AutofacContainerBuilder.RegisterType<LanguageService>().As<ILanguageService>().SingleInstance();
+            //AutofacContainerBuilder.RegisterType<DataDictionaryService>().As<IDataDictionaryService>();
+            //AutofacContainerBuilder.RegisterType<LanguageService>().As<ILanguageService>().SingleInstance();
 
             //register controller
             var controllerType = typeof(System.Web.Mvc.Controller);

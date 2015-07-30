@@ -41,8 +41,8 @@ namespace Easy.Web.Application
             Container.RegisterType<IControllerActivator, EasyControllerActivator>();
             Container.RegisterType<IHttpItemsValueProvider, HttpItemsValueProvider>(new ContainerControlledLifetimeManager());
             Container.RegisterType<IApplicationContext, ApplicationContext>(new PerRequestLifetimeManager());
-            Container.RegisterType<IDataDictionaryService, DataDictionaryService>();
-            Container.RegisterType<ILanguageService, LanguageService>(new ContainerControlledLifetimeManager());
+            //Container.RegisterType<IDataDictionaryService, DataDictionaryService>();
+            //Container.RegisterType<ILanguageService, LanguageService>(new ContainerControlledLifetimeManager());
             var moduleType = typeof(IModule);
             PublicTypes.Each(t =>
             {

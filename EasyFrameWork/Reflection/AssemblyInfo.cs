@@ -3,11 +3,21 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using Easy.Extend;
+using Easy.Models;
 
 namespace Easy.Reflection
 {
     public abstract class AssemblyInfo
     {
+        public class KnownTypes
+        {
+            public static readonly Type DependencyType = typeof(IDependency);
+            public static readonly Type FreeDependencyType = typeof(IFreeDependency);
+            public static readonly Type EntityType = typeof(IEntity);
+        }
+
+
+
         private List<Assembly> _assemblies;
         public virtual IEnumerable<Assembly> Assemblies
         {

@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
 using Autofac;
 using Easy.IOC.Autofac;
 using Microsoft.Practices.ServiceLocation;
@@ -13,19 +10,16 @@ namespace Easy.IOC
 {
     public sealed class AutofacRegister : AssemblyInfo
     {
-        readonly Type _dependencyType = typeof(IDependency);
-        readonly Type _entityType = typeof(IEntity);
-
         public AutofacRegister(ContainerBuilder builder)
         {
             PublicTypes.Each(p =>
             {
                 if (p.IsClass && !p.IsAbstract && !p.IsInterface && !p.IsGenericType)
                 {
-                    if (_dependencyType.IsAssignableFrom(p) ||
-                        _entityType.IsAssignableFrom(p))
+                    if ((KnownTypes.DependencyType.IsAssignableFrom(p) ||
+                        KnownTypes.EntityType.IsAssignableFrom(p)) && !KnownTypes.FreeDependencyType.IsAssignableFrom(p))
                     {
-                        if (_entityType.IsAssignableFrom(p))
+                        if (KnownTypes.EntityType.IsAssignableFrom(p))
                         {
                             builder.RegisterType(p);
                         }

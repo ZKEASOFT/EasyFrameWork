@@ -10,8 +10,6 @@ namespace Easy.IOC
 {
     public sealed class UnityRegister : AssemblyInfo
     {
-        private readonly Type _dependencyType = typeof(IDependency);
-        private readonly Type _entityType = typeof(IEntity);
         private readonly IUnityContainer _container;
         public UnityRegister(IUnityContainer container)
         {
@@ -20,10 +18,10 @@ namespace Easy.IOC
             {
                 if (p.IsClass && !p.IsAbstract && !p.IsInterface && !p.IsGenericType)
                 {
-                    if (_dependencyType.IsAssignableFrom(p) ||
-                        _entityType.IsAssignableFrom(p))
+                    if ((KnownTypes.DependencyType.IsAssignableFrom(p) ||
+                        KnownTypes.EntityType.IsAssignableFrom(p)) && !KnownTypes.FreeDependencyType.IsAssignableFrom(p))
                     {
-                        if (_entityType.IsAssignableFrom(p))
+                        if (KnownTypes.EntityType.IsAssignableFrom(p))
                         {
                             _container.RegisterType(p);
                         }
