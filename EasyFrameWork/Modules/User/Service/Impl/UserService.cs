@@ -11,15 +11,10 @@ namespace Easy.Modules.User.Service
 {
     public class UserService : ServiceBase<UserEntity>, IUserService
     {
-        public UserService()
-        {
-
-        }
-
         public UserEntity Login(string userID, string passWord)
         {
-            passWord = Easy.EncryptionTool.Encryption(passWord);
-            var result = this.Get(new Data.DataFilter().Where("UserID", OperatorType.Equal, userID)
+            passWord = EncryptionTool.Encryption(passWord);
+            var result = this.Get(new DataFilter().Where("UserID", OperatorType.Equal, userID)
                 .Where("PassWord", OperatorType.Equal, passWord));
             if (result.Any())
             {

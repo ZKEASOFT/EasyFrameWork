@@ -1,7 +1,4 @@
-﻿using System.Linq;
-using System.Web.Mvc;
-using Easy.Modules.DataDictionary;
-using Easy.Modules.MutiLanguage;
+﻿using System.Web.Mvc;
 using Easy.Web.DependencyResolver;
 using Easy.Web.MetadataProvider;
 using Autofac;

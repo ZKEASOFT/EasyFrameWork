@@ -1,12 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using Easy.Extend;
-using Easy.Models;
 using Microsoft.Practices.ServiceLocation;
 using Microsoft.Practices.Unity;
 using Easy.Reflection;
-namespace Easy.IOC
+
+namespace Easy.IOC.Unity
 {
     public sealed class UnityRegister : AssemblyInfo
     {
@@ -23,14 +21,14 @@ namespace Easy.IOC
                     {
                         if (KnownTypes.EntityType.IsAssignableFrom(p))
                         {
-                            _container.RegisterType(p);
+                            _container.RegisterType(p, GetLifetimeManager(p));
                         }
                         else
                         {
                             foreach (var inter in p.GetInterfaces())
                             {
-                                _container.RegisterType(inter, p);
-                                _container.RegisterType(inter, p, inter.Name + p.FullName);
+                                _container.RegisterType(inter, p, GetLifetimeManager(p));
+                                _container.RegisterType(inter, p, inter.Name + p.FullName, GetLifetimeManager(p));
                             }
                         }
                     }
@@ -41,8 +39,27 @@ namespace Easy.IOC
 
         public void Regist()
         {
-            var locator = new Unity.UnityServiceLocator(_container);
+            var locator = new UnityServiceLocator(_container);
             ServiceLocator.SetLocatorProvider(() => locator);
+        }
+
+
+        LifetimeManager GetLifetimeManager(Type lifeTimeType)
+        {
+            LifetimeManager lifetimeManager;
+            if (KnownTypes.SingleInstanceType.IsAssignableFrom(lifeTimeType))
+            {
+                lifetimeManager = new ContainerControlledLifetimeManager();
+            }
+            else if (KnownTypes.PerRequestType.IsAssignableFrom(lifeTimeType))
+            {
+                lifetimeManager = new PerRequestLifetimeManager();
+            }
+            else
+            {
+                lifetimeManager = new PerResolveLifetimeManager();
+            }
+            return lifetimeManager;
         }
     }
 }

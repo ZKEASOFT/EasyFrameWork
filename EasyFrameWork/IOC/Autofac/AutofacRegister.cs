@@ -1,12 +1,11 @@
 ﻿using System;
 using Autofac;
-using Easy.IOC.Autofac;
 using Microsoft.Practices.ServiceLocation;
 using Easy.Extend;
-using Easy.Models;
 using Easy.Reflection;
+using Autofac.Builder;
 
-namespace Easy.IOC
+namespace Easy.IOC.Autofac
 {
     public sealed class AutofacRegister : AssemblyInfo
     {
@@ -19,14 +18,10 @@ namespace Easy.IOC
                     if ((KnownTypes.DependencyType.IsAssignableFrom(p) ||
                         KnownTypes.EntityType.IsAssignableFrom(p)) && !KnownTypes.FreeDependencyType.IsAssignableFrom(p))
                     {
-                        if (KnownTypes.EntityType.IsAssignableFrom(p))
-                        {
-                            builder.RegisterType(p);
-                        }
-                        else
-                        {
-                            builder.RegisterType(p).As(p.GetInterfaces());
-                        }
+                        MakeLifeTime(
+                            KnownTypes.EntityType.IsAssignableFrom(p)
+                                ? builder.RegisterType(p).AsSelf()
+                                : builder.RegisterType(p).As(p.GetInterfaces()), p);
                     }
 
                 }
@@ -38,6 +33,23 @@ namespace Easy.IOC
 
             ServiceLocator.SetLocatorProvider(() => locator);
             return locator.LifetimeScopeProvider;
+        }
+
+        private void MakeLifeTime<TLimit, TActivatorData, TRegistrationStyle>(
+            IRegistrationBuilder<TLimit, TActivatorData, TRegistrationStyle> reg, Type lifeTimeType)
+        {
+            if (KnownTypes.SingleInstanceType.IsAssignableFrom(lifeTimeType))
+            {
+                reg.SingleInstance();
+            }
+            else if (KnownTypes.PerRequestType.IsAssignableFrom(lifeTimeType))
+            {
+                reg.InstancePerLifetimeScope();
+            }
+            else
+            {
+                reg.InstancePerDependency();
+            }
         }
     }
 }

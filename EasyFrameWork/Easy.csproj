@@ -87,7 +87,7 @@
     <Compile Include="Extend\ExtType.cs" />
     <Compile Include="HTML\jsTree\ContextmenuItem.cs" />
     <Compile Include="HTML\Tags\CollectionAreaTag.cs" />
-    <Compile Include="IOC\AutofacRegister.cs" />
+    <Compile Include="IOC\Autofac\AutofacRegister.cs" />
     <Compile Include="IOC\Autofac\AutofacContainerAdapter.cs" />
     <Compile Include="IOC\Autofac\AutofacServiceLocator.cs" />
     <Compile Include="IOC\Autofac\ILifetimeScopeProvider.cs" />
@@ -98,7 +98,7 @@
     <Compile Include="IOC\Unity\PerRequestLifetimeManager.cs" />
     <Compile Include="IOC\Unity\UnityContainerAdapter.cs" />
     <Compile Include="Reflection\AssemblyInfo.cs" />
-    <Compile Include="IOC\UnityRegister.cs" />
+    <Compile Include="IOC\Unity\UnityRegister.cs" />
     <Compile Include="IOC\Unity\UnityServiceLocator.cs" />
     <Compile Include="Models\AutoComplete.cs" />
     <Compile Include="Models\EditorEntity.cs" />
