@@ -19,7 +19,7 @@ namespace Easy
                 var lanService = ServiceLocator.Current.GetInstance<ILanguageService>();
                 if (lanService == null)
                     return new LanguageEntity { LanKey = lanKey, LanValue = lanKey };
-                var language = lanService.GetGeneric<LanguageEntity>(lanKey, GetCurrentLanID());
+                var language = lanService.Get(lanKey, GetCurrentLanID());
                 if (language == null)
                 {
                     string lanValue = lanKey;
@@ -39,7 +39,7 @@ namespace Easy
                         LanType = LanType,
                         Module = Module
                     };
-                    lanService.AddGeneric(language);
+                    lanService.Add(language);
                 }
                 return language;
             });

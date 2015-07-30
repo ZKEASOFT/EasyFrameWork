@@ -1,21 +1,21 @@
 ﻿using Easy.Data;
-using Easy.Models;
-using System;
 using System.Collections.Generic;
+using Easy.IOC;
+
 namespace Easy.RepositoryPattern
 {
-    public interface IService : IDependency
+    public interface IService<T> : IDependency where T : class
     {
-        void AddGeneric<T>(T item) where T : class;
-        IEnumerable<T> GetGeneric<T>() where T : class;
-        IEnumerable<T> GetGeneric<T>(DataFilter filter) where T : class;
-        IEnumerable<T> GetGeneric<T>(DataFilter filter, Pagination pagin) where T : class;
-        T GetGeneric<T>(params object[] primaryKeys) where T : class;
-        bool UpdateGeneric<T>(T item, DataFilter filter) where T : class;
-        bool UpdateGeneric<T>(T item, params object[] primaryKeys) where T : class;
-        long Count(DataFilter filter);
-        int Delete(DataFilter filter);
+        T Get(params object[] primaryKeys);
+        IEnumerable<T> Get();
+        IEnumerable<T> Get(DataFilter filter);
+        IEnumerable<T> Get(DataFilter filter, Pagination pagin);
+        IEnumerable<T> Get(string property, OperatorType operatorType, object value);
+        void Add(T item);
         int Delete(params object[] primaryKeys);
+        int Delete(DataFilter filter);
+        bool Update(T item, DataFilter filter);
+        bool Update(T item, params object[] primaryKeys);
+        long Count(DataFilter filter);
     }
-    
 }

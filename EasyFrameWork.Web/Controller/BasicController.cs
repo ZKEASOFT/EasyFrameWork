@@ -24,7 +24,7 @@ namespace Easy.Web.Controller
     /// <typeparam name="S">Service类型</typeparam>
     public class BasicController<T, S> : System.Web.Mvc.Controller
         where T : EditorEntity
-        where S : IServiceBase<T>
+        where S : IService<T>
     {
         /// <summary>
         /// 缩略图宽

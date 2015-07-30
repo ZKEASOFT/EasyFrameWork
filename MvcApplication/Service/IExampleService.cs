@@ -7,7 +7,7 @@ using MvcApplication.Models;
 
 namespace MvcApplication.Service
 {
-    public interface IExampleService : IServiceBase<Example>
+    public interface IExampleService : IService<Example>
     {
     }
 }

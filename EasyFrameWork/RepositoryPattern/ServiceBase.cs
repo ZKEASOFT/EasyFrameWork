@@ -8,7 +8,7 @@ using Microsoft.Practices.ServiceLocation;
 
 namespace Easy.RepositoryPattern
 {
-    public abstract class ServiceBase<T> : IService, IServiceBase<T> where T : class
+    public abstract class ServiceBase<T> : IService<T> where T : class
     {
         public RepositoryBase<T> Repository { get; private set; }
         public IApplicationContext ApplicationContext { get; private set; }
@@ -102,50 +102,5 @@ namespace Easy.RepositoryPattern
         {
             return Repository.Count(filter);
         }
-
-        public virtual void AddGeneric<T>(T item) where T : class
-        {
-            RepositoryBase<T> rep = new RepositoryBase<T>();
-            rep.Add(item);
-        }
-
-        public virtual IEnumerable<T> GetGeneric<T>() where T : class
-        {
-            RepositoryBase<T> rep = new RepositoryBase<T>();
-            return rep.Get(new DataFilter());
-        }
-
-        public virtual IEnumerable<T> GetGeneric<T>(DataFilter filter) where T : class
-        {
-            RepositoryBase<T> rep = new RepositoryBase<T>();
-            return rep.Get(filter);
-        }
-
-        public virtual IEnumerable<T> GetGeneric<T>(DataFilter filter, Pagination pagin) where T : class
-        {
-            RepositoryBase<T> rep = new RepositoryBase<T>();
-            return rep.Get(filter, pagin);
-        }
-
-        public virtual T GetGeneric<T>(params object[] primaryKeys) where T : class
-        {
-            RepositoryBase<T> rep = new RepositoryBase<T>();
-            return rep.Get(primaryKeys);
-        }
-
-        public virtual bool UpdateGeneric<T>(T item, DataFilter filter) where T : class
-        {
-            RepositoryBase<T> rep = new RepositoryBase<T>();
-            return rep.Update(item, filter);
-        }
-
-        public virtual bool UpdateGeneric<T>(T item, params object[] primaryKeys) where T : class
-        {
-            RepositoryBase<T> rep = new RepositoryBase<T>();
-            return rep.Update(item, primaryKeys);
-        }
-
-
-
     }
 }

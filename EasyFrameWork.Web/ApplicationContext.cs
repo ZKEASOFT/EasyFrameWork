@@ -24,7 +24,7 @@ namespace Easy.Web
                         IUserService userService = ServiceLocator.Current.GetInstance<IUserService>();
                         if (userService != null)
                         {
-                            _CurrentUser = userService.GetGeneric<Easy.Modules.User.Models.UserEntity>(HttpContext.Current.User.Identity.Name);
+                            _CurrentUser = userService.Get(HttpContext.Current.User.Identity.Name);
                         }
                     }
                 }

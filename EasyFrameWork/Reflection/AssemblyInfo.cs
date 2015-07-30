@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using Easy.Extend;
-using Easy.Models;
+using Easy.IOC;
 
 namespace Easy.Reflection
 {

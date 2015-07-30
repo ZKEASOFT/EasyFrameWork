@@ -102,7 +102,7 @@
     <Compile Include="IOC\Unity\UnityServiceLocator.cs" />
     <Compile Include="Models\AutoComplete.cs" />
     <Compile Include="Models\EditorEntity.cs" />
-    <Compile Include="Models\IAdapter.cs" />
+    <Compile Include="IOC\IAdapter.cs" />
     <Compile Include="Models\IImage.cs" />
     <Compile Include="Models\IUser.cs" />
     <Compile Include="Cache\StaticCache.cs" />
@@ -169,7 +169,7 @@
     </Compile>
     <Compile Include="Net\WebPage.cs" />
     <Compile Include="RepositoryPattern\IRepository.cs" />
-    <Compile Include="RepositoryPattern\IServiceBase.cs" />
+    <Compile Include="RepositoryPattern\IService.cs" />
     <Compile Include="RepositoryPattern\ServiceBase.cs" />
     <Compile Include="RepositoryPattern\RepositoryBase.cs" />
     <Compile Include="Data\DataBase\DataBasic.cs" />
@@ -188,7 +188,6 @@
     <Compile Include="Models\HumanBase.cs" />
     <Compile Include="Net\Email\EmailSender.cs" />
     <Compile Include="Common.cs" />
-    <Compile Include="RepositoryPattern\IService.cs" />
     <Compile Include="Data\DataBase\Access.cs" />
     <Compile Include="Data\DataBase\SQL.cs" />
     <Compile Include="Extend\ExtTable.cs" />

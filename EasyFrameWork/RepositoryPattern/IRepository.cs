@@ -1,7 +1,6 @@
 ﻿using Easy.Data;
-using Easy.Models;
-using System;
 using System.Collections.Generic;
+using Easy.IOC;
 
 namespace Easy.RepositoryPattern
 {
