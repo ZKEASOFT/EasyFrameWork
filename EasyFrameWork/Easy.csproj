@@ -189,7 +189,7 @@
     <Compile Include="Net\Email\EmailSender.cs" />
     <Compile Include="Common.cs" />
     <Compile Include="Data\DataBase\Access.cs" />
-    <Compile Include="Data\DataBase\SQL.cs" />
+    <Compile Include="Data\DataBase\Sql.cs" />
     <Compile Include="Extend\ExtTable.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RSS\RssEntity.cs" />

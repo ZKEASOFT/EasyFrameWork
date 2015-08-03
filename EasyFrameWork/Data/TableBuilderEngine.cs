@@ -32,9 +32,9 @@ namespace Easy.Data
                 DataBase = new Access(connString);
                 (DataBase as Access).DbType = Access.DdTypes.JET;
             }
-            else if (dataBase == DataBasic.SQL)
+            else if (dataBase == DataBasic.Sql)
             {
-                DataBase = new SQL(connString);
+                DataBase = new Sql(connString);
             }
         }
         public DataBasic DataBase

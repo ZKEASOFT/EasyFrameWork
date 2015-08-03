@@ -17,18 +17,19 @@ namespace Easy.Cache
             readonly object _obj;
             public CacheObject(object obj, bool autoRemove)
             {
-                this._obj = obj;
+                _obj = obj;
                 LastVisit = DateTime.Now;
-                this.AutoRemove = autoRemove;
+                AutoRemove = autoRemove;
             }
             public object Get()
             {
                 LastVisit = DateTime.Now;
-                if (this._obj is ICloneable)
+                var cloneable = _obj as ICloneable;
+                if (cloneable != null)
                 {
-                    return (this._obj as ICloneable).Clone();
+                    return cloneable.Clone();
                 }
-                return this._obj;
+                return _obj;
             }
         }
 
@@ -69,13 +70,12 @@ namespace Easy.Cache
                 {
                     return (T)Cache[key].Get();
                 }
-                else
-                {
-                    var signal = new Signal(key);
-                    T result = source.Invoke(signal);
-                    Cache.Add(key, new CacheObject(result, signal.AutoRemove));
-                    return result;
-                }
+
+                var signal = new Signal(key);
+                T result = source.Invoke(signal);
+                Cache.Add(key, new CacheObject(result, signal.AutoRemove));
+                return result;
+
             }
         }
 
@@ -109,14 +109,9 @@ namespace Easy.Cache
         private static readonly Dictionary<string, List<string>> SignalRela;
         public string CacheKey { get; private set; }
 
-        public Signal()
-        {
-
-        }
-
         public Signal(string cacheKey)
         {
-            this.CacheKey = cacheKey;
+            CacheKey = cacheKey;
         }
 
         static Signal()
@@ -143,7 +138,7 @@ namespace Easy.Cache
             }
         }
 
-        public void Trigger(string signal)
+        public static void Trigger(string signal)
         {
             lock (SignalRela)
             {
@@ -159,7 +154,6 @@ namespace Easy.Cache
                                 StaticCache.Cache[m] = null;
                                 StaticCache.Cache.Remove(m);
                             }
-
                         });
                     }
                 }

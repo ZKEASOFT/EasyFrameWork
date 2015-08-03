@@ -75,7 +75,7 @@ namespace Easy.Data
         }
         public RelationHelper InnerJoin(string table, string alias, string condition)
         {
-            _relations.Add(new Relation()
+            _relations.Add(new Relation
             {
                 RelationTable = table,
                 RelationType = RelationType.InnerJoin,
@@ -87,7 +87,7 @@ namespace Easy.Data
 
         public RelationHelper LeftJoin(string table, string alias, string condition)
         {
-            _relations.Add(new Relation()
+            _relations.Add(new Relation
             {
                 RelationTable = table,
                 RelationType = RelationType.LeftJoin,
@@ -98,7 +98,7 @@ namespace Easy.Data
         }
         public RelationHelper RightJoin(string table, string alias, string condition)
         {
-            _relations.Add(new Relation()
+            _relations.Add(new Relation
             {
                 RelationTable = table,
                 RelationType = RelationType.RightJoin,
@@ -109,7 +109,7 @@ namespace Easy.Data
         }
         public RelationHelper LeftOuterJoin(string table, string alias, string condition)
         {
-            _relations.Add(new Relation()
+            _relations.Add(new Relation
             {
                 RelationTable = table,
                 RelationType = RelationType.LeftOuterJoin,
@@ -120,7 +120,7 @@ namespace Easy.Data
         }
         public RelationHelper RightOuterJoin(string table, string alias, string condition)
         {
-            _relations.Add(new Relation()
+            _relations.Add(new Relation
             {
                 RelationTable = table,
                 RelationType = RelationType.RightOuterJoin,
@@ -131,7 +131,7 @@ namespace Easy.Data
         }
         public RelationHelper FullJoin(string table, string alias, string condition)
         {
-            _relations.Add(new Relation()
+            _relations.Add(new Relation
             {
                 RelationTable = table,
                 RelationType = RelationType.FullJoin,
@@ -142,7 +142,7 @@ namespace Easy.Data
         }
         public RelationHelper FullOuterJoin(string table, string alias, string condition)
         {
-            _relations.Add(new Relation()
+            _relations.Add(new Relation
             {
                 RelationTable = table,
                 RelationType = RelationType.FullOuterJoin,

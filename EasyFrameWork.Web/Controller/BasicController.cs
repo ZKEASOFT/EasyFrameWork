@@ -1,30 +1,25 @@
-﻿using System.Reflection;
-using Easy.Data;
-using Easy.Extend;
+﻿using Easy.Data;
 using Easy.HTML.Grid;
 using Easy.Models;
 using Easy.RepositoryPattern;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Web.Mvc;
 using Easy.Web.Extend;
 using Easy.Constant;
 using Easy.HTML.Tags;
-using Microsoft.Practices.ServiceLocation;
 
 namespace Easy.Web.Controller
 {
     /// <summary>
     /// 基本控制器，增删改查
     /// </summary>
-    /// <typeparam name="T">实体类型</typeparam>
-    /// <typeparam name="P">主键类型</typeparam>
-    /// <typeparam name="S">Service类型</typeparam>
-    public class BasicController<T, S> : System.Web.Mvc.Controller
-        where T : EditorEntity
-        where S : IService<T>
+    /// <typeparam name="TEntity">实体类型</typeparam>
+    /// <typeparam name="TPrimarykey">主键类型</typeparam>
+    /// <typeparam name="TService">Service类型</typeparam>
+    public class BasicController<TEntity, TPrimarykey, TService> : System.Web.Mvc.Controller
+        where TEntity : EditorEntity
+        where TService : IService<TEntity>
     {
         /// <summary>
         /// 缩略图宽
@@ -37,8 +32,8 @@ namespace Easy.Web.Controller
         /// <summary>
         /// 业务Service
         /// </summary>
-        public S Service;
-        public BasicController(S service)
+        public TService Service;
+        public BasicController(TService service)
         {
             Service = service;
         }
@@ -52,7 +47,7 @@ namespace Easy.Web.Controller
             if (!string.IsNullOrEmpty(filePath))
             {
                 entity.ImageUrl = filePath;
-                string fileName = Easy.ImageUnity.SetThumb(Server.MapPath(filePath), ImageThumbWidth ?? 64, ImageThumbHeight ?? 64);
+                string fileName = ImageUnity.SetThumb(Server.MapPath(filePath), ImageThumbWidth ?? 64, ImageThumbHeight ?? 64);
                 entity.ImageThumbUrl = filePath.Replace(System.IO.Path.GetFileName(filePath), fileName);
             }
             if (string.IsNullOrEmpty(entity.ImageUrl) || string.IsNullOrEmpty(entity.ImageThumbUrl))
@@ -63,37 +58,24 @@ namespace Easy.Web.Controller
             return entity;
         }
 
-        protected object[] GetPrimaryKeys(T entity)
+        protected object[] GetPrimaryKeys(TEntity entity)
         {
-            var primaryKey = Easy.MetaData.DataConfigureAttribute.GetAttribute<T>().MetaData.Primarykey;
+            var primaryKey = MetaData.DataConfigureAttribute.GetAttribute<TEntity>().MetaData.Primarykey;
             object[] primaryKeys = new object[primaryKey.Count];
             for (int i = 0; i < primaryKey.Count; i++)
             {
-                primaryKeys[i] = Reflection.ClassAction.GetPropertyValue<T>(entity, primaryKey[i]);
+                primaryKeys[i] = Reflection.ClassAction.GetPropertyValue<TEntity>(entity, primaryKey[i]);
             }
             return primaryKeys;
         }
 
-        protected void QueryStringBindToEntity(T entity)
-        {
-            Type t = typeof(T);
-            t.GetProperties().Each(m =>
-            {
-                if (m.CanWrite && Request.QueryString.AllKeys.Contains(m.Name))
-                {
-                    Easy.Reflection.ClassAction.SetPropertyValue(entity, m.Name, Request.QueryString[m.Name]);
-                }
-            });
-
-        }
-        public virtual ActionResult Index(ParamsContext context)
+        public virtual ActionResult Index()
         {
             return View();
         }
-        public virtual ActionResult Create(ParamsContext context)
+        public virtual ActionResult Create()
         {
-            var entity = Activator.CreateInstance<T>();
-            QueryStringBindToEntity(entity);
+            var entity = Activator.CreateInstance<TEntity>();
             entity.Status = (int)RecordStatus.Active;
             ViewBag.Title = "添加";
             return View(entity);
@@ -101,28 +83,29 @@ namespace Easy.Web.Controller
 
         [HttpPost]
         [ValidateInput(false)]
-        public virtual ActionResult Create(T entity)
+        public virtual ActionResult Create(TEntity entity)
         {
             if (ModelState.IsValid)
             {
-                if (entity is IImage)
+                var image = entity as IImage;
+                if (image != null)
                 {
-                    UpLoadImage(entity as IImage);
+                    UpLoadImage(image);
                 }
                 Service.Add(entity);
                 return RedirectToAction("Index");
             }
             return View(entity);
         }
-        public virtual ActionResult Edit(ParamsContext context)
+        public virtual ActionResult Edit(TPrimarykey Id)
         {
-            T entity = Service.Get(context.ID);
+            TEntity entity = Service.Get(Id);
             return View(entity);
         }
 
         [HttpPost]
         [ValidateInput(false)]
-        public virtual ActionResult Edit(T entity)
+        public virtual ActionResult Edit(TEntity entity)
         {
             if (entity.ActionType == ActionType.Delete)
             {
@@ -133,9 +116,10 @@ namespace Easy.Web.Controller
             ViewBag.Title = entity.Title;
             if (ModelState.IsValid)
             {
-                if (entity is IImage)
+                var image = entity as IImage;
+                if (image != null)
                 {
-                    UpLoadImage(entity as IImage);
+                    UpLoadImage(image);
                 }
                 Service.Update(entity);
                 return RedirectToAction("Index");
@@ -162,20 +146,20 @@ namespace Easy.Web.Controller
                         listIds.Add(item);
                     }
                 }
-                string primary = Easy.MetaData.DataConfigureAttribute.GetAttribute<T>().MetaData.Primarykey[0];
-                int result = Service.Delete(new Easy.Data.DataFilter().Where(primary, OperatorType.In, listIds));
+                string primary = Easy.MetaData.DataConfigureAttribute.GetAttribute<TEntity>().MetaData.Primarykey[0];
+                int result = Service.Delete(new DataFilter().Where(primary, OperatorType.In, listIds));
                 if (result > 0)
                 {
-                    return Json(new AjaxResult() { Status = AjaxStatus.Normal, Message = ids });
+                    return Json(new AjaxResult { Status = AjaxStatus.Normal, Message = ids });
                 }
                 else
                 {
-                    return Json(new AjaxResult() { Status = AjaxStatus.Warn, Message = "未删除任何数据！" });
+                    return Json(new AjaxResult { Status = AjaxStatus.Warn, Message = "未删除任何数据！" });
                 }
             }
             catch (Exception ex)
             {
-                return Json(new AjaxResult() { Status = AjaxStatus.Error, Message = ex.Message });
+                return Json(new AjaxResult { Status = AjaxStatus.Error, Message = ex.Message });
             }
         }
         [HttpPost]
@@ -191,9 +175,9 @@ namespace Easy.Web.Controller
                 }
                 return null;
             });
-            var filter = data.GetDataFilter<T>();
+            var filter = data.GetDataFilter<TEntity>();
             var pagin = data.GetPagination();
-            return Json(data.GetJsonDataForGrid<T>(Service.Get(filter, pagin), pagin));
+            return Json(data.GetJsonDataForGrid<TEntity>(Service.Get(filter, pagin), pagin));
         }
     }
 }

@@ -38,13 +38,13 @@ namespace Easy.RepositoryPattern
                 Database = new Access(ConnectionString);
                 ((Access) Database).DbType = Access.DdTypes.JET;
             }
-            else if (DataBaseCategory == DataBasic.SQL)
+            else if (DataBaseCategory == DataBasic.Sql)
             {
-                Database = new SQL(ConnectionString);
+                Database = new Sql(ConnectionString);
             }
             else
             {
-                Database = new SQL(ConnectionString);
+                Database = new Sql(ConnectionString);
             }
             ApplicationContext = ServiceLocator.Current.GetInstance<IApplicationContext>();
         }
@@ -53,11 +53,11 @@ namespace Easy.RepositoryPattern
         {
             return Database.Get<T>(primaryKeys);
         }
-        public virtual List<T> Get(DataFilter filter)
+        public virtual IEnumerable<T> Get(DataFilter filter)
         {
             return Database.Get<T>(filter);
         }
-        public virtual List<T> Get(DataFilter filter, Pagination pagin)
+        public virtual IEnumerable<T> Get(DataFilter filter, Pagination pagin)
         {
             return Database.Get<T>(filter, pagin);
         }

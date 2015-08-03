@@ -116,7 +116,6 @@
     <Compile Include="Constant\Enums.cs" />
     <Compile Include="ControllerActivator\EasyControllerActivator.cs" />
     <Compile Include="ControllerFactory\IocControllerFactory.cs" />
-    <Compile Include="Controller\ParamsContext.cs" />
     <Compile Include="DisplayViewSupport.cs" />
     <Compile Include="DependencyResolver\EasyDependencyResolver.cs" />
     <Compile Include="Controller\BasicController.cs" />

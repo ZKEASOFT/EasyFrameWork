@@ -11,52 +11,47 @@ namespace Easy.MetaData
     /// 数据和视图的配置特性
     /// </summary>
     [AttributeUsage(AttributeTargets.Class)]
-    public class DataConfigureAttribute : System.Attribute
+    public class DataConfigureAttribute : Attribute
     {
         public IDataViewMetaData MetaData
         {
             get;
             private set;
         }
-        public DataConfigureAttribute(Type MetaDataType)
+        public DataConfigureAttribute(Type metaDataType)
         {
-            IDataViewMetaData metaData = Activator.CreateInstance(MetaDataType) as IDataViewMetaData;
+            IDataViewMetaData metaData = Activator.CreateInstance(metaDataType) as IDataViewMetaData;
             //HTML标签的多语言
-            Dictionary<string, string> lan = new Dictionary<string, string>();
-            foreach (var item in metaData.HtmlTags)
-            {
-                if (string.IsNullOrEmpty(item.Value.DisplayName))
-                    lan.Add(item.Key, item.Value.ModelType.Name + "@" + item.Key);
-            }
+            Dictionary<string, string> lan = metaData.HtmlTags.Where(item => string.IsNullOrEmpty(item.Value.DisplayName)).ToDictionary(item => item.Key, item => item.Value.ModelType.Name + "@" + item.Key);
             lan = Localization.InitLan(lan);
             foreach (var item in lan)
             {
                 metaData.HtmlTags[item.Key].DisplayName = item.Value;
             }
-            this.MetaData = metaData;
+            MetaData = metaData;
         }
         /// <summary>
         /// 获取属性对表的映射
         /// </summary>
-        /// <param name="Property"></param>
+        /// <param name="property"></param>
         /// <returns></returns>
-        public string GetPropertyMapper(string Property)
+        public string GetPropertyMapper(string property)
         {
-            if (this.MetaData.PropertyDataConfig.ContainsKey(Property))
+            if (this.MetaData.PropertyDataConfig.ContainsKey(property))
             {
-                PropertyDataInfo config = this.MetaData.PropertyDataConfig[Property];
+                PropertyDataInfo config = MetaData.PropertyDataConfig[property];
                 if (!string.IsNullOrEmpty(config.ColumnName))
                 {
-                    string alias = config.IsRelation ? config.TableAlias : this.MetaData.Alias;
+                    string alias = config.IsRelation ? config.TableAlias : MetaData.Alias;
                     return string.Format("[{0}].[{1}]", alias, config.ColumnName);
                 }
                 else
                 {
-                    string alias = config.IsRelation ? config.TableAlias : this.MetaData.Alias;
-                    return string.Format("[{0}].[{1}]", alias, Property);
+                    string alias = config.IsRelation ? config.TableAlias : MetaData.Alias;
+                    return string.Format("[{0}].[{1}]", alias, property);
                 }
             }
-            else return Property;
+            else return property;
         }
 
         /// <summary>
@@ -65,15 +60,7 @@ namespace Easy.MetaData
         /// <returns></returns>
         public List<HTML.Tags.HtmlTagBase> GetHtmlTags(bool widthHidden)
         {
-            List<HTML.Tags.HtmlTagBase> returnValue = new List<HTML.Tags.HtmlTagBase>();
-            foreach (var item in MetaData.HtmlTags)
-            {
-                if (item.Value.IsIgnore)
-                    continue;
-                if ((item.Value.TagType == HTML.HTMLEnumerate.HTMLTagTypes.Hidden || item.Value.IsHidden) && !widthHidden)
-                    continue;
-                returnValue.Add(item.Value);
-            }
+            List<HTML.Tags.HtmlTagBase> returnValue = (from item in MetaData.HtmlTags where !item.Value.IsIgnore where (item.Value.TagType != HTML.HTMLEnumerate.HTMLTagTypes.Hidden && !item.Value.IsHidden) || widthHidden select item.Value).ToList();
             return returnValue.OrderBy(q => q.OrderIndex).ToList();
         }
         /// <summary>
@@ -87,12 +74,12 @@ namespace Easy.MetaData
             {
                 return MetaData.HtmlTags[property];
             }
-            else return new HTML.Tags.TextBoxHtmlTag(MetaData.TargetType, property);
+            return new HTML.Tags.TextBoxHtmlTag(MetaData.TargetType, property);
         }
         public HTML.Tags.HtmlTagBase GetHtmlTag<T>(System.Linq.Expressions.Expression<Func<T, object>> expression)
         {
-            string property = Easy.Common.GetLinqExpressionText(expression);
-            return this.GetHtmlTag(property);
+            string property = Common.GetLinqExpressionText(expression);
+            return GetHtmlTag(property);
         }
         /// <summary>
         /// 获取显示名称
@@ -113,13 +100,7 @@ namespace Easy.MetaData
         /// <returns></returns>
         public List<HTML.Tags.HtmlTagBase> GetHtmlHiddenTags()
         {
-            List<HTML.Tags.HtmlTagBase> returnValue = new List<HTML.Tags.HtmlTagBase>();
-            foreach (var item in MetaData.HtmlTags)
-            {
-                if (item.Value.IsIgnore) continue;
-                if (item.Value.TagType == HTML.HTMLEnumerate.HTMLTagTypes.Hidden || item.Value.IsHidden)
-                    returnValue.Add(item.Value);
-            }
+            List<HTML.Tags.HtmlTagBase> returnValue = (from item in MetaData.HtmlTags where !item.Value.IsIgnore where item.Value.TagType == HTML.HTMLEnumerate.HTMLTagTypes.Hidden || item.Value.IsHidden select item.Value).ToList();
             return returnValue.OrderBy(q => q.OrderIndex).ToList();
         }
         /// <summary>
@@ -132,12 +113,7 @@ namespace Easy.MetaData
             Type targetType = typeof(T);
             StaticCache cache = new StaticCache();
             string typeName = targetType.FullName;
-            var attribute = cache.Get("DataConfigureAttribute_" + typeName, m =>
-                {
-                    return
-                        System.Attribute.GetCustomAttribute(targetType, typeof(DataConfigureAttribute)) as
-                            DataConfigureAttribute;
-                });
+            var attribute = cache.Get("DataConfigureAttribute_" + typeName, m => GetCustomAttribute(targetType, typeof(DataConfigureAttribute)) as DataConfigureAttribute);
             if (attribute != null)
             {
                 attribute.GetHtmlTags(true).ForEach(m => m.ResetValue());
@@ -148,12 +124,7 @@ namespace Easy.MetaData
         {
             StaticCache cache = new StaticCache();
             string typeName = type.FullName;
-            var attribute = cache.Get("DataConfigureAttribute_" + typeName, m =>
-            {
-                return
-                    System.Attribute.GetCustomAttribute(type, typeof(DataConfigureAttribute)) as
-                        DataConfigureAttribute;
-            });
+            var attribute = cache.Get("DataConfigureAttribute_" + typeName, m => GetCustomAttribute(type, typeof(DataConfigureAttribute)) as DataConfigureAttribute);
             if (attribute != null)
             {
                 attribute.GetHtmlTags(true).ForEach(m => m.ResetValue());

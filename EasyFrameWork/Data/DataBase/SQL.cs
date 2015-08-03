@@ -6,18 +6,19 @@ using System.Text;
 using System.Data.SqlClient;
 using System.Data;
 using System.Reflection;
+using Easy.MetaData;
 
 namespace Easy.Data.DataBase
 {
-    public class SQL : DataBasic
+    public class Sql : DataBasic
     {
 
-        public SQL()
+        public Sql()
         {
             ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings[ConnectionKey].ConnectionString;
         }
 
-        public SQL(string connectionString)
+        public Sql(string connectionString)
         {
             ConnectionString = connectionString;
         }
@@ -50,17 +51,17 @@ namespace Easy.Data.DataBase
         {
             return new SqlParameter(key, value);
         }
-        public override List<T> Get<T>(DataFilter filter, Pagination pagin)
+        public override IEnumerable<T> Get<T>(DataFilter filter, Pagination pagin)
         {
-            MetaData.DataConfigureAttribute custAttribute = Easy.MetaData.DataConfigureAttribute.GetAttribute<T>();
+            DataConfigureAttribute custAttribute = DataConfigureAttribute.GetAttribute<T>();
             string tableName = GetTableName<T>(custAttribute);
             List<KeyValuePair<string, string>> comMatch;
             string selectCol = GetSelectColumn<T>(custAttribute, out comMatch);
             string condition = filter.ToString();
-            Dictionary<int, string> primaryKey = GetPrimaryKeys(custAttribute);
-            foreach (int item in primaryKey.Keys)
+            var primaryKey = GetPrimaryKeys(custAttribute);
+            foreach (var item in primaryKey)
             {
-                filter.OrderBy(primaryKey[item], OrderType.Ascending);
+                filter.OrderBy(item, OrderType.Ascending);
             }
             string orderby = filter.GetOrderString();
             StringBuilder builder = new StringBuilder();
@@ -81,7 +82,7 @@ namespace Easy.Data.DataBase
             }
             builder.Append(string.IsNullOrEmpty(condition) ? "" : " WHERE " + condition);
             builder.AppendFormat(") SELECT {0} FROM T WHERE RowIndex>{1} AND RowIndex<={2}", selectCol, pagin.PageIndex * pagin.PageSize, pagin.PageSize * (pagin.PageIndex + 1));
-            DataTable table = this.GetTable(builder.ToString(), filter.GetParameterValues());
+            DataTable table = GetTable(builder.ToString(), filter.GetParameterValues());
             if (table == null) return new List<T>();
             List<T> list = new List<T>();
             Dictionary<string, PropertyInfo> properties = GetProperties<T>(custAttribute);
@@ -89,10 +90,10 @@ namespace Easy.Data.DataBase
             {
                 list.Add(Reflection.ClassAction.GetModel<T>(table, i, comMatch, properties));
             }
-            DataTable recordCound = this.GetTable(string.Format("SELECT COUNT(1) FROM [{0}] {3} {2} {1}",
+            DataTable recordCound = GetTable(string.Format("SELECT COUNT(1) FROM [{0}] {3} {2} {1}",
                 tableName,
                 string.IsNullOrEmpty(condition) ? "" : "WHERE " + condition,
-                builderRela.ToString(),
+                builderRela,
                 custAttribute == null ? "T0" : custAttribute.MetaData.Alias), filter.GetParameterValues());
             pagin.RecordCount = Convert.ToInt64(recordCound.Rows[0][0]);
             return list;
@@ -102,14 +103,17 @@ namespace Easy.Data.DataBase
 
         public override bool IsExistTable(string tableName)
         {
-            return
-                CustomerSql("SELECT COUNT(1) FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME='" + tableName + "'")
-                    .To<int>() != 0;
+            return CustomerSql("SELECT COUNT(1) FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME=@tableName")
+                .AddParameter("@tableName", tableName)
+                .To<int>() != 0;
         }
 
         public override bool IsExistColumn(string tableName, string columnName)
         {
-            return CustomerSql("SELECT COUNT(*) FROM INFORMATION_SCHEMA.[COLUMNS]  WHERE TABLE_NAME='" + tableName + "' AND COLUMN_NAME='" + columnName + "'").To<int>() != 0;
+            return CustomerSql("SELECT COUNT(*) FROM INFORMATION_SCHEMA.[COLUMNS]  WHERE TABLE_NAME=@tableName AND COLUMN_NAME=@columnName")
+                .AddParameter("@tableName", tableName)
+                .AddParameter("@columnName", columnName)
+                .To<int>() != 0;
         }
     }
 

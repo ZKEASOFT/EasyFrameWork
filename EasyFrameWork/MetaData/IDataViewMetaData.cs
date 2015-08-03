@@ -28,8 +28,7 @@ namespace Easy.MetaData
         /// <summary>
         /// 数据库（列名）主键
         /// </summary>
-        Dictionary<int, string> Primarykey { get; }
-        int PrimarykeyCount { get; set; }
+        List<string> Primarykey { get; }
         DataFilter DataAccess(DataFilter filter);
         IUser User { get; }
     }

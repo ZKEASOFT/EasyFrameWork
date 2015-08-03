@@ -20,7 +20,7 @@ namespace Easy.Data.DataBase
         public const string ConnectionKey = "Easy";
         public const string Ace = "Ace";
         public const string Jet = "Jet";
-        public const string SQL = "SQL";
+        public const string Sql = "SQL";
 
         #region 私有方法
 
@@ -162,16 +162,16 @@ namespace Easy.Data.DataBase
             return result;
         }
 
-        protected Dictionary<int, string> GetPrimaryKeys(DataConfigureAttribute custAttribute)
+        protected List<string> GetPrimaryKeys(DataConfigureAttribute custAttribute)
         {
-            Dictionary<int, string> primaryKey;
+            List<string> primaryKey;
             if (custAttribute != null)
             {
-                primaryKey = custAttribute.MetaData.Primarykey ?? new Dictionary<int, string> { { 0, "ID" } };
+                primaryKey = custAttribute.MetaData.Primarykey ?? new List<string> { "ID" };
             }
             else
             {
-                primaryKey = new Dictionary<int, string> { { 0, "ID" } };
+                primaryKey = new List<string> { "ID" };
             }
             return primaryKey;
         }
@@ -238,7 +238,7 @@ namespace Easy.Data.DataBase
             {
                 SetParameter(comm, item.Key, item.Value);
             }
-            return this.ExecCommand(comm);
+            return ExecCommand(comm);
         }
         public virtual object Insert(string tableName, Dictionary<string, object> values)
         {
@@ -301,7 +301,7 @@ namespace Easy.Data.DataBase
             {
                 SetParameter(comm, item.Key, item.Value);
             }
-            return this.ExecCommand(comm) > 0 ? true : false;
+            return ExecCommand(comm) > 0;
         }
         public virtual bool UpDateTable(DataTable table, string tableName)
         {
@@ -314,7 +314,7 @@ namespace Easy.Data.DataBase
             adapter.DeleteCommand = builder.GetDeleteCommand();
             adapter.UpdateCommand = builder.GetUpdateCommand();
             int cou = adapter.Update(table);
-            return cou > 0 ? true : false;
+            return cou > 0;
         }
 
         public virtual DataTable GetTable(DbCommand command)
@@ -373,7 +373,7 @@ namespace Easy.Data.DataBase
             if (custAttribute != null && custAttribute.MetaData.Primarykey.Any())
             {
                 var primaryKeyBuilder = new StringBuilder();
-                custAttribute.MetaData.Primarykey.Each(m => primaryKeyBuilder.AppendFormat("[{0}],", m.Value));
+                custAttribute.MetaData.Primarykey.Each(m => primaryKeyBuilder.AppendFormat("[{0}],", m));
                 buildColumn.Append(string.Format("PRIMARY KEY({0})", primaryKeyBuilder.ToString().Trim(',')));
             }
             CustomerSql(string.Format("Create Table [{0}] ({1}) ", tableName, buildColumn.ToString().Trim(','))).ExecuteNonQuery();
@@ -426,12 +426,12 @@ namespace Easy.Data.DataBase
             {
                 filter.Where(primaryKey[i], OperatorType.Equal, primaryKeys[i]);
             }
-            List<T> list = this.Get<T>(filter);
-            if (list.Count == 1)
-                return list[0];
-            else return default(T);
+            var list = Get<T>(filter);
+            if (list.Count() == 1)
+                return list.ElementAt(0);
+            return default(T);
         }
-        public virtual List<T> Get<T>(DataFilter filter) where T : class
+        public virtual IEnumerable<T> Get<T>(DataFilter filter) where T : class
         {
             DataConfigureAttribute custAttribute = DataConfigureAttribute.GetAttribute<T>();
             if (custAttribute != null)
@@ -501,7 +501,7 @@ namespace Easy.Data.DataBase
             if (table == null) return -1;
             return Convert.ToInt64(table.Rows[0][0]);
         }
-        public virtual List<T> Get<T>(DataFilter filter, Pagination pagin) where T : class
+        public virtual IEnumerable<T> Get<T>(DataFilter filter, Pagination pagin) where T : class
         {
             DataConfigureAttribute custAttribute = DataConfigureAttribute.GetAttribute<T>();
             if (custAttribute != null)
@@ -513,10 +513,10 @@ namespace Easy.Data.DataBase
             string selectCol = GetSelectColumn<T>(custAttribute, out comMatch);
             string condition = filter.ToString();
 
-            Dictionary<int, string> primaryKey = GetPrimaryKeys(custAttribute);
-            foreach (int item in primaryKey.Keys)
+            var primaryKey = GetPrimaryKeys(custAttribute);
+            foreach (var item in primaryKey)
             {
-                filter.OrderBy(primaryKey[item], OrderType.Ascending);
+                filter.OrderBy(item, OrderType.Ascending);
             }
             string orderby = filter.GetOrderString();
             string orderByContrary = filter.GetContraryOrderString();
@@ -677,7 +677,7 @@ namespace Easy.Data.DataBase
         public virtual bool Update<T>(T item, params object[] primaryKeys) where T : class
         {
             DataFilter filter = new DataFilter();
-            Dictionary<int, string> primaryKey = new Dictionary<int, string> {{0, "ID"}};
+            var primaryKey = new List<string> { "ID" };
             DataConfigureAttribute custAttribute = DataConfigureAttribute.GetAttribute<T>();
             if (custAttribute != null)
             {
@@ -697,15 +697,14 @@ namespace Easy.Data.DataBase
             else
             {
                 Type entityType = typeof(T);
-                foreach (int primary in primaryKey.Keys)
+                foreach (var primary in primaryKey)
                 {
-                    string proPerty = primaryKey[primary];
                     PropertyInfo proper = null;
                     if (custAttribute != null)
                     {
                         foreach (string key in custAttribute.MetaData.PropertyDataConfig.Keys)
                         {
-                            if (custAttribute.MetaData.PropertyDataConfig[key].ColumnName == proPerty)
+                            if (custAttribute.MetaData.PropertyDataConfig[key].ColumnName == primary)
                             {//属性名
                                 proper = entityType.GetProperty(key);
                                 break;
@@ -713,10 +712,10 @@ namespace Easy.Data.DataBase
                         }
                     }
                     if (proper == null)
-                        proper = entityType.GetProperty(proPerty);
+                        proper = entityType.GetProperty(primary);
                     if (proper != null && proper.CanRead)
                     {
-                        filter.Where(proPerty, OperatorType.Equal, proper.GetValue(item, null));
+                        filter.Where(primary, OperatorType.Equal, proper.GetValue(item, null));
                     }
                 }
             }

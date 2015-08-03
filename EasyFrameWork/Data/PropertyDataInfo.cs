@@ -124,8 +124,8 @@ namespace Easy.Data
         {
             _dataConig.IsRelation = true;
             _dataConig.TableAlias = alias;
-            this.Insert(false);
-            this.Update(false);
+            Insert(false);
+            Update(false);
             return this;
         }
         /// <summary>
@@ -146,7 +146,6 @@ namespace Easy.Data
         {
             if (!_dataConig.IsPrimaryKey)
             {
-                UpdatePrimarykeyCount();
                 _dataConig.IsIncreasePrimaryKey = false;
                 _dataConig.IsPrimaryKey = true;
                 Update(false);
@@ -161,7 +160,6 @@ namespace Easy.Data
         {
             if (!_dataConig.IsPrimaryKey)
             {
-                UpdatePrimarykeyCount();
                 _dataConig.IsIncreasePrimaryKey = true;
                 _dataConig.IsPrimaryKey = true;
                 Insert(false);
@@ -170,14 +168,7 @@ namespace Easy.Data
             return this;
         }
 
-        private void UpdatePrimarykeyCount()
-        {
-            lock (_viewMetaData)
-            {
-                _dataConig.PrimaryKeyIndex = _viewMetaData.PrimarykeyCount;
-                _viewMetaData.PrimarykeyCount++;
-            }
-        }
+
         public PropertyDataInfoHelper SetDbType(DbType dbType)
         {
             _dataConig.ColumnType = dbType;

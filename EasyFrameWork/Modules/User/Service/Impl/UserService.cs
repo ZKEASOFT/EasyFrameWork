@@ -14,19 +14,16 @@ namespace Easy.Modules.User.Service
         public UserEntity Login(string userID, string passWord)
         {
             passWord = EncryptionTool.Encryption(passWord);
-            var result = this.Get(new DataFilter().Where("UserID", OperatorType.Equal, userID)
+            var result = Get(new DataFilter().Where("UserID", OperatorType.Equal, userID)
                 .Where("PassWord", OperatorType.Equal, passWord));
             if (result.Any())
             {
                 var user = result.First();
                 user.LastLoginDate = DateTime.Now;
-                this.Update(user);
+                Update(user);
                 return user;
             }
-            else
-            {
-                return null;
-            }
+            return null;
         }
     }
 }

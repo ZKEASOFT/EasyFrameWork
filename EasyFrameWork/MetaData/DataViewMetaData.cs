@@ -29,31 +29,24 @@ namespace Easy.MetaData
         public void Init()
         {
 
-            this.Alias = "T0";
-            this.TargetType = typeof(T);
-            foreach (var item in this.TargetType.GetProperties())
+            Alias = "T0";
+            TargetType = typeof(T);
+            foreach (var item in TargetType.GetProperties())
             {
                 TypeCode code;
-                if (item.PropertyType.Name == "Nullable`1")
-                {
-                    code = Type.GetTypeCode(item.PropertyType.GetGenericArguments()[0]);
-                }
-                else
-                {
-                    code = Type.GetTypeCode(item.PropertyType);
-                }
+                code = Type.GetTypeCode(item.PropertyType.Name == "Nullable`1" ? item.PropertyType.GetGenericArguments()[0] : item.PropertyType);
                 switch (code)
                 {
                     case TypeCode.Boolean: ViewConfig(item.Name).AsCheckBox(); break;
-                    case TypeCode.Char: ViewConfig(item.Name).AsTextBox().MaxLength(1).RegularExpression(Constant.RegularExpression.Letters); break;
+                    case TypeCode.Char: ViewConfig(item.Name).AsTextBox().MaxLength(1).RegularExpression(RegularExpression.Letters); break;
                     case TypeCode.DateTime: ViewConfig(item.Name).AsTextBox().FormatAsDate(); break;
                     case TypeCode.UInt16:
                     case TypeCode.UInt32:
-                    case TypeCode.UInt64: ViewConfig(item.Name).AsTextBox().RegularExpression(Constant.RegularExpression.PositiveIntegersAndZero); break;
+                    case TypeCode.UInt64: ViewConfig(item.Name).AsTextBox().RegularExpression(RegularExpression.PositiveIntegersAndZero); break;
                     case TypeCode.SByte:
                     case TypeCode.Int16:
                     case TypeCode.Int32:
-                    case TypeCode.Int64: ViewConfig(item.Name).AsTextBox().RegularExpression(Constant.RegularExpression.Integer); break;
+                    case TypeCode.Int64: ViewConfig(item.Name).AsTextBox().RegularExpression(RegularExpression.Integer); break;
                     case TypeCode.Object:
                         {
                             ViewConfig(item.Name).AsHidden().Ignore(); break;
@@ -86,7 +79,7 @@ namespace Easy.MetaData
                     DataConfig(item.Name);
                 }
             }
-            if (typeof(EditorEntity).IsAssignableFrom(this.TargetType))
+            if (typeof(EditorEntity).IsAssignableFrom(TargetType))
             {
                 ViewConfig("CreateBy").AsHidden();
                 ViewConfig("CreatebyName").AsTextBox().Hide();
@@ -105,7 +98,7 @@ namespace Easy.MetaData
                 DataConfig("CreateDate").Update();
                 DataConfig("ActionType").Ignore();
             }
-            if (typeof(IImage).IsAssignableFrom(this.TargetType))
+            if (typeof(IImage).IsAssignableFrom(TargetType))
             {
                 ViewConfig("ImageUrl").AsTextBox().HideInGrid();
                 ViewConfig("ImageThumbUrl").AsTextBox().HideInGrid();
@@ -114,17 +107,15 @@ namespace Easy.MetaData
             {
                 IgnoreBase();
             }
-            this.DataConfigure();
-            this.ViewConfigure();
+            DataConfigure();
+            ViewConfigure();
         }
-        Dictionary<string, HtmlTagBase> _htmlTags = new Dictionary<string, HtmlTagBase>();
-        Dictionary<string, PropertyDataInfo> _porpertyDataConfig = new Dictionary<string, PropertyDataInfo>();
-        List<Relation> _dataRelations = new List<Relation>();
 
+        Dictionary<string, HtmlTagBase> _htmlTags = new Dictionary<string, HtmlTagBase>();
         public Dictionary<string, HtmlTagBase> HtmlTags
         {
-            get { return this._htmlTags; }
-            private set { this._htmlTags = value; }
+            get { return _htmlTags; }
+            set { _htmlTags = value; }
         }
 
         public Type TargetType
@@ -132,10 +123,12 @@ namespace Easy.MetaData
             get;
             private set;
         }
+
+        Dictionary<string, PropertyDataInfo> _propertyDataConfig = new Dictionary<string, PropertyDataInfo>();
         public Dictionary<string, PropertyDataInfo> PropertyDataConfig
         {
-            get { return this._porpertyDataConfig; }
-            private set { this._porpertyDataConfig = value; }
+            get { return _propertyDataConfig; }
+            set { _propertyDataConfig = value; }
         }
         IUser _user;
         public IUser User
@@ -151,20 +144,16 @@ namespace Easy.MetaData
             }
         }
 
+        List<Relation> _dataRelations = new List<Relation>();
         public List<Relation> DataRelations
         {
-            get { return this._dataRelations; }
-            private set { this._dataRelations = value; }
+            get { return _dataRelations; }
+            set { _dataRelations = value; }
         }
-        public Dictionary<int, string> Primarykey
+        public List<string> Primarykey
         {
-            get
-            {
-                return _porpertyDataConfig.Where(item => item.Value.IsPrimaryKey).ToDictionary(item => item.Value.PrimaryKeyIndex, item => item.Value.ColumnName);
-            }
+            get { return PropertyDataConfig.Where(item => item.Value.IsPrimaryKey).ToList(m => m.Value.ColumnName); }
         }
-
-
 
         public Dictionary<string, PropertyInfo> Properties
         {
@@ -173,7 +162,6 @@ namespace Easy.MetaData
                 var properties = new Dictionary<string, PropertyInfo>();
                 TargetType.GetProperties().Each(m => properties.Add(m.Name, m));
                 return properties;
-
             }
         }
 
@@ -268,8 +256,8 @@ namespace Easy.MetaData
         /// <param name="table">表名称</param>
         protected RelationHelper DataTable(string table)
         {
-            this.Table = table;
-            return new RelationHelper(this._dataRelations);
+            Table = table;
+            return new RelationHelper(DataRelations);
         }
         /// <summary>
         /// 将属于基类的字段全部设为DataConfig(item.Name).Ignore();

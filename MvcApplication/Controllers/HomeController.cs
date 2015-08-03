@@ -9,12 +9,12 @@ using MvcApplication.Service;
 
 namespace MvcApplication.Controllers
 {
-    public class HomeController : BasicController<Example, IExampleService>
+    public class HomeController : BasicController<Example, int, IExampleService>
     {
         public HomeController(IExampleService service) :
             base(service)
         {
-            
+
         }
 
 
