@@ -102,6 +102,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ActionInvoker\FilterRegister.cs" />
+    <Compile Include="ActionInvoker\FiltersAsyncControllerActionInvoker.cs" />
+    <Compile Include="ActionInvoker\FiltersControllerActionInvoker.cs" />
+    <Compile Include="ActionInvoker\IFilterRegister.cs" />
     <Compile Include="AjaxState.cs" />
     <Compile Include="ApplicationContext.cs" />
     <Compile Include="Application\HttpItemsValueProvider.cs" />
@@ -160,9 +164,7 @@
     <None Include="packages.config" />
     <None Include="sign.pfx" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="ActionInvoker\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <ProjectReference Include="..\EasyFrameWork\Easy.csproj">
       <Project>{edb1baa7-ec61-4292-bbe5-3bc39eb171e4}</Project>
