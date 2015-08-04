@@ -9,6 +9,8 @@ using System;
 using Easy.IOC;
 using Easy.IOC.Autofac;
 using Easy.IOC.Unity;
+using Easy.Web.ControllerFactory;
+using Easy.Web.Filter;
 
 namespace Easy.Web.Application
 {
@@ -50,14 +52,16 @@ namespace Easy.Web.Application
             //ModelBinderProviders.BinderProviders.Add(new EasyBinderProvider());
 
             AutofacContainerBuilder = new ContainerBuilder();
-            AutofacContainerBuilder.RegisterType<HttpItemsValueProvider>().As<IHttpItemsValueProvider>().SingleInstance();
-            AutofacContainerBuilder.RegisterType<RequestLifetimeScopeProvider>().As<ILifetimeScopeProvider>().SingleInstance();
+            AutofacContainerBuilder.RegisterType<FilterControllerFactory>().As<IControllerFactory>();
             AutofacContainerBuilder.RegisterType<EasyControllerActivator>().As<IControllerActivator>();
+            AutofacContainerBuilder.RegisterType<HttpItemsValueProvider>().As<IHttpItemsValueProvider>().SingleInstance();
             AutofacContainerBuilder.RegisterType<ApplicationContext>().As<IApplicationContext>().InstancePerLifetimeScope();
+
+            AutofacContainerBuilder.RegisterType<RequestLifetimeScopeProvider>().As<ILifetimeScopeProvider>().SingleInstance();
             //AutofacContainerBuilder.RegisterType<DataDictionaryService>().As<IDataDictionaryService>();
             //AutofacContainerBuilder.RegisterType<LanguageService>().As<ILanguageService>().SingleInstance();
 
-            //register controller
+            
             var controllerType = typeof(System.Web.Mvc.Controller);
             var moduleType = typeof(IModule);
             PublicTypes.Each(t =>
@@ -65,7 +69,7 @@ namespace Easy.Web.Application
                 if (!t.IsInterface && !t.IsAbstract && t.IsPublic && !t.IsGenericType)
                 {
                     if (controllerType.IsAssignableFrom(t))
-                    {
+                    {//register controller
                         AutofacContainerBuilder.RegisterType(t);
                     }
                     if (moduleType.IsAssignableFrom(t))
@@ -78,12 +82,13 @@ namespace Easy.Web.Application
 
             System.Web.Mvc.DependencyResolver.SetResolver(new EasyDependencyResolver());
 
-            Application_StartUp();
+            Application_Starting();
 
             _lifetimeScopeProvider = new AutofacRegister(AutofacContainerBuilder).Regist(AutofacContainerBuilder.Build());
 
             TaskManager.ExcuteAll();
+            
+            Application_Started();
         }
-
     }
 }

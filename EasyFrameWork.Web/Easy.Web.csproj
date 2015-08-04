@@ -102,10 +102,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ActionInvoker\FilterRegister.cs" />
+    <Compile Include="Filter\ConfigureFilterBase.cs" />
+    <Compile Include="Filter\FilterRegister.cs" />
     <Compile Include="ActionInvoker\FiltersAsyncControllerActionInvoker.cs" />
     <Compile Include="ActionInvoker\FiltersControllerActionInvoker.cs" />
-    <Compile Include="ActionInvoker\IFilterRegister.cs" />
+    <Compile Include="Filter\FilterRegisterItem.cs" />
+    <Compile Include="Filter\IConfigureFilter.cs" />
+    <Compile Include="Filter\IFilterRegister.cs" />
     <Compile Include="AjaxState.cs" />
     <Compile Include="ApplicationContext.cs" />
     <Compile Include="Application\HttpItemsValueProvider.cs" />
@@ -119,7 +122,7 @@
     <Compile Include="Common.cs" />
     <Compile Include="Constant\Enums.cs" />
     <Compile Include="ControllerActivator\EasyControllerActivator.cs" />
-    <Compile Include="ControllerFactory\IocControllerFactory.cs" />
+    <Compile Include="ControllerFactory\FilterControllerFactory.cs" />
     <Compile Include="DisplayViewSupport.cs" />
     <Compile Include="DependencyResolver\EasyDependencyResolver.cs" />
     <Compile Include="Controller\BasicController.cs" />

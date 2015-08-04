@@ -32,7 +32,7 @@ namespace Easy.IOC.Autofac
             {
                 if (_container.IsRegistered(serviceType))
                 {
-                    if (LifetimeScopeProvider != null)
+                    if (LifetimeScopeProvider != null && LifetimeScopeProvider.LifetimeScope != null)
                     {
                         var scope = LifetimeScopeProvider.LifetimeScope;
                         return key != null ? scope.ResolveNamed(key, serviceType) : scope.Resolve(serviceType);
@@ -56,7 +56,7 @@ namespace Easy.IOC.Autofac
             {
                 if (_container.IsRegistered(serviceType))
                 {
-                    if (LifetimeScopeProvider != null)
+                    if (LifetimeScopeProvider != null && LifetimeScopeProvider.LifetimeScope != null)
                     {
                         var scope = LifetimeScopeProvider.LifetimeScope;
                         var enumerableType = typeof(IEnumerable<>).MakeGenericType(serviceType);

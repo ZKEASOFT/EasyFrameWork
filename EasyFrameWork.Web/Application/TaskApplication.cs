@@ -7,6 +7,8 @@ using System.Web.Compilation;
 using Easy.Extend;
 using Easy.StartTask;
 using Easy.IOC;
+using Easy.Web.Filter;
+using Microsoft.Practices.ServiceLocation;
 
 namespace Easy.Web.Application
 {
@@ -40,6 +42,11 @@ namespace Easy.Web.Application
             get { return _publicTypes ?? (_publicTypes = Assemblies.PublicTypes()); }
         }
         public abstract IContainerAdapter ContainerAdapter { get;  }
-        public abstract void Application_StartUp();
+        public abstract void Application_Starting();
+
+        public virtual void Application_Started()
+        {
+            ServiceLocator.Current.GetAllInstances<IConfigureFilter>().Each(m => m.Configure());
+        }
     }
 }

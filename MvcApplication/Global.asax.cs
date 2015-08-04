@@ -5,9 +5,9 @@ using MvcApplication.Tasks;
 namespace MvcApplication
 {
 
-    public class MvcApplication : AutofacMvcApplication
+    public class MvcApplication : UnityMvcApplication
     {
-        public override void Application_StartUp()
+        public override void Application_Starting()
         {
             TaskManager
                 .Include<ConfigTask>()

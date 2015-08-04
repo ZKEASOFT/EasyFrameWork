@@ -11,6 +11,7 @@ using Microsoft.Practices.Unity;
 using Easy.Extend;
 using Easy.IOC;
 using Easy.IOC.Unity;
+using Easy.Web.ControllerFactory;
 
 namespace Easy.Web.Application
 {
@@ -38,9 +39,11 @@ namespace Easy.Web.Application
             //ModelBinderProviders.BinderProviders.Add(new EasyBinderProvider());
 
             Container = new UnityContainer();
+            Container.RegisterType<IControllerFactory, FilterControllerFactory>();
             Container.RegisterType<IControllerActivator, EasyControllerActivator>();
             Container.RegisterType<IHttpItemsValueProvider, HttpItemsValueProvider>(new ContainerControlledLifetimeManager());
             Container.RegisterType<IApplicationContext, ApplicationContext>(new PerRequestLifetimeManager());
+
             //Container.RegisterType<IDataDictionaryService, DataDictionaryService>();
             //Container.RegisterType<ILanguageService, LanguageService>(new ContainerControlledLifetimeManager());
             var moduleType = typeof(IModule);
@@ -58,10 +61,13 @@ namespace Easy.Web.Application
 
             System.Web.Mvc.DependencyResolver.SetResolver(new EasyDependencyResolver());
 
-            Application_StartUp();
+            Application_Starting();
 
             new UnityRegister(Container).Regist();
+
             TaskManager.ExcuteAll();
+
+            Application_Started();
         }
     }
 }

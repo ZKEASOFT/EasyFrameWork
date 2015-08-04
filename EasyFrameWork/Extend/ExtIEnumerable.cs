@@ -10,12 +10,13 @@ namespace Easy.Extend
     [DebuggerStepThrough]
     public static class ExtIEnumerable
     {
-        public static void Each<T>(this IEnumerable<T> source, Action<T> fun)
+        public static IEnumerable<T> Each<T>(this IEnumerable<T> source, Action<T> fun)
         {
             foreach (T item in source)
             {
                 fun(item);
             }
+            return source;
         }
         public static List<TResult> ToList<T, TResult>(this IEnumerable<T> source, Func<T, TResult> fun)
         {
