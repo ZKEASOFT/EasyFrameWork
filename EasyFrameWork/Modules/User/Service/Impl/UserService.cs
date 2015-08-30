@@ -11,6 +11,12 @@ namespace Easy.Modules.User.Service
 {
     public class UserService : ServiceBase<UserEntity>, IUserService
     {
+        public override void Add(UserEntity item)
+        {
+            item.PassWord = EncryptionTool.Encryption(item.PassWord);
+            base.Add(item);
+        }
+
         public UserEntity Login(string userID, string passWord)
         {
             passWord = EncryptionTool.Encryption(passWord);

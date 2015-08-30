@@ -28,23 +28,35 @@ namespace Easy.RepositoryPattern
         }
         public RepositoryBase()
         {
-            if (DataBaseCategory == DataBasic.Ace)
+            switch (DataBaseCategory)
             {
-                Database = new Access(ConnectionString);
-                ((Access) Database).DbType = Access.DdTypes.Ace;
-            }
-            else if (DataBaseCategory == DataBasic.Jet)
-            {
-                Database = new Access(ConnectionString);
-                ((Access) Database).DbType = Access.DdTypes.JET;
-            }
-            else if (DataBaseCategory == DataBasic.Sql)
-            {
-                Database = new Sql(ConnectionString);
-            }
-            else
-            {
-                Database = new Sql(ConnectionString);
+                case DataBasic.Ace:
+                {
+                    Database = new Access(ConnectionString);
+                    ((Access)Database).DbType = Access.DdTypes.Ace;
+                    break;
+                }
+                case DataBasic.Jet:
+                {
+                    Database = new Access(ConnectionString);
+                    ((Access)Database).DbType = Access.DdTypes.JET;
+                    break;
+                }
+                case DataBasic.Sql:
+                {
+                    Database = new Sql(ConnectionString);
+                    break;
+                }
+                case DataBasic.MySql:
+                {
+                    Database = new MySql(ConnectionString);
+                    break;
+                }
+                default:
+                {
+                    Database = new Sql(ConnectionString);
+                    break;
+                }
             }
             ApplicationContext = ServiceLocator.Current.GetInstance<IApplicationContext>();
         }

@@ -12,21 +12,8 @@ namespace MvcApplication
 
         public override void Configure()
         {
-            Registry.Register<HomeController, Tfilter>(m => m.Index());
+           
         }
     }
 
-    public class Tfilter : AuthorizeAttribute
-    {
-
-        public void OnActionExecuted(ActionExecutedContext filterContext)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public void OnActionExecuting(ActionExecutingContext filterContext)
-        {
-            throw new System.NotImplementedException();
-        }
-    }
 }

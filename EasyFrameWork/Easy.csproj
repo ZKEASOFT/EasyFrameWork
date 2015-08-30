@@ -80,6 +80,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Constant\DicKeys.cs" />
+    <Compile Include="Data\DataBase\MySql.cs" />
     <Compile Include="Data\Operation.cs" />
     <Compile Include="Data\TableBuilderEngine.cs" />
     <Compile Include="Extend\ExtDate.cs" />

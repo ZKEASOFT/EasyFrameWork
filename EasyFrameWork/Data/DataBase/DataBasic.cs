@@ -21,6 +21,7 @@ namespace Easy.Data.DataBase
         public const string Ace = "Ace";
         public const string Jet = "Jet";
         public const string Sql = "SQL";
+        public const string MySql = "MySql";
 
         #region 私有方法
 
@@ -504,9 +505,11 @@ namespace Easy.Data.DataBase
         public virtual IEnumerable<T> Get<T>(DataFilter filter, Pagination pagin) where T : class
         {
             DataConfigureAttribute custAttribute = DataConfigureAttribute.GetAttribute<T>();
+            string alias = "T0";
             if (custAttribute != null)
             {
                 filter = custAttribute.MetaData.DataAccess(filter);//数据权限    
+                alias = custAttribute.MetaData.Alias;
             }
             string tableName = GetTableName<T>(custAttribute);
             List<KeyValuePair<string, string>> comMatch;
@@ -516,7 +519,7 @@ namespace Easy.Data.DataBase
             var primaryKey = GetPrimaryKeys(custAttribute);
             foreach (var item in primaryKey)
             {
-                filter.OrderBy(item, OrderType.Ascending);
+                filter.OrderBy(string.Format("[{0}].[{1}]", alias, item), OrderType.Ascending);
             }
             string orderby = filter.GetOrderString();
             string orderByContrary = filter.GetContraryOrderString();
@@ -529,12 +532,12 @@ namespace Easy.Data.DataBase
                     builderRela.Append(item);
                 }
             }
-
-            DataTable recordCound = this.GetTable(string.Format("SELECT COUNT(*) FROM [{0}] {3} {2} {1}",
+            const string formatCount = "SELECT COUNT(*) FROM [{0}] {3} {2} {1}";
+            DataTable recordCound = this.GetTable(string.Format(formatCount,
                 tableName,
                 string.IsNullOrEmpty(condition) ? "" : "WHERE " + condition,
                 builderRela,
-                custAttribute == null ? "T0" : custAttribute.MetaData.Alias), filter.GetParameterValues());
+                alias), filter.GetParameterValues());
             pagin.RecordCount = Convert.ToInt64(recordCound.Rows[0][0]);
             if (pagin.AllPage == pagin.PageIndex && pagin.RecordCount > 0)
             {
@@ -550,8 +553,8 @@ namespace Easy.Data.DataBase
                 }
             }
             var builder = new StringBuilder();
-            const string format = "SELECT * FROM (SELECT TOP {1} * FROM (SELECT TOP {2} {0} FROM {3} {6} {5} {4}) TEMP0 {7}) TEMP1 {4}";
-            builder.AppendFormat(format,
+            const string formatTable = "SELECT * FROM (SELECT TOP {1} * FROM (SELECT TOP {2} {0} FROM {3} {6} {5} {4}) TEMP0 {7}) TEMP1 {8}";
+            builder.AppendFormat(formatTable,
                 selectCol,
                 pageSize,
                 pagin.PageSize * (pagin.PageIndex + 1),
@@ -559,7 +562,8 @@ namespace Easy.Data.DataBase
                 orderby,
                 string.IsNullOrEmpty(condition) ? "" : "WHERE " + condition,
                 builderRela,
-                orderByContrary);
+                orderByContrary.Replace("[{0}].".FormatWith(alias), ""),
+                orderby.Replace("[{0}].".FormatWith(alias), ""));
 
 
             DataTable table = this.GetTable(builder.ToString(), filter.GetParameterValues());
