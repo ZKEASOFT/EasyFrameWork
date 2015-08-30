@@ -47,9 +47,14 @@ namespace Easy.RepositoryPattern
                     Database = new Sql(ConnectionString);
                     break;
                 }
+                case DataBasic.SqlEarly:
+                {
+                    Database = new SqlEarly(ConnectionString);
+                    break;
+                }
                 case DataBasic.MySql:
                 {
-                    Database = new MySql(ConnectionString);
+                    Database = new Data.DataBase.MySql(ConnectionString);
                     break;
                 }
                 default:

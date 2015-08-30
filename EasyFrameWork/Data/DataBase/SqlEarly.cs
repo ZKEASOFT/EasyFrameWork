@@ -4,35 +4,34 @@ using System.Data.Common;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
-using MySql.Data.MySqlClient;
 
 namespace Easy.Data.DataBase
 {
-    class MySql : DataBasic
+    class SqlEarly : DataBasic
     {
-        public MySql()
+        public SqlEarly()
         {
             ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings[ConnectionKey].ConnectionString;
         }
 
-        public MySql(string connectionString)
+        public SqlEarly(string connectionString)
         {
             ConnectionString = connectionString;
         }
         public string ConnectionString { get; set; }
         protected override DbDataAdapter GetDbDataAdapter(DbCommand command)
         {
-            return new MySqlDataAdapter(command as MySqlCommand);
+            return new SqlDataAdapter(command as SqlCommand);
         }
 
         protected override DbConnection GetDbConnection()
         {
-            return new MySqlConnection(ConnectionString);
+            return new SqlConnection(ConnectionString);
         }
 
         protected override DbCommand GetDbCommand()
         {
-            return new MySqlCommand();
+            return new SqlCommand();
         }
 
         protected override DbCommandBuilder GetDbCommandBuilder(DbDataAdapter adapter)
@@ -42,7 +41,7 @@ namespace Easy.Data.DataBase
 
         protected override DbParameter GetDbParameter(string key, object value)
         {
-            return new MySqlParameter(key, value);
+            return new SqlParameter(key, value);
         }
 
         public override bool IsExistTable(string tableName)

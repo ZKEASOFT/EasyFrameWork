@@ -21,6 +21,7 @@ namespace Easy.Data.DataBase
         public const string Ace = "Ace";
         public const string Jet = "Jet";
         public const string Sql = "SQL";
+        public const string SqlEarly = "SqlEarly";
         public const string MySql = "MySql";
 
         #region 私有方法
