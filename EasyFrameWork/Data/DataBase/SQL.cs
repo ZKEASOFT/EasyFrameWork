@@ -81,7 +81,7 @@ namespace Easy.Data.DataBase
                 }
             }
             builder.Append(string.IsNullOrEmpty(condition) ? "" : " WHERE " + condition);
-            builder.AppendFormat(") SELECT {0} FROM T WHERE RowIndex>{1} AND RowIndex<={2}", selectCol, pagin.PageIndex * pagin.PageSize, pagin.PageSize * (pagin.PageIndex + 1));
+            builder.AppendFormat(") SELECT * FROM T WHERE RowIndex>{0} AND RowIndex<={1}", pagin.PageIndex * pagin.PageSize, pagin.PageSize * (pagin.PageIndex + 1));
             DataTable table = GetTable(builder.ToString(), filter.GetParameterValues());
             if (table == null) return new List<T>();
             List<T> list = new List<T>();
