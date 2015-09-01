@@ -16,7 +16,7 @@ namespace Easy.Data
         {
             Conditions = new List<Condition>();
             ConditionGroups = new List<ConditionGroup>();
-            Orders = new List<Order>();
+            Orders = new OrderCollection();
         }
         public DataFilter()
         {
@@ -39,7 +39,7 @@ namespace Easy.Data
             get;
             set;
         }
-        public List<Order> Orders
+        public OrderCollection Orders
         {
             get;
             set;
@@ -91,13 +91,19 @@ namespace Easy.Data
         #region 排序
         public DataFilter OrderBy(Order item)
         {
-            Orders.Add(item);
+            if (!Orders.Exists(item.Property))
+            {
+                Orders.Add(item);
+            }
             return this;
         }
 
         public DataFilter OrderBy(string property, OrderType order)
         {
-            Orders.Add(new Order(property, order));
+            if (!Orders.Exists(property))
+            {
+                Orders.Add(new Order(property, order));
+            }
             return this;
         }
         #endregion
@@ -165,7 +171,7 @@ namespace Easy.Data
         }
         public List<KeyValuePair<string, object>> GetParameterValues()
         {
-            var values = new List<KeyValuePair<string, object>>();            
+            var values = new List<KeyValuePair<string, object>>();
             ConditionGroups.ForEach(m => values.AddRange(m.GetKeyAndValue()));
             Conditions.Where(m => m.Value != null).Each(m => values.Add(m.GetKeyAndValue()));
             return values;

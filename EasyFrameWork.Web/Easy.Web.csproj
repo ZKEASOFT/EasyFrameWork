@@ -102,6 +102,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Attribute\HandleErrorToLogAttribute.cs" />
     <Compile Include="Filter\ConfigureFilterBase.cs" />
     <Compile Include="Filter\FilterRegister.cs" />
     <Compile Include="ActionInvoker\FiltersAsyncControllerActionInvoker.cs" />

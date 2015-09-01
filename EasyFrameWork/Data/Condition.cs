@@ -358,4 +358,19 @@ namespace Easy.Data
 
         }
     }
+
+    public class OrderCollection : List<Order>
+    {
+        public bool Exists(string property)
+        {
+            string singleProperty = Trim(property);
+            return this.Any(order => Trim(order.Property).Equals(singleProperty));
+        }
+
+        private string Trim(string property)
+        {
+            string singleProperty = property.Contains(".") ? property.Split('.')[1] : property;
+            return singleProperty.Replace("[", "").Replace("]", "");
+        }
+    }
 }
