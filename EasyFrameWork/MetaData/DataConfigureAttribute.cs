@@ -22,11 +22,14 @@ namespace Easy.MetaData
         {
             IDataViewMetaData metaData = Activator.CreateInstance(metaDataType) as IDataViewMetaData;
             //HTML标签的多语言
-            Dictionary<string, string> lan = metaData.HtmlTags.Where(item => string.IsNullOrEmpty(item.Value.DisplayName)).ToDictionary(item => item.Key, item => item.Value.ModelType.Name + "@" + item.Key);
-            lan = Localization.InitLan(lan);
-            foreach (var item in lan)
+            if (Localization.IsMultiLanReady())
             {
-                metaData.HtmlTags[item.Key].DisplayName = item.Value;
+                Dictionary<string, string> lan = metaData.HtmlTags.ToDictionary(item => item.Key, item => item.Value.ModelType.Name + "@" + item.Key);
+                lan = Localization.InitLan(lan);
+                foreach (var item in lan)
+                {
+                    metaData.HtmlTags[item.Key].DisplayName = item.Value;
+                }
             }
             MetaData = metaData;
         }

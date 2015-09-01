@@ -10,36 +10,47 @@ namespace Easy
 {
     public static class Localization
     {
+        private static readonly ILanguageService LanService;
+
+        static Localization()
+        {
+            LanService = ServiceLocator.Current.GetInstance<ILanguageService>();
+        }
+
+        public static bool IsMultiLanReady()
+        {
+            return LanService != null;
+        }
         public static string Get(string lanKey)
         {
             var lanCache = new StaticCache();
             LanguageEntity lan = lanCache.Get(lanKey, m =>
             {
                 m.When(LanguageService.SignalLanguageUpdate);
-                var lanService = ServiceLocator.Current.GetInstance<ILanguageService>();
-                if (lanService == null)
+
+                if (LanService == null)
                     return new LanguageEntity { LanKey = lanKey, LanValue = lanKey };
-                var language = lanService.Get(lanKey, GetCurrentLanID());
+                var language = LanService.Get(lanKey, GetCurrentLanID());
                 if (language == null)
                 {
                     string lanValue = lanKey;
-                    string LanType = "UnKnown";
-                    string Module = "Unknown";
+                    string lanType = "UnKnown";
+                    string module = "Unknown";
                     if (lanKey.Contains("@"))
                     {
                         lanValue = lanKey.Split('@')[1];
-                        LanType = "EntityProperty";
-                        Module = lanKey.Split('@')[0];
+                        lanType = "EntityProperty";
+                        module = lanKey.Split('@')[0];
                     }
                     language = new LanguageEntity
                     {
                         LanID = GetCurrentLanID(),
                         LanValue = lanValue,
                         LanKey = lanKey,
-                        LanType = LanType,
-                        Module = Module
+                        LanType = lanType,
+                        Module = module
                     };
-                    lanService.Add(language);
+                    LanService.Add(language);
                 }
                 return language;
             });
@@ -47,10 +58,8 @@ namespace Easy
         }
         public static Dictionary<string, string> InitLan(Dictionary<string, string> source)
         {
-            var lanService = ServiceLocator.Current.GetInstance<ILanguageService>();
-
-            if (lanService != null)
-                return lanService.InitLan(source);
+            if (LanService != null)
+                return LanService.InitLan(source);
 
             foreach (string item in source.Keys.ToArray<string>())
             {

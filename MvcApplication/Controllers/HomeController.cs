@@ -14,7 +14,7 @@ namespace MvcApplication.Controllers
         public HomeController(IExampleService service) :
             base(service)
         {
-
+            service.Get();
         }
 
 
