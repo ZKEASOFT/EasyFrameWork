@@ -17,6 +17,7 @@ namespace Easy.Modules.User.Models
         /// 密码
         /// </summary>
         public string PassWord { get; set; }
+        public string PassWordNew { get; set; }
         /// <summary>
         /// 时间戳
         /// </summary>
@@ -32,8 +33,6 @@ namespace Easy.Modules.User.Models
         /// </summary>
         public DateTime LastLoginDate { get; set; }
 
-        public string ID { get; set; }
-
         public string UserName { get; set; }
 
         public string ApiLoginToken { get; set; }
@@ -44,23 +43,26 @@ namespace Easy.Modules.User.Models
         {
             DataTable("Users");
             DataConfig(m => m.UserID).Update(false).Insert(true).AsPrimaryKey();
-            DataConfig(m => m.LastLoginDate).Insert(false);
-            DataConfig(m => m.ID).Ignore();
+            DataConfig(m => m.LastLoginDate).Insert(false).Update(false);
             DataConfig(m => m.Title).Ignore();
+            DataConfig(m => m.PassWordNew).Ignore();
         }
 
         protected override void ViewConfigure()
         {
-            ViewConfig(p => p.PassWord).AsPassWord().HideInGrid().Required();
-            ViewConfig(p => p.NickName).AsTextBox().Required().Order(2);
+            ViewConfig(p => p.PassWord).AsHidden();
+            ViewConfig(p => p.PassWordNew).AsTextBox().HideInGrid();
             ViewConfig(p => p.UserID).AsTextBox().Required().Order(1);
+            ViewConfig(p => p.NickName).AsTextBox().Required().Order(2);
             ViewConfig(p => p.Age).AsTextBox().RegularExpression(Easy.Constant.RegularExpression.Integer).HideInGrid();
+            ViewConfig(p => p.LastName).AsTextBox().HideInGrid();
+            ViewConfig(p => p.FirstName).AsTextBox().HideInGrid();
             ViewConfig(p => p.Birthday).AsTextBox().HideInGrid().FormatAsDate();
             ViewConfig(p => p.Birthplace).AsTextBox().HideInGrid().MaxLength(200);
             ViewConfig(p => p.Address).AsTextBox().HideInGrid().MaxLength(200);
             ViewConfig(p => p.ZipCode).AsTextBox().HideInGrid().RegularExpression(Easy.Constant.RegularExpression.ZipCode);
             ViewConfig(p => p.School).AsTextBox().HideInGrid().MaxLength(100);
-            ViewConfig(p => p.LoginIP).AsTextBox().Hide();
+            ViewConfig(p => p.LoginIP).AsTextBox().Hide().HideInGrid();
             ViewConfig(p => p.Timestamp).AsHidden();
             ViewConfig(p => p.LastLoginDate).AsTextBox().Hide().FormatAsDate();
             ViewConfig(p => p.Sex).AsDropDownList().DataSource(SourceType.Dictionary);
@@ -69,8 +71,7 @@ namespace Easy.Modules.User.Models
             ViewConfig(p => p.PhotoUrl).AsFileUp().HideInGrid();
             ViewConfig(p => p.UserTypeCD).AsDropDownList().DataSource(Easy.Constant.SourceType.Dictionary);
             ViewConfig(p => p.Title).AsTextBox().Ignore();
-            ViewConfig(p => p.ID).AsHidden();
-            ViewConfig(m => m.ApiLoginToken).AsTextBox().ReadOnly();
+            ViewConfig(m => m.ApiLoginToken).AsTextBox().ReadOnly().HideInGrid().Hide();
         }
     }
 }

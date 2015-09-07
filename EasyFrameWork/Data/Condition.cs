@@ -130,15 +130,13 @@ namespace Easy.Data
                                 Type itemType = null;
                                 foreach (var item in valueEnum)
                                 {
-                                    if (itemType == null)
-                                        itemType = item.GetType();
-                                    if (!itemType.IsClass)
+                                    if (item is string)
                                     {
-                                        valuesBuilder.AppendFormat("{0},", item);
+                                        valuesBuilder.AppendFormat("'{0}',", item.ToString().Replace("'", "''"));
                                     }
                                     else
                                     {
-                                        valuesBuilder.AppendFormat("'{0}',", item.ToString().Replace("'", "''"));
+                                        valuesBuilder.AppendFormat("{0},", item);
                                     }
                                 }
                             }
@@ -154,6 +152,7 @@ namespace Easy.Data
                             {
                                 builder.AppendFormat(" [{0}] in ({1}) ", this.Property, valuesBuilder.ToString().Trim(','));
                             }
+                            this.Value = null;
                             break;
                         }
                     case OperatorType.NotIn:
@@ -165,15 +164,13 @@ namespace Easy.Data
                                 Type itemType = null;
                                 foreach (var item in valueEnum)
                                 {
-                                    if (itemType == null)
-                                        itemType = item.GetType();
-                                    if (!itemType.IsClass)
+                                    if (item is string)
                                     {
-                                        valuesBuilder.AppendFormat("{0},", item);
+                                        valuesBuilder.AppendFormat("'{0}',", item.ToString().Replace("'", "''"));
                                     }
                                     else
                                     {
-                                        valuesBuilder.AppendFormat("'{0}',", item.ToString().Replace("'", "''"));
+                                        valuesBuilder.AppendFormat("{0},", item);
                                     }
                                 }
                             }
@@ -189,6 +186,7 @@ namespace Easy.Data
                             {
                                 builder.AppendFormat(" [{0}] not in ({1}) ", this.Property, valuesBuilder.ToString().Trim(','));
                             }
+                            this.Value = null;
                             break;
                         }
                     default:

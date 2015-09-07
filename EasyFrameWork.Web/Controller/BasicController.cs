@@ -8,6 +8,7 @@ using System.Web.Mvc;
 using Easy.Web.Extend;
 using Easy.Constant;
 using Easy.HTML.Tags;
+using Easy.MetaData;
 
 namespace Easy.Web.Controller
 {
@@ -134,10 +135,13 @@ namespace Easy.Web.Controller
             {
                 string[] id = ids.Split(',');
                 List<object> listIds = new List<object>();
+                string primary = DataConfigureAttribute.GetAttribute<TEntity>().MetaData.Primarykey[0];
+
+                bool isString = typeof(TEntity).GetProperty(primary).PropertyType.Name.ToLower().Equals("string");
                 foreach (string item in id)
                 {
                     long test = 0;
-                    if (long.TryParse(item, out test))
+                    if (!isString && long.TryParse(item, out test))
                     {
                         listIds.Add(test);
                     }
@@ -146,7 +150,6 @@ namespace Easy.Web.Controller
                         listIds.Add(item);
                     }
                 }
-                string primary = Easy.MetaData.DataConfigureAttribute.GetAttribute<TEntity>().MetaData.Primarykey[0];
                 int result = Service.Delete(new DataFilter().Where(primary, OperatorType.In, listIds));
                 if (result > 0)
                 {

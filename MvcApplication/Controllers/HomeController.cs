@@ -2,6 +2,8 @@
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using Easy.Modules.User.Models;
+using Easy.Modules.User.Service;
 using Easy.Web.Controller;
 using Microsoft.Practices.ServiceLocation;
 using MvcApplication.Models;
@@ -9,12 +11,14 @@ using MvcApplication.Service;
 
 namespace MvcApplication.Controllers
 {
-    public class HomeController : BasicController<Example, int, IExampleService>
+    public class HomeController : BasicController<UserEntity, string, IUserService>
     {
-        public HomeController(IExampleService service) :
+        public HomeController(IUserService service) :
             base(service)
         {
-            service.Get();
+            var user= service.Get("admin");
+            service.Update(user);
+            service.Get("admin");
         }
 
 

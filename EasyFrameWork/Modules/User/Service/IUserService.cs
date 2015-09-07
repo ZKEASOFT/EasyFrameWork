@@ -10,6 +10,6 @@ namespace Easy.Modules.User.Service
 {
     public interface IUserService : IService<UserEntity>, IFreeDependency
     {
-        UserEntity Login(string userID, string passWord);
+        UserEntity Login(string userID, string passWord, string ip);
     }
 }

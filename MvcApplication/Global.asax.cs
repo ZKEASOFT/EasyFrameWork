@@ -1,5 +1,6 @@
 ﻿using Easy.IOC;
 using Easy.Modules.MutiLanguage;
+using Easy.Modules.User.Service;
 using Easy.Web.Application;
 using MvcApplication.Tasks;
 
@@ -11,7 +12,7 @@ namespace MvcApplication
         public override void Application_Starting()
         {
 
-            //ContainerAdapter.RegisterType<ILanguageService, LanguageService>();
+            ContainerAdapter.RegisterType<IUserService, UserService>();
             TaskManager
                 .Include<ConfigTask>()
                 .Include<ResourceTask>();
@@ -21,7 +22,7 @@ namespace MvcApplication
     {
         public void Load(IContainerAdapter adapter)
         {
-            
+
         }
     }
 

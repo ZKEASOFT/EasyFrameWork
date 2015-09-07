@@ -183,7 +183,7 @@ namespace Easy.HTML.Tags
         /// <returns></returns>
         public DropDownListHtmlTag DataSource(SourceType type)
         {
-            string dictionaryType = this.ModelType.Name + "_" + this.Name;
+            string dictionaryType = this.ModelType.Name + "@" + this.Name;
             if (type == SourceType.Dictionary)
             {
                 var dicService = ServiceLocator.Current.GetInstance<IDataDictionaryService>();
