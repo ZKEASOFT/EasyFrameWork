@@ -82,7 +82,11 @@ namespace Easy.HTML.Tags
         /// <summary>
         /// 值
         /// </summary>
-        public object Value { get; set; }
+        public object Value 
+        { 
+            get; 
+            set; 
+        }
 
         public object DefaultValue { get; set; }
 
@@ -237,6 +241,7 @@ namespace Easy.HTML.Tags
             {
                 builder.AppendFormat(errorMsgPlace, this.Name);
             }
+            SetValue(null);
             return builder.ToString();
         }
 
@@ -248,12 +253,7 @@ namespace Easy.HTML.Tags
         {
             return this.ToHtmlString(widthLabel);
         }
-
-        public virtual void ResetValue()
-        {
-            this.Value = this.DefaultValue == null ? ((this.DataType.IsClass || this.DataType.IsInterface || this.DataType.IsAbstract) ? null : Activator.CreateInstance(this.DataType)) : this.DefaultValue;
-        }
-
+        
         #region
 
         /// <summary>

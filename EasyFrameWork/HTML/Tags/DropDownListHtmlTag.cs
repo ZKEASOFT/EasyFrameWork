@@ -41,9 +41,9 @@ namespace Easy.HTML.Tags
 
         public override string ToString(bool widthLabel)
         {
+            string val = this.Value == null ? "" : this.Value.ToString();
             string baseStr = base.ToString(widthLabel);
             var builder = new StringBuilder();
-            string val = this.Value == null ? "" : this.Value.ToString();
             if (this.Value != null && this.Value is ICollection)
             {
                 var vals = this.Value as ICollection;
@@ -340,14 +340,5 @@ namespace Easy.HTML.Tags
         }
 
         #endregion
-
-        public override void ResetValue()
-        {
-            base.ResetValue();
-            if (this.SourceType == SourceType.ViewData && this._data != null)
-            {
-                this._data.Clear();
-            }
-        }
     }
 }
