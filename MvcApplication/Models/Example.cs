@@ -13,6 +13,7 @@ namespace MvcApplication.Models
         public int Id { get; set; }
         public string Text { get; set; }
         public string Value { get; set; }
+        public IEnumerable<ExampleItem> Items { get; set; } 
     }
 
     class ExampleMetaData : DataViewMetaData<Example>
@@ -31,6 +32,7 @@ namespace MvcApplication.Models
             ViewConfig(m => m.Id).AsHidden();
             ViewConfig(m => m.Text).AsTextBox().Required();
             ViewConfig(m => m.Value).AsMutiLineTextBox().MaxLength(200);
+            ViewConfig(m => m.Items).AsCollectionArea();
         }
 
     }

@@ -11,14 +11,12 @@ using MvcApplication.Service;
 
 namespace MvcApplication.Controllers
 {
-    public class HomeController : BasicController<UserEntity, string, IUserService>
+    public class HomeController : BasicController<Example, int, IExampleService>
     {
-        public HomeController(IUserService service) :
+        public HomeController(IExampleService service) :
             base(service)
         {
-            var user= service.Get("admin");
-            service.Update(user);
-            service.Get("admin");
+           
         }
 
 
