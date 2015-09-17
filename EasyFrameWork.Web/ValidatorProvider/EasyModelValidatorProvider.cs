@@ -17,14 +17,7 @@ namespace Easy.Web.ValidatorProvider
             EasyModelMetaData data = metadata as EasyModelMetaData;
             if (data != null && data.HtmlTag != null)
             {
-                foreach (ValidatorBase item in data.HtmlTag.Validator)
-                {
-                    ModelValidator validator = GetValidator(data, context, item);
-                    if (validator != null)
-                    {
-                        validators.Add(validator);
-                    }
-                }
+                validators.AddRange(data.HtmlTag.Validator.Select(item => GetValidator(data, context, item)).Where(validator => validator != null));
             }
             return validators;
         }
@@ -36,25 +29,25 @@ namespace Easy.Web.ValidatorProvider
             }
             if (validator is RequiredValidator)
             {
-                return new Validator.RequiredModelValidator(metadata, context, validator as RequiredValidator);
+                return new Validator.RequiredModelValidator(metadata, context, (RequiredValidator)validator);
             }
-            else if (validator is RangeValidator)
+            if (validator is RangeValidator)
             {
-                return new Validator.RangeModelValidator(metadata, context, validator as RangeValidator);
+                return new Validator.RangeModelValidator(metadata, context, (RangeValidator)validator);
             }
-            else if (validator is RegularValidator)
+            if (validator is RegularValidator)
             {
-                return new Validator.RegularModelValidator(metadata, context, validator as RegularValidator);
+                return new Validator.RegularModelValidator(metadata, context, (RegularValidator)validator);
             }
-            else if (validator is RemoteValidator)
+            if (validator is RemoteValidator)
             {
-                return new Validator.RemoteModelValidator(metadata, context, validator as RemoteValidator);
+                return new Validator.RemoteModelValidator(metadata, context, (RemoteValidator)validator);
             }
-            else if (validator is StringLengthValidator)
+            if (validator is StringLengthValidator)
             {
-                return new Validator.StringLengthModelValidator(metadata, context, validator as StringLengthValidator);
+                return new Validator.StringLengthModelValidator(metadata, context, (StringLengthValidator)validator);
             }
-            else return null;
+            return null;
         }
     }
 }

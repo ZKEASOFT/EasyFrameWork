@@ -7,6 +7,7 @@ using System.IO;
 using System.Threading;
 using System.Text.RegularExpressions;
 using System.Linq.Expressions;
+using Easy.Extend;
 
 namespace Easy.Web
 {
@@ -15,28 +16,24 @@ namespace Easy.Web
         /// <summary>
         /// 判断文件是否能上传
         /// </summary>
-        /// <param name="Ext">文件扩展名</param>
+        /// <param name="ext">文件扩展名</param>
         /// <returns></returns>
-        public static bool FileCanUp(string Ext)
+        public static bool FileCanUp(string ext)
         {
-            Ext = Ext.ToLower();
-            if (Ext == ".aspx" || Ext == ".asp" || Ext == ".exe" || Ext == ".php" || Ext == ".jsp" || Ext == ".htm" || Ext == ".html" || Ext == ".xhtml" || Ext == string.Empty || Ext == null
-                || Ext == ".cs" || Ext == ".bat" || Ext == ".jar" || Ext == ".dll" || Ext == ".com")
-            {
-                return false;
-            }
-            else return true;
+            ext = ext.ToLower();
+            var exts = new List<string> { ".aspx", ".asp", ".exe", ".php", ".jsp", ".htm", ".html", ".xhtml", ".cs", ".bat", ".jar", ".dll", ".com" };
+            return !exts.Contains(ext);
         }
 
         /// <summary>
         /// 判断是否为图片
         /// </summary>
-        /// <param name="Ext">扩展名</param>
+        /// <param name="ext">扩展名</param>
         /// <returns>返回Bool值，是则返回true</returns>
-        public static bool IsImage(string Ext)
+        public static bool IsImage(string ext)
         {
-            Ext = Ext.ToLower();
-            if (Ext == ".gif" || Ext == ".jpg" || Ext == ".png" || Ext == ".jpeg" || Ext == ".bmp")
+            ext = ext.ToLower();
+            if (ext == ".gif" || ext == ".jpg" || ext == ".png" || ext == ".jpeg" || ext == ".bmp")
             {
                 return true;
             }
@@ -47,7 +44,7 @@ namespace Easy.Web
         /// <summary>
         /// MD5加密
         /// </summary>
-        /// <param name="str1"></param>
+        /// <param name="str"></param>
         /// <returns></returns>
         public static string Md5Encoder(string str)
         {

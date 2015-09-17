@@ -121,7 +121,6 @@
     <Compile Include="Attribute\ViewDataAttribute.cs" />
     <Compile Include="Cache\MemoryCache.cs" />
     <Compile Include="Common.cs" />
-    <Compile Include="Constant\Enums.cs" />
     <Compile Include="ControllerActivator\EasyControllerActivator.cs" />
     <Compile Include="ControllerFactory\FilterControllerFactory.cs" />
     <Compile Include="DisplayViewSupport.cs" />

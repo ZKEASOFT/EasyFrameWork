@@ -11,7 +11,7 @@ namespace Easy.Models
         long Timestamp { get; set; }
         string LoginIP { get; set; }
         string PhotoUrl { get; set; }
-        int UserTypeCD { get; set; }
+        int? UserTypeCD { get; set; }
         DateTime LastLoginDate { get; set; }
         string UserName { get; set; }
         string ApiLoginToken { get; set; }

@@ -18,10 +18,9 @@ namespace Easy.Web.Validator
         public RequiredModelValidator(EasyModelMetaData metadata, ControllerContext context, RequiredValidator requiredvalidator)
             : base(metadata, context)
         {
-            this.Attribute = new RequiredAttribute();
+            this.Attribute = new RequiredAttribute { ErrorMessage = requiredvalidator.ErrorMessage };
             //this.Attribute.ErrorMessageResourceType = Metadata.ContainerType;
             //this.Attribute.ErrorMessageResourceName = Metadata.PropertyName;
-            this.Attribute.ErrorMessage = requiredvalidator.ErrorMessage;
         }
         public override IEnumerable<ModelClientValidationRule> GetClientValidationRules()
         {

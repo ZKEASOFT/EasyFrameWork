@@ -1,17 +1,17 @@
-<?xml version="1.0"?>
+﻿<?xml version="1.0"?>
 <package >
   <metadata>
     <id>EasyFrameWork</id>
     <version>$version$</version>
     <title>$title$</title>
-    <authors>SeriaWei</authors>
+    <authors>ZKEASOFT</authors>
     <owners>SeriaWei</owners>
     <licenseUrl>http://opensource.org/licenses/Apache-2.0</licenseUrl>
-    <projectUrl>https://github.com/SeriaWei/EasyFrameWork</projectUrl>
+    <projectUrl>http://www.zkea.net/easyframework</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <description>Easy to work</description>
-    <releaseNotes>V1.0</releaseNotes>
-    <copyright>© zKea. All rights reserved.</copyright>
+    <description>Easy to coding</description>
+    <releaseNotes>http://www.zkea.net</releaseNotes>
+    <copyright>© ZKEASOFT. All rights reserved. www.zkea.net</copyright>
     <tags>EasyFrameWork</tags>
   </metadata>
 </package>

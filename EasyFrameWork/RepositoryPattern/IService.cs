@@ -1,4 +1,5 @@
-﻿using Easy.Data;
+﻿using System;
+using Easy.Data;
 using System.Collections.Generic;
 using Easy.IOC;
 

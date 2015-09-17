@@ -77,6 +77,7 @@
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Transactions" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Data" />
@@ -127,7 +128,6 @@
     <Compile Include="Extend\Extlong.cs" />
     <Compile Include="Extend\ExtObject.cs" />
     <Compile Include="Extend\ExtString.cs" />
-    <Compile Include="Models\IEnterprise.cs" />
     <Compile Include="HTML\Grid\EasyGrid.cs" />
     <Compile Include="HTML\Grid\GridData.cs" />
     <Compile Include="HTML\Grid\GridSetting.cs" />

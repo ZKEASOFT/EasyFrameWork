@@ -2,9 +2,12 @@
 using Easy.Data;
 using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using Microsoft.Practices.ServiceLocation;
+using System.Transactions;
 
 namespace Easy.RepositoryPattern
 {
@@ -16,6 +19,25 @@ namespace Easy.RepositoryPattern
         {
             Repository = new RepositoryBase<T>();
             ApplicationContext = ServiceLocator.Current.GetInstance<IApplicationContext>();
+        }
+        [DebuggerStepThrough]
+        protected TResult ExecuteTransaction<TResult>(Func<TResult> command)
+        {
+            var options = new TransactionOptions { IsolationLevel = System.Transactions.IsolationLevel.ReadUncommitted };
+            using (var ts = new TransactionScope(TransactionScopeOption.Required, options))
+            {
+                try
+                {
+                    var result = command.Invoke();
+                    ts.Complete();
+                    return result;
+                }
+                catch (Exception exception)
+                {
+                    Logger.Error(exception);
+                    return default(TResult);
+                }
+            }
         }
         public virtual T Get(params object[] primaryKeys)
         {
@@ -47,11 +69,11 @@ namespace Easy.RepositoryPattern
                     if (string.IsNullOrEmpty(entity.CreateBy))
                         entity.CreateBy = ApplicationContext.CurrentUser.UserID;
                     if (string.IsNullOrEmpty(entity.CreatebyName))
-                        entity.CreatebyName = ApplicationContext.CurrentUser.NickName;
+                        entity.CreatebyName = ApplicationContext.CurrentUser.UserName;
                     if (string.IsNullOrEmpty(entity.LastUpdateBy))
                         entity.LastUpdateBy = ApplicationContext.CurrentUser.UserID;
                     if (string.IsNullOrEmpty(entity.LastUpdateByName))
-                        entity.LastUpdateByName = ApplicationContext.CurrentUser.NickName;
+                        entity.LastUpdateByName = ApplicationContext.CurrentUser.UserName;
                 }
                 entity.CreateDate = DateTime.Now;
                 entity.LastUpdateDate = DateTime.Now;
@@ -76,7 +98,7 @@ namespace Easy.RepositoryPattern
                     if (string.IsNullOrEmpty(entity.LastUpdateBy))
                         entity.LastUpdateBy = ApplicationContext.CurrentUser.UserID;
                     if (string.IsNullOrEmpty(entity.LastUpdateByName))
-                        entity.LastUpdateByName = ApplicationContext.CurrentUser.NickName;
+                        entity.LastUpdateByName = ApplicationContext.CurrentUser.UserName;
                 }
                 entity.LastUpdateDate = DateTime.Now;
             }
@@ -92,7 +114,7 @@ namespace Easy.RepositoryPattern
                     if (string.IsNullOrEmpty(entity.LastUpdateBy))
                         entity.LastUpdateBy = ApplicationContext.CurrentUser.UserID;
                     if (string.IsNullOrEmpty(entity.LastUpdateByName))
-                        entity.LastUpdateByName = ApplicationContext.CurrentUser.NickName;
+                        entity.LastUpdateByName = ApplicationContext.CurrentUser.UserName;
                 }
                 entity.LastUpdateDate = DateTime.Now;
             }

@@ -8,7 +8,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("EasyFrameWork.Web")]
 [assembly: AssemblyDescription("EasyFrameWork.Web For Mvc")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("zKea")]
+[assembly: AssemblyCompany("ZKEASOFT")]
 [assembly: AssemblyProduct("EasyFrameWork.Web")]
 [assembly: AssemblyCopyright("Copyright © 2015. zKea. All rights reserved.")]
 [assembly: AssemblyTrademark("")]
@@ -32,5 +32,5 @@ using System.Runtime.InteropServices;
 // 可以指定所有这些值，也可以使用“生成号”和“修订号”的默认值，
 // 方法是按如下所示使用“*”:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("1.0.2.9")]
-[assembly: AssemblyFileVersion("1.0.2.9")]
+[assembly: AssemblyVersion("1.0.3.0")]
+[assembly: AssemblyFileVersion("1.0.3.0")]

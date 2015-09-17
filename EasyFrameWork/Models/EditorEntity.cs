@@ -14,7 +14,7 @@ namespace Easy.Models
         /// <summary>
         /// 是否通过
         /// </summary>
-        public int Status { get; set; }
+        public int? Status { get; set; }
         /// <summary>
         /// 创建人ID
         /// </summary>

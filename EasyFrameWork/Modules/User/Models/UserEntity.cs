@@ -27,7 +27,7 @@ namespace Easy.Modules.User.Models
         /// </summary>
         public string LoginIP { get; set; }
         public string PhotoUrl { get; set; }
-        public int UserTypeCD { get; set; }
+        public int? UserTypeCD { get; set; }
         /// <summary>
         /// 最后登陆时间
         /// </summary>
