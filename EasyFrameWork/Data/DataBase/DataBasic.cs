@@ -226,7 +226,10 @@ namespace Easy.Data.DataBase
         }
         protected virtual void SetParameter(DbCommand comm, string key, object value)
         {
-            comm.Parameters.Add(GetDbParameter(key, value));
+            if (key.IsNotNullAndWhiteSpace())
+            {
+                comm.Parameters.Add(GetDbParameter(key, value));
+            }
         }
 
         public abstract bool IsExistTable(string tableName);

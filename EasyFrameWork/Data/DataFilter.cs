@@ -53,8 +53,7 @@ namespace Easy.Data
         }
         public DataFilter Where(string property, OperatorType operatorType, object value)
         {
-            Conditions.Add(new Condition(property, operatorType, value));
-            return this;
+            return Where(new Condition(property, operatorType, value));
         }
         public DataFilter Where<T>(Expression<Func<T, object>> expression, OperatorType operatorType, object value)
         {
@@ -66,20 +65,15 @@ namespace Easy.Data
                 if (!string.IsNullOrEmpty(propertyMap))
                     property = propertyMap;
             }
-            Conditions.Add(new Condition(property, operatorType, value));
-            return this;
+            return Where(new Condition(property, operatorType, value));
         }
         public DataFilter Where(string condition)
         {
-            var con = new Condition(condition, ConditionType.And);
-            Conditions.Add(con);
-            return this;
+            return Where(new Condition(condition, ConditionType.And));
         }
         public DataFilter Where(string condition, ConditionType conditionType)
         {
-            var con = new Condition(condition, conditionType);
-            Conditions.Add(con);
-            return this;
+            return Where(new Condition(condition, conditionType));
         }
         public DataFilter Where(ConditionGroup conditionGroup)
         {
@@ -173,7 +167,14 @@ namespace Easy.Data
         {
             var values = new List<KeyValuePair<string, object>>();
             ConditionGroups.ForEach(m => values.AddRange(m.GetKeyAndValue()));
-            Conditions.Where(m => m.Value != null).Each(m => values.Add(m.GetKeyAndValue()));
+            Conditions.Where(m => m.Value != null).Each(m =>
+            {
+                var keyvalue = m.GetKeyAndValue();
+                if (keyvalue.Key.IsNotNullAndWhiteSpace())
+                {
+                    values.Add(keyvalue);
+                }
+            });
             return values;
         }
     }

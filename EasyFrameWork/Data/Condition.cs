@@ -152,7 +152,6 @@ namespace Easy.Data
                             {
                                 builder.AppendFormat(" [{0}] in ({1}) ", this.Property, valuesBuilder.ToString().Trim(','));
                             }
-                            this.Value = null;
                             break;
                         }
                     case OperatorType.NotIn:
@@ -186,7 +185,6 @@ namespace Easy.Data
                             {
                                 builder.AppendFormat(" [{0}] not in ({1}) ", this.Property, valuesBuilder.ToString().Trim(','));
                             }
-                            this.Value = null;
                             break;
                         }
                     default:

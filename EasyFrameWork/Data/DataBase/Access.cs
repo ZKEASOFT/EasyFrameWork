@@ -6,6 +6,7 @@ using System.Text;
 using System.Data.OleDb;
 using System.Data;
 using System.Data.Common;
+using Easy.Extend;
 
 namespace Easy.Data.DataBase
 {
@@ -81,17 +82,20 @@ namespace Easy.Data.DataBase
 
         protected override void SetParameter(DbCommand comm, string key, object value)
         {
-            if (value is DateTime)
+            if (key.IsNotNullAndWhiteSpace())
             {
-                comm.Parameters.Add(new OleDbParameter
+                if (value is DateTime)
                 {
-                    OleDbType = OleDbType.DBTimeStamp,
-                    Value = Convert.ToDateTime(value).ToString("yyyy-MM-dd HH:mm:ss")
-                });
-            }
-            else
-            {
-                base.SetParameter(comm, key, value);
+                    comm.Parameters.Add(new OleDbParameter
+                    {
+                        OleDbType = OleDbType.DBTimeStamp,
+                        Value = Convert.ToDateTime(value).ToString("yyyy-MM-dd HH:mm:ss")
+                    });
+                }
+                else
+                {
+                    base.SetParameter(comm, key, value);
+                }
             }
         }
 

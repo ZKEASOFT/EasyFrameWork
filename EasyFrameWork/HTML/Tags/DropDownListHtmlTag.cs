@@ -25,7 +25,7 @@ namespace Easy.HTML.Tags
         {
             get
             {
-                if (_souceFunc != null && _data == null)
+                if (_souceFunc != null)
                 {
                     _data = _souceFunc.Invoke();
                 }

@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using Easy.Data;
 using Easy.Modules.User.Models;
 using Easy.Modules.User.Service;
 using Easy.Web.Controller;
@@ -16,7 +17,7 @@ namespace MvcApplication.Controllers
         public HomeController(IExampleService service) :
             base(service)
         {
-           
+            service.Get(new DataFilter().Where("ID", OperatorType.In, new[] {1}));
         }
 
 
