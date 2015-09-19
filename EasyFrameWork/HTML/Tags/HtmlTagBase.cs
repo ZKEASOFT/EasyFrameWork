@@ -8,7 +8,7 @@ using System.Text;
 
 namespace Easy.HTML.Tags
 {
-    public abstract class HtmlTagBase
+    public abstract class HtmlTagBase : IDisposable
     {
 
         public HtmlTagBase(Type modelType, string property)
@@ -18,7 +18,8 @@ namespace Easy.HTML.Tags
             this.Name = property;
             this.DisplayName = this.Name;
             this.OrderIndex = 100;
-            this.AddClass("form-control");
+            AddClass("form-control");
+            SetValue(null);
         }
         #region Private
         Dictionary<string, string> _Properties = new Dictionary<string, string>();
@@ -36,6 +37,14 @@ namespace Easy.HTML.Tags
         #region 可继承私有方法
         public virtual void SetValue(object val)
         {
+            if (val == null)
+            {
+                if (ModelType.IsValueType)
+                {
+                    this.Value = Activator.CreateInstance(ModelType);
+                    return;
+                }
+            }
             this.Value = val;
         }
         #endregion
@@ -82,10 +91,10 @@ namespace Easy.HTML.Tags
         /// <summary>
         /// 值
         /// </summary>
-        public object Value 
-        { 
-            get; 
-            set; 
+        public object Value
+        {
+            get;
+            set;
         }
 
         public object DefaultValue { get; set; }
@@ -241,7 +250,6 @@ namespace Easy.HTML.Tags
             {
                 builder.AppendFormat(errorMsgPlace, this.Name);
             }
-            SetValue(null);
             return builder.ToString();
         }
 
@@ -253,7 +261,7 @@ namespace Easy.HTML.Tags
         {
             return this.ToHtmlString(widthLabel);
         }
-        
+
         #region
 
         /// <summary>
@@ -261,7 +269,7 @@ namespace Easy.HTML.Tags
         /// </summary>
         /// <param name="ErrorMessage"></param>
         /// <returns></returns>
-        public virtual HtmlTagBase Required(string ErrorMessage)
+        public HtmlTagBase Required(string ErrorMessage)
         {
             this.Validator.Add(new RequiredValidator()
             {
@@ -275,7 +283,7 @@ namespace Easy.HTML.Tags
         /// 必填
         /// </summary>
         /// <returns></returns>
-        public virtual HtmlTagBase Required()
+        public HtmlTagBase Required()
         {
             this.Validator.Add(new RequiredValidator()
             {
@@ -289,7 +297,7 @@ namespace Easy.HTML.Tags
         /// </summary>
         /// <param name="Max"></param>
         /// <returns></returns>
-        public virtual HtmlTagBase MaxLength(int Max)
+        public HtmlTagBase MaxLength(int Max)
         {
             this.Validator.Add(new StringLengthValidator(0, Max)
             {
@@ -302,7 +310,7 @@ namespace Easy.HTML.Tags
         /// </summary>
         /// <param name="Max"></param>
         /// <returns></returns>
-        public virtual HtmlTagBase MaxLength(int Max, string errorMsg)
+        public HtmlTagBase MaxLength(int Max, string errorMsg)
         {
             this.Validator.Add(new StringLengthValidator(0, Max)
             {
@@ -311,7 +319,7 @@ namespace Easy.HTML.Tags
             });
             return this;
         }
-        public virtual HtmlTagBase MaxLength(int Min, int Max)
+        public HtmlTagBase MaxLength(int Min, int Max)
         {
             this.Validator.Add(new StringLengthValidator(Min, Max)
             {
@@ -319,7 +327,7 @@ namespace Easy.HTML.Tags
             });
             return this;
         }
-        public virtual HtmlTagBase MaxLength(int Min, int Max, string errorMsg)
+        public HtmlTagBase MaxLength(int Min, int Max, string errorMsg)
         {
             this.Validator.Add(new StringLengthValidator(Min, Max)
             {
@@ -333,7 +341,7 @@ namespace Easy.HTML.Tags
         /// </summary>
         /// <param name="Value"></param>
         /// <returns></returns>
-        public virtual HtmlTagBase SetDisplayName(string Value)
+        public HtmlTagBase SetDisplayName(string Value)
         {
             this.DisplayName = Value;
             foreach (ValidatorBase item in this.Validator)
@@ -348,7 +356,7 @@ namespace Easy.HTML.Tags
         /// <param name="Property"></param>
         /// <param name="Value"></param>
         /// <returns></returns>
-        public virtual HtmlTagBase AddProperty(string Property, string Value)
+        public HtmlTagBase AddProperty(string Property, string Value)
         {
             if (this.Properties.ContainsKey(Property))
                 this.Properties[Property] = Value;
@@ -360,7 +368,7 @@ namespace Easy.HTML.Tags
         /// </summary>
         /// <param name="Css"></param>
         /// <returns></returns>
-        public virtual HtmlTagBase AddClass(string Css)
+        public HtmlTagBase AddClass(string Css)
         {
             if (!this.Classes.Contains(Css))
                 this.Classes.Add(Css);
@@ -371,7 +379,7 @@ namespace Easy.HTML.Tags
         /// </summary>
         /// <param name="width"></param>
         /// <returns></returns>
-        public virtual HtmlTagBase SetColumnWidth(int width)
+        public HtmlTagBase SetColumnWidth(int width)
         {
             this.Grid.ColumnWidth = width;
             return this;
@@ -381,7 +389,7 @@ namespace Easy.HTML.Tags
         /// </summary>
         /// <param name="cansearch"></param>
         /// <returns></returns>
-        public virtual HtmlTagBase SearchAble(bool? cansearch = true)
+        public HtmlTagBase SearchAble(bool? cansearch = true)
         {
             bool search = cansearch ?? true;
             this.Grid.Searchable = search;
@@ -391,7 +399,7 @@ namespace Easy.HTML.Tags
         /// 只读
         /// </summary>
         /// <returns></returns>
-        public virtual HtmlTagBase ReadOnly()
+        public HtmlTagBase ReadOnly()
         {
             if (!this.Properties.ContainsKey("readonly"))
             {
@@ -416,7 +424,7 @@ namespace Easy.HTML.Tags
         /// 关闭，无效
         /// </summary>
         /// <returns></returns>
-        public virtual HtmlTagBase Disable()
+        public HtmlTagBase Disable()
         {
             if (!this.Properties.ContainsKey("disabled"))
             {
@@ -434,7 +442,7 @@ namespace Easy.HTML.Tags
         /// <param name="properyt">例:margin</param>
         /// <param name="value">例：20px</param>
         /// <returns></returns>
-        public virtual HtmlTagBase AddStyle(string properyt, string value)
+        public HtmlTagBase AddStyle(string properyt, string value)
         {
             if (this.Styles.ContainsKey(properyt))
             {
@@ -450,7 +458,7 @@ namespace Easy.HTML.Tags
         /// 隐藏；display:none
         /// </summary>
         /// <returns></returns>
-        public virtual HtmlTagBase Hide()
+        public HtmlTagBase Hide()
         {
             this.IsHidden = true;
             return this.AddStyle("display", "none");
@@ -459,7 +467,7 @@ namespace Easy.HTML.Tags
         /// 不在页面中出现
         /// </summary>
         /// <returns></returns>
-        public virtual HtmlTagBase Ignore()
+        public HtmlTagBase Ignore()
         {
             this.IsIgnore = true;
             return this;
@@ -468,7 +476,7 @@ namespace Easy.HTML.Tags
         /// 不在列表中显示
         /// </summary>
         /// <returns></returns>
-        public virtual HtmlTagBase HideInGrid()
+        public HtmlTagBase HideInGrid()
         {
             this.Grid.Visiable = false;
             return this;
@@ -478,7 +486,7 @@ namespace Easy.HTML.Tags
         /// </summary>
         /// <param name="index"></param>
         /// <returns></returns>
-        public virtual HtmlTagBase Order(int index)
+        public HtmlTagBase Order(int index)
         {
             this.OrderIndex = index;
             return this;
@@ -490,7 +498,7 @@ namespace Easy.HTML.Tags
         /// </summary>
         /// <param name="expression">表达试</param>
         /// <returns></returns>
-        public virtual HtmlTagBase RegularExpression(string expression)
+        public HtmlTagBase RegularExpression(string expression)
         {
             this.Validator.Add(new RegularValidator(expression)
             {
@@ -505,7 +513,7 @@ namespace Easy.HTML.Tags
         /// <param name="expression">表达试</param>
         /// <param name="errorMsg">错误提示语</param>
         /// <returns></returns>
-        public virtual HtmlTagBase RegularExpression(string expression, string errorMsg)
+        public HtmlTagBase RegularExpression(string expression, string errorMsg)
         {
             this.Validator.Add(new RegularValidator(expression)
             {
@@ -520,7 +528,7 @@ namespace Easy.HTML.Tags
         /// <param name="min">最小值</param>
         /// <param name="max">最大值</param>
         /// <returns></returns>
-        public virtual HtmlTagBase Range(double min, double max)
+        public HtmlTagBase Range(double min, double max)
         {
             this.Validator.Add(new RangeValidator(min, max)
             {
@@ -535,7 +543,7 @@ namespace Easy.HTML.Tags
         /// <param name="max">最大值</param>
         /// <param name="errorMsg">错误提示语</param>
         /// <returns></returns>
-        public virtual HtmlTagBase Range(double min, double max, string errorMsg)
+        public HtmlTagBase Range(double min, double max, string errorMsg)
         {
             this.Validator.Add(new RangeValidator(min, max)
             {
@@ -550,7 +558,7 @@ namespace Easy.HTML.Tags
         /// <param name="routeName">路由名称</param>
         /// <param name="errorMsg">错误提示语</param>
         /// <returns></returns>
-        public virtual HtmlTagBase Remote(string action, string controller)
+        public HtmlTagBase Remote(string action, string controller)
         {
             this.Validator.Add(new RemoteValidator()
             {
@@ -567,7 +575,7 @@ namespace Easy.HTML.Tags
         /// <param name="controller"></param>
         /// <param name="errorMsg"></param>
         /// <returns></returns>
-        public virtual HtmlTagBase Remote(string action, string controller, string errorMsg)
+        public HtmlTagBase Remote(string action, string controller, string errorMsg)
         {
             this.Validator.Add(new RemoteValidator()
             {
@@ -586,7 +594,7 @@ namespace Easy.HTML.Tags
         /// <param name="area"></param>
         /// <param name="errorMsg"></param>
         /// <returns></returns>
-        public virtual HtmlTagBase Remote(string action, string controller, string area, string errorMsg)
+        public HtmlTagBase Remote(string action, string controller, string area, string errorMsg)
         {
             this.Validator.Add(new RemoteValidator()
             {
@@ -603,34 +611,39 @@ namespace Easy.HTML.Tags
         /// </summary>
         /// <param name="validator"></param>
         /// <returns></returns>
-        public virtual HtmlTagBase Remote(RemoteValidator validator)
+        public HtmlTagBase Remote(RemoteValidator validator)
         {
             this.Validator.Add(validator);
             return this;
         }
 
-        public virtual HtmlTagBase ShowForDisplay(bool show)
+        public HtmlTagBase ShowForDisplay(bool show)
         {
             this.IsShowForDisplay = show;
             return this;
         }
-        public virtual HtmlTagBase ShowForEdit(bool show)
+        public HtmlTagBase ShowForEdit(bool show)
         {
             this.IsShowForEdit = show;
             return this;
         }
-        public virtual HtmlTagBase SetTemplate(string template)
+        public HtmlTagBase SetTemplate(string template)
         {
             this.TemplateName = template;
             return this;
         }
 
-        public virtual HtmlTagBase Format(string format)
+        public HtmlTagBase Format(string format)
         {
             this.ValueFormat = format;
             return this;
         }
 
         #endregion
+
+        public void Dispose()
+        {
+            SetValue(null);
+        }
     }
 }

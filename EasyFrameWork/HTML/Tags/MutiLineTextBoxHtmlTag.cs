@@ -24,9 +24,8 @@ namespace Easy.HTML.Tags
         }
         public override string ToString(bool widthLabel)
         {
-            var value = this.Value.ToString();
             string result = base.ToString(widthLabel);
-            return result.Replace("</textarea>", value + "</textarea>");
+            return result.Replace("</textarea>", this.Value + "</textarea>");
         }
     }
 }
