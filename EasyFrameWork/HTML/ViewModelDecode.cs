@@ -10,7 +10,7 @@ using Microsoft.Practices.ServiceLocation;
 
 namespace Easy.HTML
 {
-    public class ViewModelDecode<T>
+    public class ViewModelDecode<T> : IDisposable
     {
         private readonly DataConfigureAttribute _attribute;
         private readonly T _entity;
@@ -18,7 +18,7 @@ namespace Easy.HTML
 
         public ViewModelDecode()
         {
-            var entityType = typeof (T);
+            var entityType = typeof(T);
             _attribute = DataConfigureAttribute.GetAttribute<T>();
         }
 
@@ -35,7 +35,7 @@ namespace Easy.HTML
             else
             {
                 _entity = ServiceLocator.Current.GetInstance<T>();
-                entityType = typeof (T);
+                entityType = typeof(T);
                 _attribute = DataConfigureAttribute.GetAttribute<T>();
             }
             if (_attribute == null)
@@ -60,7 +60,7 @@ namespace Easy.HTML
                     {
                         DropDownListHtmlTag tag = item as DropDownListHtmlTag;
                         if (tag.SourceType == Constant.SourceType.ViewData &&
-                           ExtendPropertyValue.ContainsKey(tag.SourceKey))
+                            ExtendPropertyValue.ContainsKey(tag.SourceKey))
                         {
                             if (ExtendPropertyValue[tag.SourceKey] is Dictionary<string, string>)
                             {
@@ -68,8 +68,8 @@ namespace Easy.HTML
                             }
                         }
                     }
-                    object Val = ClassAction.GetObjPropertyValue(_entity, item.Name);
-                    item.SetValue(Val);
+                    object val = ClassAction.GetObjPropertyValue(_entity, item.Name);
+                    item.SetValue(val);
                 }
                 lists.Add(item.ToString(widthLabel));
             }
@@ -95,10 +95,10 @@ namespace Easy.HTML
             List<string> lists = new List<string>();
             foreach (var item in _attribute.GetHtmlHiddenTags())
             {
-                if (this._withValue)
+                if (_withValue)
                 {
-                    object Val = ClassAction.GetObjPropertyValue(this._entity, item.Name);
-                    item.SetValue(Val);
+                    object val = ClassAction.GetObjPropertyValue(_entity, item.Name);
+                    item.SetValue(val);
                 }
                 lists.Add(item.ToString(false));
             }
@@ -111,10 +111,17 @@ namespace Easy.HTML
         /// <returns></returns>
         public string GetViewModelPropertyHtmlTag(string property)
         {
-            object Val = ClassAction.GetObjPropertyValue(this._entity, property);
-            var html = _attribute.GetHtmlTag(property);
-            html.SetValue(Val);
-            return html.ToString();
+            var tag = _attribute.GetHtmlTag(property);
+            if (_withValue)
+            {
+                object val = ClassAction.GetObjPropertyValue(_entity, property);
+                tag.SetValue(val);
+            }
+            else
+            {
+                tag.SetValue(null);
+            }
+            return tag.ToString();
         }
         /// <summary>
         /// 获取对应属性的显示名称
@@ -125,6 +132,11 @@ namespace Easy.HTML
         {
             return _attribute.GetDisplayName(property);
         }
-        
+
+
+        public void Dispose()
+        {
+            _attribute.GetHtmlTags(true).ForEach(m => m.Dispose());
+        }
     }
 }
