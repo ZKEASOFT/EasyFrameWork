@@ -103,6 +103,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Attribute\HandleErrorToLogAttribute.cs" />
+    <Compile Include="ValueProvider\Cookie.cs" />
+    <Compile Include="ValueProvider\ICookie.cs" />
     <Compile Include="Filter\ConfigureFilterBase.cs" />
     <Compile Include="Filter\FilterRegister.cs" />
     <Compile Include="ActionInvoker\FiltersAsyncControllerActionInvoker.cs" />
