@@ -18,6 +18,7 @@ namespace Easy.IOC.Unity
             var valueProvider = ServiceLocator.Current.GetInstance<IHttpItemsValueProvider>();
             if (valueProvider == null) return null;
             IDictionary backingStore = valueProvider.Items;
+            if (backingStore == null) return null;
             IDictionary<PerRequestLifetimeManager, object> instances;
 
             if (backingStore.Contains(_key))

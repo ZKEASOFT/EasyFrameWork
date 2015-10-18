@@ -61,12 +61,12 @@ namespace Easy.Web.Application
             //AutofacContainerBuilder.RegisterType<DataDictionaryService>().As<IDataDictionaryService>();
             //AutofacContainerBuilder.RegisterType<LanguageService>().As<ILanguageService>().SingleInstance();
 
-            
+
             var controllerType = typeof(System.Web.Mvc.Controller);
             var moduleType = typeof(IModule);
             PublicTypes.Each(t =>
             {
-                if (!t.IsInterface && !t.IsAbstract && t.IsPublic && !t.IsGenericType)
+                if (t != null && !t.IsInterface && !t.IsAbstract && t.IsPublic && !t.IsGenericType)
                 {
                     if (controllerType.IsAssignableFrom(t))
                     {//register controller
@@ -87,7 +87,7 @@ namespace Easy.Web.Application
             _lifetimeScopeProvider = new AutofacRegister(AutofacContainerBuilder).Regist(AutofacContainerBuilder.Build());
 
             TaskManager.ExcuteAll();
-            
+
             Application_Started();
         }
     }

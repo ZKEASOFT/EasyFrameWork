@@ -8,7 +8,14 @@ namespace Easy.Web.Application
 
         public IDictionary Items
         {
-            get { return HttpContext.Current.Items; }
+            get
+            {
+                if (HttpContext.Current != null)
+                {
+                    return HttpContext.Current.Items;
+                }
+                return null;
+            }
         }
     }
 }

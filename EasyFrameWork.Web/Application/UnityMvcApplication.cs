@@ -49,7 +49,7 @@ namespace Easy.Web.Application
             var moduleType = typeof(IModule);
             PublicTypes.Each(t =>
             {
-                if (!t.IsInterface && !t.IsAbstract && t.IsPublic && !t.IsGenericType)
+                if (t != null && !t.IsInterface && !t.IsAbstract && t.IsPublic && !t.IsGenericType)
                 {
                     if (moduleType.IsAssignableFrom(t))
                     {
