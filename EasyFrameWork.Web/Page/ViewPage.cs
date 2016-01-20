@@ -107,10 +107,6 @@ namespace Easy.Web.Page
 
     public abstract class ViewPage : ViewPage<dynamic>
     {
-        public ViewPage()
-        {
-
-        }
     }
 
 }

@@ -10,7 +10,7 @@ using System.Web.Mvc;
 
 namespace Easy.Web.Metadata
 {
-    public class EasyModelMetaData : ModelMetadata
+    public sealed class EasyModelMetaData : ModelMetadata
     {
         public EasyModelMetaData(ModelMetadataProvider provider, Type containerType, Func<object> modelAccessor, Type modelType, string propertyName)
             : base(provider, containerType, modelAccessor, modelType, propertyName)
@@ -22,28 +22,29 @@ namespace Easy.Web.Metadata
                 {
                     if (custAttribute.MetaData.HtmlTags.ContainsKey(propertyName))
                     {
-                        this.HtmlTag = custAttribute.MetaData.HtmlTags[propertyName];
+                        HtmlTag = custAttribute.MetaData.HtmlTags[propertyName];
+                        DisplayFormatString = HtmlTag.ValueFormat;
 
-                        this.DisplayFormatString = this.HtmlTag.ValueFormat;
-                        if (!string.IsNullOrEmpty(this.HtmlTag.DisplayName))
+                        if (!string.IsNullOrEmpty(HtmlTag.DisplayName))
                         {
-                            this.DisplayName = this.HtmlTag.DisplayName;
+                            DisplayName = HtmlTag.DisplayName;
                         }
                         else
                         {
-                            this.DisplayName = this.HtmlTag.Name;
+                            DisplayName = HtmlTag.Name;
                         }
-                        this.EditFormatString = this.HtmlTag.ValueFormat;
-                        this.IsReadOnly = this.HtmlTag.IsReadOnly;
-                        this.IsRequired = this.HtmlTag.IsRequired;
-                        this.Order = this.HtmlTag.OrderIndex;
-                        this.ShowForDisplay = this.HtmlTag.IsShowForDisplay;
-                        this.ShowForEdit = this.HtmlTag.IsShowForEdit;
-                        this.TemplateHint = this.HtmlTag.TemplateName;
+                        EditFormatString = HtmlTag.ValueFormat;
+                        IsReadOnly = HtmlTag.IsReadOnly;
+                        IsRequired = HtmlTag.IsRequired;
+                        Order = HtmlTag.OrderIndex;
+                        ShowForDisplay = HtmlTag.IsShowForDisplay;
+                        ShowForEdit = HtmlTag.IsShowForEdit;
+                        TemplateHint = HtmlTag.TemplateName;
+                        HideSurroundingHtml = HtmlTag.IsHidden;
                     }
                     if (custAttribute.MetaData.PropertyDataConfig.ContainsKey(propertyName))
                     {
-                        this.PropertyData = custAttribute.MetaData.PropertyDataConfig[propertyName];
+                        PropertyData = custAttribute.MetaData.PropertyDataConfig[propertyName];
                     }
 
                 }

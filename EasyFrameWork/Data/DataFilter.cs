@@ -12,7 +12,7 @@ namespace Easy.Data
 
     public class DataFilter
     {
-        void init()
+        void Init()
         {
             Conditions = new List<Condition>();
             ConditionGroups = new List<ConditionGroup>();
@@ -20,11 +20,11 @@ namespace Easy.Data
         }
         public DataFilter()
         {
-            init();
+            Init();
         }
         public DataFilter(List<string> updateProperties)
         {
-            init();
+            Init();
             this.UpdateProperties = updateProperties;
         }
         public List<string> UpdateProperties { get; set; }
@@ -85,19 +85,13 @@ namespace Easy.Data
         #region 排序
         public DataFilter OrderBy(Order item)
         {
-            if (!Orders.Exists(item.Property))
-            {
-                Orders.Add(item);
-            }
+            Orders.Append(item);
             return this;
         }
 
         public DataFilter OrderBy(string property, OrderType order)
         {
-            if (!Orders.Exists(property))
-            {
-                Orders.Add(new Order(property, order));
-            }
+            Orders.Append(new Order(property, order));
             return this;
         }
         #endregion

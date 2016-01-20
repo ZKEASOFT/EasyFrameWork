@@ -1,0 +1,17 @@
+﻿<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>EasyFrameWork.Web.UI</id>
+    <version>1.0.0.3</version>
+    <title>EasyFrameWork.Web.UI</title>
+    <authors>ZKEASOFT</authors>
+    <owners>SeriaWei</owners>
+    <licenseUrl>http://opensource.org/licenses/Apache-2.0</licenseUrl>
+    <projectUrl>https://github.com/SeriaWei/EasyFrameWork</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>EasyFrameWork.Web For Mvc</description>
+    <releaseNotes>www.zkea.net</releaseNotes>
+    <copyright>© ZKEASOFT All rights reserved. www.zkea.net</copyright>
+    <tags>EasyFrameWork.Web.UI</tags>
+  </metadata>
+</package>

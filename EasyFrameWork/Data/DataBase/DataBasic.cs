@@ -308,20 +308,7 @@ namespace Easy.Data.DataBase
             }
             return ExecCommand(comm) > 0;
         }
-        public virtual bool UpDateTable(DataTable table, string tableName)
-        {
-            DbCommand command = GetDbCommand();
-            command.CommandText = string.Format("SELECT * FROM [{0}]", tableName);
-            command.Connection = GetDbConnection();
-            DbDataAdapter adapter = GetDbDataAdapter(command);
-            DbCommandBuilder builder = GetDbCommandBuilder(adapter);
-            adapter.InsertCommand = builder.GetInsertCommand();
-            adapter.DeleteCommand = builder.GetDeleteCommand();
-            adapter.UpdateCommand = builder.GetUpdateCommand();
-            int cou = adapter.Update(table);
-            return cou > 0;
-        }
-
+        
         public virtual DataTable GetTable(DbCommand command)
         {
             command.Connection = GetDbConnection();

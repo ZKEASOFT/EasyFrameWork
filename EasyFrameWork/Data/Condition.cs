@@ -111,14 +111,14 @@ namespace Easy.Data
                         }
                     case OperatorType.NotEqual:
                         {
-                            operatorStr = "<>";
+                            operatorStr = "!=";
                             break;
                         }
                     case OperatorType.StartWith:
                     case OperatorType.EndWith:
                     case OperatorType.Contains:
                         {
-                            operatorStr = "like";
+                            operatorStr = "LIKE";
                             break;
                         }
                     case OperatorType.In:
@@ -139,11 +139,11 @@ namespace Easy.Data
 
                             if (this.Property.Contains("["))
                             {
-                                builder.AppendFormat(" {0} {1} ({2}) ", this.Property, this.OperatorType == OperatorType.In ? "in" : "not in", valuesBuilder);
+                                builder.AppendFormat(" {0} {1} ({2}) ", this.Property, this.OperatorType == OperatorType.In ? "IN" : "NOT IN", valuesBuilder);
                             }
                             else
                             {
-                                builder.AppendFormat(" [{0}] {1} ({2}) ", this.Property, this.OperatorType == OperatorType.In ? "in" : "not in", valuesBuilder);
+                                builder.AppendFormat(" [{0}] {1} ({2}) ", this.Property, this.OperatorType == OperatorType.In ? "IN" : "NOT IN", valuesBuilder);
                             }
                             break;
                         }
@@ -300,49 +300,59 @@ namespace Easy.Data
         public OrderType OrderType { get; set; }
         public override string ToString()
         {
-            if (!Property.Contains("["))
-            {
-                Property = string.Format("[{0}]", Property);
-            }
             switch (OrderType)
             {
-                case OrderType.Ascending: return string.Format(" {0} Asc", Property);
-                case OrderType.Descending: return string.Format(" {0} Desc", Property);
-                default: return string.Format(" {0} Asc", Property);
+                case OrderType.Ascending: return string.Format(" {0} ASC", Property);
+                case OrderType.Descending: return string.Format(" {0} DESC", Property);
+                default: return string.Format(" {0} ASC", Property);
             }
         }
         public string ToString(bool contrary)
         {
             if (contrary)
             {
-                if (!Property.Contains("["))
-                {
-                    Property = string.Format("[{0}]", Property);
-                }
                 switch (OrderType)
                 {
-                    case OrderType.Descending: return string.Format(" {0} Asc", Property);
-                    case OrderType.Ascending: return string.Format(" {0} Desc", Property);
-                    default: return string.Format(" {0} Asc", Property);
+                    case OrderType.Descending: return string.Format(" {0} ASC", Property);
+                    case OrderType.Ascending: return string.Format(" {0} DESC", Property);
+                    default: return string.Format(" {0} ASC", Property);
                 }
             }
-            return this.ToString();
-
+            return ToString();
         }
     }
 
     public class OrderCollection : List<Order>
     {
-        public bool Exists(string property)
+        public Order this[string property]
         {
-            string singleProperty = Trim(property);
-            return this.Any(order => Trim(order.Property).Equals(singleProperty));
+            get
+            {
+                string simple = simpleProperty(property);
+                return this.FirstOrDefault(item => simpleProperty(item.Property).Equals(simple, StringComparison.CurrentCultureIgnoreCase));
+            }
         }
 
-        private string Trim(string property)
+        public bool Exists(string property)
         {
-            string singleProperty = property.Contains(".") ? property.Split('.')[1] : property;
-            return singleProperty.Replace("[", "").Replace("]", "");
+            string simple = simpleProperty(property);
+            return this.Any(order => simpleProperty(order.Property).Equals(simple, StringComparison.CurrentCultureIgnoreCase));
+        }
+
+        private string simpleProperty(string property)
+        {
+            return property.Replace("[", "").Replace("]", "");
+        }
+        public void Append(Order order)
+        {
+            if (!Exists(order.Property))
+            {
+                Add(order);
+            }
+            else
+            {
+                this[order.Property].OrderType = order.OrderType;
+            }
         }
     }
 }

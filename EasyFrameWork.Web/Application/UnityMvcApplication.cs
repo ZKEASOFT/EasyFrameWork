@@ -17,11 +17,6 @@ namespace Easy.Web.Application
 {
     public abstract class UnityMvcApplication : TaskApplication
     {
-        public override void Init()
-        {
-            base.Init();
-        }
-
         public IUnityContainer Container { get; private set; }
 
         private IContainerAdapter _containerAdapter;
