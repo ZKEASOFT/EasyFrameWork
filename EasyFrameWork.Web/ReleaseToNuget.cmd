@@ -1,3 +1,3 @@
-nuget pack -IncludeReferencedProjects Easy.Web.csproj
+nuget pack Easy.Web.csproj -IncludeReferencedProjects
 nuget push *.nupkg
 @pause
