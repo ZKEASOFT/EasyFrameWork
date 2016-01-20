@@ -42,7 +42,7 @@ namespace Easy.Web.Application
             Container.RegisterType<IControllerFactory, FilterControllerFactory>();
             Container.RegisterType<IControllerActivator, EasyControllerActivator>();
             Container.RegisterType<IHttpItemsValueProvider, HttpItemsValueProvider>(new ContainerControlledLifetimeManager());
-            Container.RegisterType<IApplicationContext, ApplicationContext>(new PerRequestLifetimeManager());
+            //Container.RegisterType<IApplicationContext, ApplicationContext>(new PerRequestLifetimeManager());
 
             //Container.RegisterType<IDataDictionaryService, DataDictionaryService>();
             //Container.RegisterType<ILanguageService, LanguageService>(new ContainerControlledLifetimeManager());

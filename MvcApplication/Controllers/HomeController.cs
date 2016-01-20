@@ -18,14 +18,18 @@ namespace MvcApplication.Controllers
         public HomeController(IExampleService service) :
             base(service)
         {
-            
+
         }
 
+        public override ActionResult Index()
+        {
+            var s = Service.Get(new DataFilter().Where("Id", OperatorType.In, new[] { 1, 2 }));
+            return base.Index();
+        }
 
         public ActionResult About()
         {
             ViewBag.Message = "Your app description page.";
-
             return View();
         }
 

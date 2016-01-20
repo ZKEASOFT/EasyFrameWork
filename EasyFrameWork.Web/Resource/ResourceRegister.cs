@@ -131,11 +131,13 @@ namespace Easy.Web.Resource
 
         public override IDisposable AtHead()
         {
+            _page.OutputStack.Push(new StringWriter());
             return new Capture(this._page, _callBack, ResourcePosition.Head, ViewPage.PartStyleKey);
         }
 
         public override IDisposable AtFoot()
         {
+            _page.OutputStack.Push(new StringWriter());
             return new Capture(this._page, _callBack, ResourcePosition.Foot, ViewPage.PartStyleKey);
         }
 

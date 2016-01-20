@@ -55,7 +55,7 @@ namespace Easy.Web.Application
             AutofacContainerBuilder.RegisterType<FilterControllerFactory>().As<IControllerFactory>();
             AutofacContainerBuilder.RegisterType<EasyControllerActivator>().As<IControllerActivator>();
             AutofacContainerBuilder.RegisterType<HttpItemsValueProvider>().As<IHttpItemsValueProvider>().SingleInstance();
-            AutofacContainerBuilder.RegisterType<ApplicationContext>().As<IApplicationContext>().InstancePerLifetimeScope();
+            //AutofacContainerBuilder.RegisterType<ApplicationContext>().As<IApplicationContext>().InstancePerLifetimeScope();
 
             AutofacContainerBuilder.RegisterType<RequestLifetimeScopeProvider>().As<ILifetimeScopeProvider>().SingleInstance();
             //AutofacContainerBuilder.RegisterType<DataDictionaryService>().As<IDataDictionaryService>();

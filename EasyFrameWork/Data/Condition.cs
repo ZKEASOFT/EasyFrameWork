@@ -122,68 +122,28 @@ namespace Easy.Data
                             break;
                         }
                     case OperatorType.In:
-                        {
-                            var valuesBuilder = new StringBuilder();
-                            if (this.Value is IEnumerable)
-                            {
-                                var valueEnum = this.Value as IEnumerable;
-                                Type itemType = null;
-                                foreach (var item in valueEnum)
-                                {
-                                    if (item is string)
-                                    {
-                                        valuesBuilder.AppendFormat("'{0}',", item.ToString().Replace("'", "''"));
-                                    }
-                                    else
-                                    {
-                                        valuesBuilder.AppendFormat("{0},", item);
-                                    }
-                                }
-                            }
-                            else
-                            {
-                                valuesBuilder.Append(this.Value);
-                            }
-                            if (this.Property.Contains("["))
-                            {
-                                builder.AppendFormat(" {0} in ({1}) ", this.Property, valuesBuilder.ToString().Trim(','));
-                            }
-                            else
-                            {
-                                builder.AppendFormat(" [{0}] in ({1}) ", this.Property, valuesBuilder.ToString().Trim(','));
-                            }
-                            break;
-                        }
                     case OperatorType.NotIn:
                         {
                             var valuesBuilder = new StringBuilder();
-                            if (this.Value is IEnumerable)
+                            IEnumerable valueEnum = this.Value as IEnumerable ?? new[] { this.Value };
+                            var index = 0;
+                            foreach (var item in valueEnum)
                             {
-                                var valueEnum = this.Value as IEnumerable;
-                                Type itemType = null;
-                                foreach (var item in valueEnum)
+                                if (valuesBuilder.Length > 0)
                                 {
-                                    if (item is string)
-                                    {
-                                        valuesBuilder.AppendFormat("'{0}',", item.ToString().Replace("'", "''"));
-                                    }
-                                    else
-                                    {
-                                        valuesBuilder.AppendFormat("{0},", item);
-                                    }
+                                    valuesBuilder.Append(",");
                                 }
+                                valuesBuilder.AppendFormat("@{0}_{1}", this._valueKey, index);
+                                index++;
                             }
-                            else
-                            {
-                                valuesBuilder.Append(this.Value);
-                            }
+
                             if (this.Property.Contains("["))
                             {
-                                builder.AppendFormat(" {0} not in ({1}) ", this.Property, valuesBuilder.ToString().Trim(','));
+                                builder.AppendFormat(" {0} {1} ({2}) ", this.Property, this.OperatorType == OperatorType.In ? "in" : "not in", valuesBuilder);
                             }
                             else
                             {
-                                builder.AppendFormat(" [{0}] not in ({1}) ", this.Property, valuesBuilder.ToString().Trim(','));
+                                builder.AppendFormat(" [{0}] {1} ({2}) ", this.Property, this.OperatorType == OperatorType.In ? "in" : "not in", valuesBuilder);
                             }
                             break;
                         }
@@ -225,16 +185,32 @@ namespace Easy.Data
                 return ToString();
             }
         }
-        public KeyValuePair<string, object> GetKeyAndValue()
+        public IEnumerable<KeyValuePair<string, object>> GetKeyAndValue()
         {
             switch (this.OperatorType)
             {
-                case OperatorType.StartWith: return new KeyValuePair<string, object>(_valueKey, Value + "%");
-                case OperatorType.EndWith: return new KeyValuePair<string, object>(_valueKey, "%" + Value + "%");
-                case OperatorType.Contains: return new KeyValuePair<string, object>(_valueKey, "%" + Value + "%");
+                case OperatorType.StartWith:
+                    yield return new KeyValuePair<string, object>(_valueKey, "{0}%".FormatWith(Value));
+                    break;
+                case OperatorType.EndWith:
+                    yield return new KeyValuePair<string, object>(_valueKey, "%{0}".FormatWith(Value));
+                    break;
+                case OperatorType.Contains:
+                    yield return new KeyValuePair<string, object>(_valueKey, "%{0}%".FormatWith(Value));
+                    break;
                 case OperatorType.In:
-                case OperatorType.NotIn: return new KeyValuePair<string, object>();
-                default: return new KeyValuePair<string, object>(_valueKey, Value);
+                case OperatorType.NotIn:
+                    IEnumerable valueEnum = this.Value as IEnumerable ?? new[] { this.Value };
+                    var index = 0;
+                    foreach (var item in valueEnum)
+                    {
+                        yield return new KeyValuePair<string, object>("@{0}_{1}".FormatWith(this._valueKey, index), item);
+                        index++;
+                    }
+                    break;
+                default:
+                    yield return new KeyValuePair<string, object>(_valueKey, Value);
+                    break;
             }
 
         }
@@ -291,14 +267,14 @@ namespace Easy.Data
             return ToString();
 
         }
-        public List<KeyValuePair<string, object>> GetKeyAndValue()
+        public IEnumerable<KeyValuePair<string, object>> GetKeyAndValue()
         {
             var list = new List<KeyValuePair<string, object>>();
             Conditions.Each(item =>
             {
                 if (item.Value != null)
                 {
-                    list.Add(item.GetKeyAndValue());
+                    item.GetKeyAndValue().Each(list.Add);
                 }
             });
             return list;

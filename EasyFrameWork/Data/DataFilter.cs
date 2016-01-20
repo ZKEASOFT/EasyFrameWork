@@ -170,10 +170,14 @@ namespace Easy.Data
             Conditions.Where(m => m.Value != null).Each(m =>
             {
                 var keyvalue = m.GetKeyAndValue();
-                if (keyvalue.Key.IsNotNullAndWhiteSpace())
+                keyvalue.Each(kv =>
                 {
-                    values.Add(keyvalue);
-                }
+                    if (kv.Key.IsNotNullAndWhiteSpace())
+                    {
+                        values.Add(kv);
+                    }
+                });
+
             });
             return values;
         }

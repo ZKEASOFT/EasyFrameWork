@@ -8,6 +8,7 @@ using System.Text;
 using System.Web;
 using System.Web.Mvc;
 using Easy.Extend;
+using Microsoft.Practices.ServiceLocation;
 
 namespace Easy.Web.Page
 {
@@ -91,6 +92,15 @@ namespace Easy.Web.Page
             {
                 source.Add(resource.Name, resource);
                 TempData[key] = source;
+            }
+        }
+
+        private IApplicationContext _applicationContext;
+        public IApplicationContext ApplicationContext
+        {
+            get
+            {
+                return _applicationContext ?? (_applicationContext = ServiceLocator.Current.GetInstance<IApplicationContext>());
             }
         }
     }
