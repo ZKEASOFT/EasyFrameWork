@@ -33,36 +33,39 @@ namespace Easy.MetaData
             TargetType = typeof(T);
             foreach (var item in TargetType.GetProperties())
             {
-                TypeCode code;
-                code = Type.GetTypeCode(item.PropertyType.Name == "Nullable`1" ? item.PropertyType.GetGenericArguments()[0] : item.PropertyType);
+                TypeCode code = Type.GetTypeCode(item.PropertyType.Name == "Nullable`1" ? item.PropertyType.GetGenericArguments()[0] : item.PropertyType);
                 switch (code)
                 {
-                    case TypeCode.Boolean: ViewConfig(item.Name).AsCheckBox(); break;
-                    case TypeCode.Char: ViewConfig(item.Name).AsTextBox().MaxLength(1).RegularExpression(RegularExpression.Letters); break;
-                    case TypeCode.DateTime: ViewConfig(item.Name).AsTextBox().FormatAsDate(); break;
+                    case TypeCode.Boolean:
+                        ViewConfig(item.Name).AsCheckBox().SetColumnWidth(75);
+                        break;
+                    case TypeCode.Char:
+                        ViewConfig(item.Name).AsTextBox().MaxLength(1).RegularExpression(RegularExpression.Letters);
+                        break;
+                    case TypeCode.DateTime:
+                        ViewConfig(item.Name).AsTextBox().FormatAsDate().SetColumnWidth(140);
+                        break;
                     case TypeCode.UInt16:
                     case TypeCode.UInt32:
-                    case TypeCode.UInt64: ViewConfig(item.Name).AsTextBox().RegularExpression(RegularExpression.PositiveIntegersAndZero); break;
+                    case TypeCode.UInt64:
+                        ViewConfig(item.Name).AsTextBox().RegularExpression(RegularExpression.PositiveIntegersAndZero).SetColumnWidth(75);
+                        break;
                     case TypeCode.SByte:
                     case TypeCode.Int16:
                     case TypeCode.Int32:
-                    case TypeCode.Int64: ViewConfig(item.Name).AsTextBox().RegularExpression(RegularExpression.Integer); break;
+                    case TypeCode.Int64:
+                        ViewConfig(item.Name).AsTextBox().RegularExpression(RegularExpression.Integer).SetColumnWidth(75);
+                        break;
                     case TypeCode.Object:
-                        {
-                            ViewConfig(item.Name).AsHidden().Ignore(); break;
-                        }
+                        ViewConfig(item.Name).AsHidden().Ignore();
+                        break;
                     case TypeCode.Single:
                     case TypeCode.Double:
                     case TypeCode.Decimal:
-                        {
-                            TextBoxHtmlTag tag = ViewConfig(item.Name).AsTextBox().RegularExpression(Easy.Constant.RegularExpression.Float);
-                            if (code == TypeCode.Decimal)
-                            {
-                                tag.Format(FormatStyle.Currency);
-                            }
-                            break;
-                        }
-                    case TypeCode.String: ViewConfig(item.Name).AsTextBox().MaxLength(200);
+                        ViewConfig(item.Name).AsTextBox().RegularExpression(RegularExpression.Float).SetColumnWidth(75);
+                        break;
+                    case TypeCode.String: 
+                        ViewConfig(item.Name).AsTextBox().MaxLength(200).SetColumnWidth(200);
                         break;
                     case TypeCode.DBNull:
                     case TypeCode.Byte:
@@ -82,16 +85,16 @@ namespace Easy.MetaData
             if (typeof(EditorEntity).IsAssignableFrom(TargetType))
             {
                 ViewConfig("CreateBy").AsHidden();
-                ViewConfig("CreatebyName").AsTextBox().Hide();
-                ViewConfig("CreateDate").AsTextBox().Hide().FormatAsDateTime();
+                ViewConfig("CreatebyName").AsTextBox().Hide().SetColumnWidth(80);
+                ViewConfig("CreateDate").AsTextBox().Hide().FormatAsDateTime().SetColumnWidth(140);
 
                 ViewConfig("LastUpdateBy").AsHidden();
-                ViewConfig("LastUpdateByName").AsTextBox().Hide();
-                ViewConfig("LastUpdateDate").AsTextBox().Hide().FormatAsDateTime();
+                ViewConfig("LastUpdateByName").AsTextBox().Hide().SetColumnWidth(80);
+                ViewConfig("LastUpdateDate").AsTextBox().Hide().FormatAsDateTime().SetColumnWidth(140);
                 ViewConfig("ActionType").AsHidden().AddClass("actionType");
-                ViewConfig("Title").AsTextBox().Order(1);
-                ViewConfig("Description").AsMutiLineTextBox().Order(101);
-                ViewConfig("Status").AsDropDownList().DataSource(Constant.DicKeys.RecordStatus, SourceType.Dictionary);
+                ViewConfig("Title").AsTextBox().Order(1).SetColumnWidth(200);
+                ViewConfig("Description").AsMutiLineTextBox().SetColumnWidth(250).Order(101);
+                ViewConfig("Status").AsDropDownList().DataSource(DicKeys.RecordStatus, SourceType.Dictionary).SetColumnWidth(70);
 
                 DataConfig("CreateBy").Update();
                 DataConfig("CreatebyName").Update();

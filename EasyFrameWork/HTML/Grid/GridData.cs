@@ -10,6 +10,7 @@ using System.Web;
 using Easy.Extend;
 using Easy.Constant;
 using System.Collections;
+using System.ComponentModel;
 
 namespace Easy.HTML.Grid
 {
@@ -131,42 +132,46 @@ namespace Easy.HTML.Grid
         private string GetHtmlModelString(HtmlTagBase Tag, string DataType)
         {
             int hidden = 0;
-            string Data = "";
-            string format = "";
+            string data = "";
+            string dateFormat = "";
+            string jsDateFormat = "";
+            string valueFormat = "";
             switch (Tag.TagType)
             {
-                case Easy.HTML.HTMLEnumerate.HTMLTagTypes.Input:
+                case HTMLEnumerate.HTMLTagTypes.Input:
                     {
-                        format = (Tag as TextBoxHtmlTag).DateFormat;
+                        dateFormat = (Tag as TextBoxHtmlTag).DateFormat;
+                        jsDateFormat = (Tag as TextBoxHtmlTag).JavaScriptDateFormat;
+                        valueFormat = (Tag as TextBoxHtmlTag).ValueFormat;
                         break;
                     }
-                case Easy.HTML.HTMLEnumerate.HTMLTagTypes.DropDownList:
+                case HTMLEnumerate.HTMLTagTypes.DropDownList:
                     {
                         var dropTag = Tag as DropDownListHtmlTag;
                         if (dropTag.SourceType == SourceType.ViewData && DropDownOptions.ContainsKey(Tag.Name))
                         {
                             dropTag.DataSource(DropDownOptions[Tag.Name]);
                         }
-                        Data = dropTag.GetOptions();
+                        data = dropTag.GetOptions();
                         DataType = "Select";
                         break;
                     }
-                case Easy.HTML.HTMLEnumerate.HTMLTagTypes.MutiSelect:
+                case HTMLEnumerate.HTMLTagTypes.MutiSelect:
                     {
                         var muliTag = Tag as MutiSelectHtmlTag;
                         if (muliTag.SourceType == SourceType.ViewData && DropDownOptions.ContainsKey(Tag.Name))
                         {
                             muliTag.DataSource(DropDownOptions[Tag.Name]);
                         }
-                        Data = muliTag.GetOptions();
+                        data = muliTag.GetOptions();
                         DataType = "Select";
                         break;
                     }
-                case Easy.HTML.HTMLEnumerate.HTMLTagTypes.File: DataType = "None";
+                case HTMLEnumerate.HTMLTagTypes.File: DataType = "None";
                     break;
-                case Easy.HTML.HTMLEnumerate.HTMLTagTypes.PassWord: DataType = "None";
+                case HTMLEnumerate.HTMLTagTypes.PassWord: DataType = "None";
                     break;
-                case HTML.HTMLEnumerate.HTMLTagTypes.Hidden: hidden = 1; break;
+                case HTMLEnumerate.HTMLTagTypes.Hidden: hidden = 1; break;
                 default:
                     break;
             }
@@ -185,9 +190,11 @@ namespace Easy.HTML.Grid
             columnBuilder.AppendFormat("Name:'{0}',", Tag.Name);
             columnBuilder.AppendFormat("Width:{0},", Tag.Grid.ColumnWidth);
             columnBuilder.AppendFormat("DataType:'{0}',", DataType);
-            columnBuilder.AppendFormat("Format:'{0}',", format);
+            columnBuilder.AppendFormat("DateFormat:'{0}',", dateFormat);
+            columnBuilder.AppendFormat("JsDateFormat:'{0}',", jsDateFormat);
+            columnBuilder.AppendFormat("ValueFormat:'{0}',", valueFormat);
             columnBuilder.AppendFormat("Hidden:{0},", hidden);
-            columnBuilder.AppendFormat("Data:\"{0}\"", Data);
+            columnBuilder.AppendFormat("Data:\"{0}\"", data);
             columnBuilder.Append("},");
             return columnBuilder.ToString();
         }
@@ -262,7 +269,7 @@ namespace Easy.HTML.Grid
                     {
                         typeName = item.PropertyType.GetGenericArguments()[0].Name;
                     }
-                    ColumnBuilder.AppendFormat("{0}:{{ Name: '{0}',DisplayName:'{0}',Width:150,DataType:'{1}',Format:'',,Hidden:0 }},", item.Name, typeName);
+                    ColumnBuilder.AppendFormat("{0}:{{ Name: '{0}',DisplayName:'{0}',Width:150,DataType:'{1}',DateFormat:'',JsDateFormat:'',ValueDateFormat:'',Hidden:0 }},", item.Name, typeName);
                 }
             }
             return string.Format("{{{0}}}", ColumnBuilder.ToString().Trim(','));
@@ -275,6 +282,7 @@ namespace Easy.HTML.Grid
             int groupIndex = -1;
             int groupConditionIndex = -1;
             ConditionGroup Group = new ConditionGroup();
+            var properies = typeof(T).GetProperties();
             foreach (var item in _form.AllKeys)
             {
                 #region 单件
@@ -285,16 +293,34 @@ namespace Easy.HTML.Grid
                     string value = _form[string.Format("Conditions[{0}][Value]", tempIndex)];
                     if (!string.IsNullOrEmpty(value))
                     {
-                        Condition condition = new Condition();
-                        condition.Property = _form[string.Format("Conditions[{0}][Property]", tempIndex)];
+                        Condition condition = new Condition
+                        {
+                            Property = _form[string.Format("Conditions[{0}][Property]", tempIndex)]
+                        };
                         if (custAttribute != null)
                         {
                             condition.Property = custAttribute.GetPropertyMapper(condition.Property);
                         }
-                        condition.OperatorType = (OperatorType)int.Parse(_form[string.Format("Conditions[{0}][OperatorType]", tempIndex)]);
-                        condition.ConditionType = (ConditionType)int.Parse(_form[string.Format("Conditions[{0}][ConditionType]", tempIndex)]);
-                        condition.Value = ConvertValue(_form[string.Format("Conditions[{0}][DataType]", tempIndex)], value);
-                        filter.Where(condition);
+                        var type = properies.FirstOrDefault(m => m.Name == condition.Property);
+                        if (type != null)
+                        {
+                            condition.OperatorType = (OperatorType)int.Parse(_form[string.Format("Conditions[{0}][OperatorType]", tempIndex)]);
+                            condition.ConditionType = (ConditionType)int.Parse(_form[string.Format("Conditions[{0}][ConditionType]", tempIndex)]);
+                            condition.Value = ConvertValue(type.PropertyType, value);
+                        }
+                        if (condition.Value != null)
+                        {
+                            if (custAttribute != null)
+                            {
+                                PropertyDataInfo propertyDataInfo = custAttribute.MetaData.PropertyDataConfig[condition.Property];
+                                if (propertyDataInfo.Search != null)
+                                {
+                                    condition = propertyDataInfo.Search(condition);
+                                }
+                            }
+                            filter.Where(condition);
+                        }
+
                     }
                 }
                 #endregion
@@ -324,18 +350,25 @@ namespace Easy.HTML.Grid
                             {
                                 condition.Property = custAttribute.GetPropertyMapper(condition.Property);
                             }
-                            condition.OperatorType = (OperatorType)int.Parse(_form[string.Format("ConditionGroups[{0}][Conditions][{1}][OperatorType]", tempGroupIndex, tempGroupConditionIndex)]);
-                            condition.ConditionType = (ConditionType)int.Parse(_form[string.Format("ConditionGroups[{0}][Conditions][{1}][ConditionType]", tempGroupIndex, tempGroupConditionIndex)]);
-                            condition.Value = ConvertValue(_form[string.Format("ConditionGroups[{0}][Conditions][{1}][ConditionType]", tempGroupIndex, tempGroupConditionIndex)], value);
-                            if (custAttribute != null)
+                            var type = properies.FirstOrDefault(m => m.Name == condition.Property);
+                            if (type != null)
                             {
-                                PropertyDataInfo propertyDataInfo = custAttribute.MetaData.PropertyDataConfig[proterty];
-                                if (propertyDataInfo.Search != null)
-                                {
-                                    condition = propertyDataInfo.Search(condition);
-                                }
+                                condition.OperatorType = (OperatorType)int.Parse(_form[string.Format("ConditionGroups[{0}][Conditions][{1}][OperatorType]", tempGroupIndex, tempGroupConditionIndex)]);
+                                condition.ConditionType = (ConditionType)int.Parse(_form[string.Format("ConditionGroups[{0}][Conditions][{1}][ConditionType]", tempGroupIndex, tempGroupConditionIndex)]);
+                                condition.Value = ConvertValue(type.PropertyType, value);
                             }
-                            Group.Add(condition);
+                            if (condition.Value != null)
+                            {
+                                if (custAttribute != null)
+                                {
+                                    PropertyDataInfo propertyDataInfo = custAttribute.MetaData.PropertyDataConfig[condition.Property];
+                                    if (propertyDataInfo.Search != null)
+                                    {
+                                        condition = propertyDataInfo.Search(condition);
+                                    }
+                                }
+                                Group.Add(condition);
+                            }
                         }
                     }
                 }
@@ -385,16 +418,17 @@ namespace Easy.HTML.Grid
             }
             return page;
         }
-        private object ConvertValue(string TypeStr, string value)
+        private object ConvertValue(Type type, string value)
         {
-            object result;
-            switch (TypeStr)
+            try
             {
-                case "Boolean": result = Convert.ToBoolean(value); break;
-                case "DateTime": result = Convert.ToDateTime(value); break;
-                default: result = value; break;
+                TypeConverter typeConverter = TypeDescriptor.GetConverter(type);
+                return typeConverter.ConvertTo(value, type);
             }
-            return result;
+            catch
+            {
+                return null;
+            }
         }
     }
 }

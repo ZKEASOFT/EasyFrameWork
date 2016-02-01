@@ -30,15 +30,15 @@ namespace Easy.HTML.Tags
 
         }
         public string DateFormat { get; set; }
+        public string JavaScriptDateFormat { get; set; }
         /// <summary>
         /// 只显示日期，格式为：年/月/日
         /// </summary>
         /// <returns></returns>
         public TextBoxHtmlTag FormatAsDate()
         {
-            this.DateFormat = "yyyy/MM/dd";
-            this.AddProperty("DateFormat", this.DateFormat);
-            this.AddProperty("ValueType", "Date");
+            FormatDate("yyyy/MM/dd");
+            FormatDateForJavaScript("YYYY/MM/DD");
             this.AddClass("Date");
             return this;
         }
@@ -48,10 +48,8 @@ namespace Easy.HTML.Tags
         /// <returns></returns>
         public TextBoxHtmlTag FormatAsDateTime()
         {
-            this.DateFormat = "yyyy/MM/dd H:mm";
-            this.AddProperty("DateFormat", this.DateFormat);
-            this.AddProperty("ValueType", "Date");
-            this.AddClass("Date");
+            FormatDate("yyyy/MM/dd hh:mm");
+            FormatDateForJavaScript("YYYY/MM/DD HH:mm");
             return this;
         }
         /// <summary>
@@ -67,6 +65,15 @@ namespace Easy.HTML.Tags
             this.AddClass("Date");
             return this;
         }
+        public TextBoxHtmlTag FormatDateForJavaScript(string format)
+        {
+            this.JavaScriptDateFormat = format;
+            this.AddProperty("JsDateFormat", format);
+            this.AddProperty("ValueType", "Date");
+            this.AddClass("Date");
+            return this;
+        }
+
 
         /// <summary>
         /// 没有文本的时候的提示信息(HTML5)
