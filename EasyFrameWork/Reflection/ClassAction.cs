@@ -259,11 +259,7 @@ namespace Easy.Reflection
         public static object ValueConvert(Type type, object obj)
         {
             if (obj == null) return null;
-            TypeCode code = Type.GetTypeCode(type);
-            if (type.Name == "Nullable`1" && obj != null)
-            {
-                code = Type.GetTypeCode(type.GetGenericArguments()[0]);
-            }
+            TypeCode code = type.IsGenericType ? Type.GetTypeCode(type.GetGenericArguments()[0]) : Type.GetTypeCode(type);
             switch (code)
             {
                 case TypeCode.Boolean:

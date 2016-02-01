@@ -33,7 +33,7 @@ namespace Easy.MetaData
             TargetType = typeof(T);
             foreach (var item in TargetType.GetProperties())
             {
-                TypeCode code = Type.GetTypeCode(item.PropertyType.Name == "Nullable`1" ? item.PropertyType.GetGenericArguments()[0] : item.PropertyType);
+                TypeCode code = Type.GetTypeCode(item.PropertyType.IsGenericType ? item.PropertyType.GetGenericArguments()[0] : item.PropertyType);
                 switch (code)
                 {
                     case TypeCode.Boolean:
@@ -64,7 +64,7 @@ namespace Easy.MetaData
                     case TypeCode.Decimal:
                         ViewConfig(item.Name).AsTextBox().RegularExpression(RegularExpression.Float).SetColumnWidth(75);
                         break;
-                    case TypeCode.String: 
+                    case TypeCode.String:
                         ViewConfig(item.Name).AsTextBox().MaxLength(200).SetColumnWidth(200);
                         break;
                     case TypeCode.DBNull:

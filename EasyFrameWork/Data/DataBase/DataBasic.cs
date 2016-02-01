@@ -130,7 +130,7 @@ namespace Easy.Data.DataBase
             foreach (var item in propertys)
             {
                 string isNull = "null";
-                var code = Type.GetTypeCode(item.PropertyType.Name == "Nullable`1" ? item.PropertyType.GetGenericArguments()[0] : item.PropertyType);
+                var code = Type.GetTypeCode(item.PropertyType.IsGenericType ? item.PropertyType.GetGenericArguments()[0] : item.PropertyType);
                 if (custAttribute != null)
                 {
                     if (custAttribute.MetaData.PropertyDataConfig.ContainsKey(item.Name))

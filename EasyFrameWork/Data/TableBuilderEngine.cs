@@ -58,15 +58,7 @@ namespace Easy.Data
                 {
                     foreach (var item in propertys)
                     {
-                        TypeCode code;
-                        if (item.PropertyType.Name == "Nullable`1")
-                        {
-                            code = Type.GetTypeCode(item.PropertyType.GetGenericArguments()[0]);
-                        }
-                        else
-                        {
-                            code = Type.GetTypeCode(item.PropertyType);
-                        }
+                        TypeCode code = Type.GetTypeCode(item.PropertyType.IsGenericType ? item.PropertyType.GetGenericArguments()[0] : item.PropertyType);
 
                         if (custAttribute.MetaData.PropertyDataConfig.ContainsKey(item.Name))
                         {
@@ -115,15 +107,7 @@ namespace Easy.Data
                 {
                     foreach (var item in propertys)
                     {
-                        TypeCode code;
-                        if (item.PropertyType.Name == "Nullable`1")
-                        {
-                            code = Type.GetTypeCode(item.PropertyType.GetGenericArguments()[0]);
-                        }
-                        else
-                        {
-                            code = Type.GetTypeCode(item.PropertyType);
-                        }
+                        TypeCode code = Type.GetTypeCode(item.PropertyType.IsGenericType ? item.PropertyType.GetGenericArguments()[0] : item.PropertyType);
                         if (!DataBase.IsExistColumn(TargeType.Name, item.Name))
                         {
                             DataBase.AddColumn(TargeType.Name, item.Name, Common.ConvertToDbType(code));

@@ -11,13 +11,21 @@ using Easy.Extend;
 using Easy.Constant;
 using System.Collections;
 using System.ComponentModel;
+using System.Reflection;
+using System.Text.RegularExpressions;
 
 namespace Easy.HTML.Grid
 {
     public class GridData
     {
-        NameValueCollection _form;
-        private Func<HtmlTagBase, Dictionary<string, string>> _dataSource;
+        private readonly NameValueCollection _form;
+        private readonly Func<HtmlTagBase, Dictionary<string, string>> _dropDownDataFunc;
+
+        private static readonly Regex ConditionIndexRegex = new Regex(@"Conditions\[(\d+)\]", RegexOptions.Compiled);
+        private static readonly Regex GroupIndexRegex = new Regex(@"ConditionGroups\[(\d+)\]", RegexOptions.Compiled);
+        private static readonly Regex GroupConditoinIndexRegex = new Regex(@"\[Conditions\]\[(\d+)\]", RegexOptions.Compiled);
+        private static readonly Regex PropertyRegex = new Regex(@"\[([a-z|A-Z]*)\]$", RegexOptions.Compiled);
+        private PropertyInfo[] _propertyInfos;
 
         Dictionary<string, Dictionary<string, string>> _options = new Dictionary<string, Dictionary<string, string>>();
         public Dictionary<string, Dictionary<string, string>> DropDownOptions
@@ -30,10 +38,10 @@ namespace Easy.HTML.Grid
         {
             this._form = form;
         }
-        public GridData(NameValueCollection form, Func<HtmlTagBase, Dictionary<string, string>> dataSource)
+        public GridData(NameValueCollection form, Func<HtmlTagBase, Dictionary<string, string>> dropDownListData)
         {
             this._form = form;
-            _dataSource = dataSource;
+            _dropDownDataFunc = dropDownListData;
         }
         #region 私有方法
         private string GetModelString(object source, DataConfigureAttribute attribute)
@@ -45,58 +53,54 @@ namespace Easy.HTML.Grid
             foreach (var item in propertys)
             {
                 object value = item.GetValue(source, null);
-                if ((attribute.MetaData.HtmlTags[item.Name].TagType == HTML.HTMLEnumerate.HTMLTagTypes.DropDownList ||
-                    attribute.MetaData.HtmlTags[item.Name].TagType == HTML.HTMLEnumerate.HTMLTagTypes.MutiSelect)
+                if ((attribute.MetaData.HtmlTags[item.Name].TagType == HTMLEnumerate.HTMLTagTypes.DropDownList ||
+                    attribute.MetaData.HtmlTags[item.Name].TagType == HTMLEnumerate.HTMLTagTypes.MutiSelect)
                     && value != null)
                 {
-                    var tag = attribute.MetaData.HtmlTags[item.Name] as DropDownListHtmlTag;
-                    Dictionary<string, string> Data = tag.OptionItems;
+                    var tag = (DropDownListHtmlTag)attribute.MetaData.HtmlTags[item.Name];
+                    Dictionary<string, string> options = tag.OptionItems;
                     if (tag.SourceType == SourceType.ViewData)
                     {
-                        if (_dataSource != null)
+                        if (_dropDownDataFunc != null)
                         {
-                            Data = _dataSource(tag);
+                            options = _dropDownDataFunc(tag);
                         }
                     }
-                    if (Data != null)
+                    if (options != null)
                     {
                         if (typeof(ICollection).IsAssignableFrom(item.PropertyType))
                         {
-                            ICollection vals = value as ICollection;
+                            ICollection vals = (ICollection)value;
                             StringBuilder builderResult = new StringBuilder();
                             foreach (object val in vals)
                             {
-                                if (Data.ContainsKey(val.ToString()))
+                                if (options.ContainsKey(val.ToString()))
                                 {
-                                    builderResult.AppendFormat("{0},", Data[val.ToString()]);
+                                    builderResult.AppendFormat("{0},", options[val.ToString()]);
                                 }
                             }
                             value = builderResult.ToString().Trim(',');
                         }
-                        else if (Data.ContainsKey(value.ToString()))
+                        else if (options.ContainsKey(value.ToString()))
                         {
-                            value = Data[value.ToString()];
+                            value = options[value.ToString()];
                         }
                     }
                 }
-                else if ((attribute.MetaData.HtmlTags[item.Name].TagType == HTML.HTMLEnumerate.HTMLTagTypes.Input ||
-                    attribute.MetaData.HtmlTags[item.Name].TagType == HTML.HTMLEnumerate.HTMLTagTypes.MutiLineTextBox ||
-                    attribute.MetaData.HtmlTags[item.Name].TagType == HTML.HTMLEnumerate.HTMLTagTypes.Hidden) && value != null)
+                else if ((attribute.MetaData.HtmlTags[item.Name].TagType == HTMLEnumerate.HTMLTagTypes.Input ||
+                    attribute.MetaData.HtmlTags[item.Name].TagType == HTMLEnumerate.HTMLTagTypes.MutiLineTextBox ||
+                    attribute.MetaData.HtmlTags[item.Name].TagType == HTMLEnumerate.HTMLTagTypes.Hidden) && value != null)
                 {
 
                     if (attribute.MetaData.HtmlTags[item.Name].TagType == HTML.HTMLEnumerate.HTMLTagTypes.Input &&
-                        (item.PropertyType.Name == "DateTime" || (item.PropertyType.Name == "Nullable`1" && item.PropertyType.GetGenericArguments()[0].Name == "DateTime")))
+                        (item.PropertyType.Name == "DateTime" || (item.PropertyType.IsGenericType && item.PropertyType.GetGenericArguments()[0].Name == "DateTime")))
                     {
-                        string dateFormat = (attribute.MetaData.HtmlTags[item.Name] as HTML.Tags.TextBoxHtmlTag).DateFormat;
+                        string dateFormat = ((TextBoxHtmlTag)attribute.MetaData.HtmlTags[item.Name]).DateFormat;
                         DateTime dateTime = Convert.ToDateTime(value);
                         value = dateTime.ToString(dateFormat);
                     }
                     else
                     {
-                        if (!string.IsNullOrEmpty(attribute.MetaData.HtmlTags[item.Name].ValueFormat))
-                        {
-                            value = string.Format("{0:" + attribute.MetaData.HtmlTags[item.Name].ValueFormat + "}", value);
-                        }
                         string val = value.ToString().NoHTML().HtmlEncode();
                         if (val.Length > 50)
                         {
@@ -105,91 +109,89 @@ namespace Easy.HTML.Grid
                         value = val;
                     }
                 }
-                else if (attribute.MetaData.HtmlTags[item.Name].TagType == HTML.HTMLEnumerate.HTMLTagTypes.PassWord)
+                else if (attribute.MetaData.HtmlTags[item.Name].TagType == HTMLEnumerate.HTMLTagTypes.PassWord)
                 {
                     value = "******";
                 }
-                else if (attribute.MetaData.HtmlTags[item.Name].DataType.Name == "Boolean" && value != null)
-                {
-                    value = Convert.ToBoolean(value) ? "是" : "否";
-                }
+
                 if (!string.IsNullOrEmpty(attribute.MetaData.HtmlTags[item.Name].ValueFormat))
                 {
-                    value = string.Format("{0:" + attribute.MetaData.HtmlTags[item.Name].ValueFormat + "}", value);
+                    value = string.Format("{{0:{0}}}", attribute.MetaData.HtmlTags[item.Name].ValueFormat).FormatWith(value);
                 }
-                if (columnBuilder.Length == 1)
+                if (columnBuilder.Length > 1)
                 {
-                    columnBuilder.AppendFormat("{0}:\"{1}\"", item.Name, (value ?? "").ToString());
+                    columnBuilder.Append(",");
                 }
-                else
-                {
-                    columnBuilder.AppendFormat(",{0}:\"{1}\"", item.Name, (value ?? "").ToString());
-                }
+                columnBuilder.AppendFormat("{0}:\"{1}\"", item.Name, (value ?? ""));
             }
             columnBuilder.Append("},");
             return columnBuilder.ToString();
         }
-        private string GetHtmlModelString(HtmlTagBase Tag, string DataType)
+        private string GetHtmlModelString(HtmlTagBase tag, string dataType)
         {
             int hidden = 0;
             string data = "";
             string dateFormat = "";
             string jsDateFormat = "";
             string valueFormat = "";
-            switch (Tag.TagType)
+            switch (tag.TagType)
             {
                 case HTMLEnumerate.HTMLTagTypes.Input:
                     {
-                        dateFormat = (Tag as TextBoxHtmlTag).DateFormat;
-                        jsDateFormat = (Tag as TextBoxHtmlTag).JavaScriptDateFormat;
-                        valueFormat = (Tag as TextBoxHtmlTag).ValueFormat;
+                        var textBoxHtmlTag = tag as TextBoxHtmlTag;
+                        if (textBoxHtmlTag != null)
+                        {
+                            dateFormat = textBoxHtmlTag.DateFormat;
+                            jsDateFormat = textBoxHtmlTag.JavaScriptDateFormat;
+                            valueFormat = textBoxHtmlTag.ValueFormat;
+                        }
                         break;
                     }
                 case HTMLEnumerate.HTMLTagTypes.DropDownList:
                     {
-                        var dropTag = Tag as DropDownListHtmlTag;
-                        if (dropTag.SourceType == SourceType.ViewData && DropDownOptions.ContainsKey(Tag.Name))
+                        var dropTag = (DropDownListHtmlTag)tag;
+                        if (dropTag.SourceType == SourceType.ViewData && DropDownOptions.ContainsKey(tag.Name))
                         {
-                            dropTag.DataSource(DropDownOptions[Tag.Name]);
+                            dropTag.DataSource(DropDownOptions[tag.Name]);
                         }
                         data = dropTag.GetOptions();
-                        DataType = "Select";
+                        dataType = "Select";
                         break;
                     }
                 case HTMLEnumerate.HTMLTagTypes.MutiSelect:
                     {
-                        var muliTag = Tag as MutiSelectHtmlTag;
-                        if (muliTag.SourceType == SourceType.ViewData && DropDownOptions.ContainsKey(Tag.Name))
+                        var muliTag = (MutiSelectHtmlTag)tag;
+                        if (muliTag.SourceType == SourceType.ViewData && DropDownOptions.ContainsKey(tag.Name))
                         {
-                            muliTag.DataSource(DropDownOptions[Tag.Name]);
+                            muliTag.DataSource(DropDownOptions[tag.Name]);
                         }
                         data = muliTag.GetOptions();
-                        DataType = "Select";
+                        dataType = "Select";
                         break;
                     }
-                case HTMLEnumerate.HTMLTagTypes.File: DataType = "None";
+                case HTMLEnumerate.HTMLTagTypes.File: dataType = "None";
                     break;
-                case HTMLEnumerate.HTMLTagTypes.PassWord: DataType = "None";
+                case HTMLEnumerate.HTMLTagTypes.PassWord: dataType = "None";
                     break;
                 case HTMLEnumerate.HTMLTagTypes.Hidden: hidden = 1; break;
                 default:
                     break;
             }
-            if (!Tag.Grid.Searchable)
+            if (!tag.Grid.Searchable)
             {
-                DataType = "None";
+                dataType = "None";
             }
-            if (!Tag.Grid.Visiable)
+            if (!tag.Grid.Visiable)
             {
                 hidden = 1;
             }
-            Tag.DisplayName = string.IsNullOrEmpty(Tag.DisplayName) ? Tag.Name : Tag.DisplayName;
+            tag.DisplayName = string.IsNullOrEmpty(tag.DisplayName) ? tag.Name : tag.DisplayName;
             StringBuilder columnBuilder = new StringBuilder();
-            columnBuilder.AppendFormat("{0}:{{", Tag.Name);
-            columnBuilder.AppendFormat("DisplayName:'{0}',", Tag.DisplayName.Replace("\"", "\\\"").Replace("\'", "\\\'"));
-            columnBuilder.AppendFormat("Name:'{0}',", Tag.Name);
-            columnBuilder.AppendFormat("Width:{0},", Tag.Grid.ColumnWidth);
-            columnBuilder.AppendFormat("DataType:'{0}',", DataType);
+            columnBuilder.AppendFormat("{0}:{{", tag.Name);
+            columnBuilder.AppendFormat("DisplayName:'{0}',", tag.DisplayName.Replace("\"", "\\\"").Replace("\'", "\\\'"));
+            columnBuilder.AppendFormat("Name:'{0}',", tag.Name);
+            columnBuilder.AppendFormat("Width:{0},", tag.Grid.ColumnWidth);
+            columnBuilder.AppendFormat("DataType:'{0}',", dataType);
             columnBuilder.AppendFormat("DateFormat:'{0}',", dateFormat);
             columnBuilder.AppendFormat("JsDateFormat:'{0}',", jsDateFormat);
             columnBuilder.AppendFormat("ValueFormat:'{0}',", valueFormat);
@@ -200,48 +202,68 @@ namespace Easy.HTML.Grid
         }
         private int GetConditionIndex(string conditionKey)
         {
-            if (conditionKey.Contains("Conditions["))
+            int i = -1;
+            ConditionIndexRegex.Replace(conditionKey, match =>
             {
-                conditionKey = conditionKey.Replace("Conditions[", "");
-                string index = conditionKey.Substring(0, conditionKey.IndexOf(']'));
-                int returnValue = -1;
-                return int.TryParse(index, out returnValue) ? returnValue : -1;
-            }
-            else return -1;
+                if (match.Groups.Count == 2)
+                {
+                    i = int.Parse(match.Groups[1].Value);
+                }
+                return null;
+            });
+            return i;
         }
         private int GetConditionGroupIndex(string conditionGroupKey)
         {
-            if (conditionGroupKey.Contains("ConditionGroups["))
+            int i = -1;
+            GroupIndexRegex.Replace(conditionGroupKey, match =>
             {
-                conditionGroupKey = conditionGroupKey.Replace("ConditionGroups[", "");
-                string index = conditionGroupKey.Substring(0, conditionGroupKey.IndexOf(']'));
-                int returnValue = -1;
-                return int.TryParse(index, out returnValue) ? returnValue : -1;
-            }
-            else return -1;
+                if (match.Groups.Count == 2)
+                {
+                    i = int.Parse(match.Groups[1].Value);
+                }
+                return null;
+            });
+            return i;
         }
-        private int GetGroupConditionIndex(int groupIndex, string conditionGroupKey)
+        private int GetGroupConditionIndex(string conditionGroupKey)
         {
-            if (conditionGroupKey.Contains(string.Format("ConditionGroups[{0}][Conditions][", groupIndex)))
+            int i = -1;
+            GroupConditoinIndexRegex.Replace(conditionGroupKey, match =>
             {
-                conditionGroupKey = conditionGroupKey.Replace(string.Format("ConditionGroups[{0}][Conditions][", groupIndex), "");
-                string index = conditionGroupKey.Substring(0, conditionGroupKey.IndexOf(']'));
-                int returnValue = -1;
-                return int.TryParse(index, out returnValue) ? returnValue : -1;
-            }
-            else return -1;
+                if (match.Groups.Count == 2)
+                {
+                    i = int.Parse(match.Groups[1].Value);
+                }
+                return null;
+            });
+            return i;
+        }
+
+        private string GetConditionProperty(string formKey)
+        {
+            string property = null;
+            PropertyRegex.Replace(formKey, match =>
+            {
+                if (match.Groups.Count == 2)
+                {
+                    property = match.Groups[1].Value;
+                }
+                return null;
+            });
+            return property;
         }
         #endregion
         public string GetJsonDataForGrid<T>(IEnumerable<T> data, long pageSize, long pageIndex, long recordCount)
         {
             string baseStr = "{{ Columns: {0}, Rows: [{1}] ,PageIndex:{2},PageSize:{3},RecordCount:{4}}}";
-            StringBuilder RowBuilder = new StringBuilder();
+            StringBuilder rowBuilder = new StringBuilder();
             DataConfigureAttribute attribute = DataConfigureAttribute.GetAttribute<T>();
             foreach (var item in data)
             {
-                RowBuilder.Append(GetModelString(item, attribute));
+                rowBuilder.Append(GetModelString(item, attribute));
             }
-            return string.Format(baseStr, GetHtmlModelString<T>(), RowBuilder.ToString().Trim(','), pageIndex, pageSize, recordCount);
+            return string.Format(baseStr, GetHtmlModelString<T>(), rowBuilder.ToString().Trim(','), pageIndex, pageSize, recordCount);
         }
         public string GetJsonDataForGrid<T>(IEnumerable<T> data, Pagination page)
         {
@@ -250,142 +272,106 @@ namespace Easy.HTML.Grid
         public string GetHtmlModelString<T>()
         {
             DataConfigureAttribute attribute = DataConfigureAttribute.GetAttribute<T>();
-            StringBuilder ColumnBuilder = new StringBuilder();
+            StringBuilder columnBuilder = new StringBuilder();
             if (attribute != null)
             {
                 foreach (var item in attribute.GetHtmlTags(true))
                 {
-                    ColumnBuilder.Append(GetHtmlModelString(item, item.DataType.Name));
+                    columnBuilder.Append(GetHtmlModelString(item, item.DataType.Name));
                 }
             }
             else
             {
                 Type tType = typeof(T);
-                System.Reflection.PropertyInfo[] propertys = tType.GetProperties();
+                PropertyInfo[] propertys = tType.GetProperties();
                 foreach (var item in propertys)
                 {
-                    string typeName = item.PropertyType.Name;
-                    if (item.PropertyType.Name == "Nullable`1")
-                    {
-                        typeName = item.PropertyType.GetGenericArguments()[0].Name;
-                    }
-                    ColumnBuilder.AppendFormat("{0}:{{ Name: '{0}',DisplayName:'{0}',Width:150,DataType:'{1}',DateFormat:'',JsDateFormat:'',ValueDateFormat:'',Hidden:0 }},", item.Name, typeName);
+                    string typeName = item.PropertyType.IsGenericType ? item.PropertyType.GetGenericArguments()[0].Name : item.PropertyType.Name;
+                    columnBuilder.AppendFormat("{0}:{{ Name: '{0}',DisplayName:'{0}',Width:150,DataType:'{1}',DateFormat:'',JsDateFormat:'',ValueDateFormat:'',Hidden:0 }},", item.Name, typeName);
                 }
             }
-            return string.Format("{{{0}}}", ColumnBuilder.ToString().Trim(','));
+            return string.Format("{{{0}}}", columnBuilder.ToString().Trim(','));
         }
         public DataFilter GetDataFilter<T>()
         {
             DataConfigureAttribute custAttribute = DataConfigureAttribute.GetAttribute<T>();
             DataFilter filter = new DataFilter();
-            int conditionIndex = -1;
-            int groupIndex = -1;
-            int groupConditionIndex = -1;
-            ConditionGroup Group = new ConditionGroup();
-            var properies = typeof(T).GetProperties();
+            List<Condition> conditions = new List<Condition>();
+            List<ConditionGroup> groups = new List<ConditionGroup>();
+            _propertyInfos = typeof(T).GetProperties();
             foreach (var item in _form.AllKeys)
             {
-                #region 单件
-                int tempIndex = GetConditionIndex(item);
-                if (tempIndex >= 0 && conditionIndex != tempIndex)
-                {
-                    conditionIndex = tempIndex;
-                    string value = _form[string.Format("Conditions[{0}][Value]", tempIndex)];
-                    if (!string.IsNullOrEmpty(value))
-                    {
-                        Condition condition = new Condition
-                        {
-                            Property = _form[string.Format("Conditions[{0}][Property]", tempIndex)]
-                        };
-                        if (custAttribute != null)
-                        {
-                            condition.Property = custAttribute.GetPropertyMapper(condition.Property);
-                        }
-                        var type = properies.FirstOrDefault(m => m.Name == condition.Property);
-                        if (type != null)
-                        {
-                            condition.OperatorType = (OperatorType)int.Parse(_form[string.Format("Conditions[{0}][OperatorType]", tempIndex)]);
-                            condition.ConditionType = (ConditionType)int.Parse(_form[string.Format("Conditions[{0}][ConditionType]", tempIndex)]);
-                            condition.Value = ConvertValue(type.PropertyType, value);
-                        }
-                        if (condition.Value != null)
-                        {
-                            if (custAttribute != null)
-                            {
-                                PropertyDataInfo propertyDataInfo = custAttribute.MetaData.PropertyDataConfig[condition.Property];
-                                if (propertyDataInfo.Search != null)
-                                {
-                                    condition = propertyDataInfo.Search(condition);
-                                }
-                            }
-                            filter.Where(condition);
-                        }
+                string property = GetConditionProperty(item);
+                if (property.IsNullOrEmpty()) continue;
 
-                    }
-                }
-                #endregion
-                #region 条件组合
-                int tempGroupIndex = GetConditionGroupIndex(item);
-                if (tempGroupIndex >= 0)
+                #region 单个件
+
+                int conditionIndex = GetConditionIndex(item);
+                if (conditionIndex >= 0)
                 {
-                    if (tempGroupIndex != groupIndex && groupIndex != -1)
+                    if (conditionIndex == conditions.Count)
                     {
-                        filter.Where(Group);
-                        groupConditionIndex = -1;
-                        groupIndex = -1;
-                        Group = new ConditionGroup();
+                        conditions.Add(new Condition());
                     }
-                    groupIndex = tempGroupIndex;
-                    int tempGroupConditionIndex = GetGroupConditionIndex(tempGroupIndex, item);
-                    if (tempGroupConditionIndex >= 0 && groupConditionIndex != tempGroupConditionIndex)
+                    SetCondition(conditions[conditionIndex], property, _form[item]);
+                }
+
+                #endregion
+
+
+
+                #region 组合条件
+
+                int groupIndex = GetConditionGroupIndex(item);
+                if (groupIndex >= 0)
+                {
+                    if (groupIndex == groups.Count)
                     {
-                        groupConditionIndex = tempGroupConditionIndex;
-                        string value = _form[string.Format("ConditionGroups[{0}][Conditions][{1}][Value]", tempGroupIndex, tempGroupConditionIndex)];
-                        if (!string.IsNullOrEmpty(value))
+                        groups.Add(new ConditionGroup());
+                    }
+                    int groupConditionIndex = GetGroupConditionIndex(item);
+                    if (groupConditionIndex >= 0)
+                    {
+                        if (groupConditionIndex == groups[groupIndex].Conditions.Count)
                         {
-                            Condition condition = new Condition();
-                            string proterty = _form[string.Format("ConditionGroups[{0}][Conditions][{1}][Property]", tempGroupIndex, tempGroupConditionIndex)];
-                            condition.Property = proterty;
-                            if (custAttribute != null)
-                            {
-                                condition.Property = custAttribute.GetPropertyMapper(condition.Property);
-                            }
-                            var type = properies.FirstOrDefault(m => m.Name == condition.Property);
-                            if (type != null)
-                            {
-                                condition.OperatorType = (OperatorType)int.Parse(_form[string.Format("ConditionGroups[{0}][Conditions][{1}][OperatorType]", tempGroupIndex, tempGroupConditionIndex)]);
-                                condition.ConditionType = (ConditionType)int.Parse(_form[string.Format("ConditionGroups[{0}][Conditions][{1}][ConditionType]", tempGroupIndex, tempGroupConditionIndex)]);
-                                condition.Value = ConvertValue(type.PropertyType, value);
-                            }
-                            if (condition.Value != null)
-                            {
-                                if (custAttribute != null)
-                                {
-                                    PropertyDataInfo propertyDataInfo = custAttribute.MetaData.PropertyDataConfig[condition.Property];
-                                    if (propertyDataInfo.Search != null)
-                                    {
-                                        condition = propertyDataInfo.Search(condition);
-                                    }
-                                }
-                                Group.Add(condition);
-                            }
+                            groups[groupIndex].Conditions.Add(new Condition());
                         }
+                        SetCondition(groups[groupIndex].Conditions[groupConditionIndex], property, _form[item]);
+                    }
+                    else
+                    {
+                        SetGroup(groups[groupIndex], property, _form[item]);
                     }
                 }
                 #endregion
             }
-            if (Group.Conditions.Count > 0)
+
+            foreach (var con in conditions)
             {
-                filter.Where(Group);
+                if (custAttribute != null)
+                {
+                    con.Property = custAttribute.GetPropertyMapper(con.Property);
+                }
+                filter.Where(con);
+            }
+
+            foreach (var gro in groups)
+            {
+                if (custAttribute != null)
+                {
+                    foreach (var con in gro.Conditions)
+                    {
+                        con.Property = custAttribute.GetPropertyMapper(con.Property);
+                    }
+                }
+                filter.Where(gro);
             }
             for (int i = 0; ; i++)
             {
                 string orderp = _form[string.Format("OrderBy[{0}][OrderCol]", i)];
                 string orderType = _form[string.Format("OrderBy[{0}][OrderType]", i)];
                 if (string.IsNullOrEmpty(orderp) || string.IsNullOrEmpty(orderType)) break;
-
-                Order order = new Order();
-                order.Property = orderp;
+                Order order = new Order { Property = orderp };
                 if (custAttribute != null)
                 {
                     order.Property = custAttribute.GetPropertyMapper(order.Property);
@@ -393,7 +379,6 @@ namespace Easy.HTML.Grid
                 order.OrderType = (OrderType)int.Parse(orderType);
                 filter.OrderBy(order);
             }
-
             return filter;
         }
 
@@ -418,12 +403,47 @@ namespace Easy.HTML.Grid
             }
             return page;
         }
-        private object ConvertValue(Type type, string value)
+
+        private void SetCondition(Condition condition, string property, string value)
+        {
+            switch (property)
+            {
+                case "Property":
+                    condition.Property = value;
+                    break;
+                case "Value":
+                    condition.Value = ConvertValue(condition.Property, value);
+                    break;
+                case "OperatorType":
+                    condition.OperatorType = (OperatorType)int.Parse(value);
+                    break;
+                case "ConditionType":
+                    condition.ConditionType = (ConditionType)int.Parse(value); ;
+                    break;
+            }
+        }
+
+        private void SetGroup(ConditionGroup group, string property, string value)
+        {
+            switch (property)
+            {
+                case "ConditionType":
+                    group.ConditionType = (ConditionType)int.Parse(value); ;
+                    break;
+            }
+        }
+        private object ConvertValue(string property, string value)
         {
             try
             {
-                TypeConverter typeConverter = TypeDescriptor.GetConverter(type);
-                return typeConverter.ConvertTo(value, type);
+                var propertyType = _propertyInfos.FirstOrDefault(m => m.Name == property);
+                if (propertyType != null)
+                {
+                    Type type = propertyType.PropertyType.IsGenericType ? propertyType.PropertyType.GetGenericArguments()[0] : propertyType.PropertyType;
+                    TypeConverter typeConverter = TypeDescriptor.GetConverter(type);
+                    return typeConverter.ConvertTo(value, type);
+                }
+                return null;
             }
             catch
             {

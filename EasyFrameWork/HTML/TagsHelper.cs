@@ -10,25 +10,18 @@ namespace Easy.HTML
 
     public class TagsHelper
     {
-        string Key;
-        Dictionary<string, HtmlTagBase> Attributes;
-        PropertyInfo targetType;
-        Type modelType;
-        Type dataType;
+        private readonly string _key;
+        private readonly Dictionary<string, HtmlTagBase> _attributes;
+        private readonly Type _modelType;
+        private readonly Type _dataType;
+        private readonly PropertyInfo _targetType;
         public TagsHelper(string Key, ref Dictionary<string, HtmlTagBase> Attributes, Type modelType, PropertyInfo targetType)
         {
-            this.Key = Key;
-            this.Attributes = Attributes;
-            this.targetType = targetType;
-            this.modelType = modelType;
-            if (targetType.PropertyType.Name == "Nullable`1")
-            {
-                dataType = targetType.PropertyType.GetGenericArguments()[0];
-            }
-            else
-            {
-                dataType = targetType.PropertyType;
-            }
+            _key = Key;
+            _attributes = Attributes;
+            _targetType = targetType;
+            _modelType = modelType;
+            _dataType = targetType.PropertyType.IsGenericType ? targetType.PropertyType.GetGenericArguments()[0] : targetType.PropertyType;
         }
         /// <summary>
         /// 基本输入框
@@ -36,13 +29,13 @@ namespace Easy.HTML
         /// <returns></returns>
         public TextBoxHtmlTag AsTextBox()
         {
-            TextBoxHtmlTag tag = new TextBoxHtmlTag(modelType, Key);
-            if (Attributes.ContainsKey(this.Key))
+            TextBoxHtmlTag tag = new TextBoxHtmlTag(_modelType, _key);
+            if (_attributes.ContainsKey(this._key))
             {
-                Attributes.Remove(this.Key);
+                _attributes.Remove(this._key);
             }
-            tag.DataType = dataType;
-            Attributes.Add(this.Key, tag);
+            tag.DataType = _dataType;
+            _attributes.Add(this._key, tag);
             return tag;
         }
         /// <summary>
@@ -51,13 +44,13 @@ namespace Easy.HTML
         /// <returns></returns>
         public MutiLineTextBoxHtmlTag AsMutiLineTextBox()
         {
-            MutiLineTextBoxHtmlTag tag = new MutiLineTextBoxHtmlTag(modelType, Key);
-            if (Attributes.ContainsKey(this.Key))
+            MutiLineTextBoxHtmlTag tag = new MutiLineTextBoxHtmlTag(_modelType, _key);
+            if (_attributes.ContainsKey(this._key))
             {
-                Attributes.Remove(this.Key);
+                _attributes.Remove(this._key);
             }
-            tag.DataType = dataType;
-            Attributes.Add(this.Key, tag);
+            tag.DataType = _dataType;
+            _attributes.Add(this._key, tag);
             return tag;
         }
         /// <summary>
@@ -66,13 +59,13 @@ namespace Easy.HTML
         /// <returns></returns>
         public DropDownListHtmlTag AsDropDownList()
         {
-            DropDownListHtmlTag tag = new DropDownListHtmlTag(modelType, Key);
-            if (Attributes.ContainsKey(this.Key))
+            DropDownListHtmlTag tag = new DropDownListHtmlTag(_modelType, _key);
+            if (_attributes.ContainsKey(this._key))
             {
-                Attributes.Remove(this.Key);
+                _attributes.Remove(this._key);
             }
-            tag.DataType = dataType;
-            Attributes.Add(this.Key, tag);
+            tag.DataType = _dataType;
+            _attributes.Add(this._key, tag);
             return tag;
         }
         /// <summary>
@@ -81,13 +74,13 @@ namespace Easy.HTML
         /// <returns></returns>
         public FileHtmlTag AsFileUp()
         {
-            FileHtmlTag tag = new FileHtmlTag(modelType, Key);
-            if (Attributes.ContainsKey(this.Key))
+            FileHtmlTag tag = new FileHtmlTag(_modelType, _key);
+            if (_attributes.ContainsKey(this._key))
             {
-                Attributes.Remove(this.Key);
+                _attributes.Remove(this._key);
             }
-            tag.DataType = dataType;
-            Attributes.Add(this.Key, tag);
+            tag.DataType = _dataType;
+            _attributes.Add(this._key, tag);
             return tag;
         }
         /// <summary>
@@ -96,13 +89,13 @@ namespace Easy.HTML
         /// <returns></returns>
         public MutiSelectHtmlTag AsMutiSelect()
         {
-            MutiSelectHtmlTag tag = new MutiSelectHtmlTag(modelType, Key);
-            if (Attributes.ContainsKey(this.Key))
+            MutiSelectHtmlTag tag = new MutiSelectHtmlTag(_modelType, _key);
+            if (_attributes.ContainsKey(this._key))
             {
-                Attributes.Remove(this.Key);
+                _attributes.Remove(this._key);
             }
-            tag.DataType = dataType;
-            Attributes.Add(this.Key, tag);
+            tag.DataType = _dataType;
+            _attributes.Add(this._key, tag);
             return tag;
         }
         /// <summary>
@@ -111,13 +104,13 @@ namespace Easy.HTML
         /// <returns></returns>
         public PassWordHtmlTag AsPassWord()
         {
-            PassWordHtmlTag tag = new PassWordHtmlTag(modelType, Key);
-            if (Attributes.ContainsKey(this.Key))
+            PassWordHtmlTag tag = new PassWordHtmlTag(_modelType, _key);
+            if (_attributes.ContainsKey(this._key))
             {
-                Attributes.Remove(this.Key);
+                _attributes.Remove(this._key);
             }
-            tag.DataType = dataType;
-            Attributes.Add(this.Key, tag);
+            tag.DataType = _dataType;
+            _attributes.Add(this._key, tag);
             return tag;
         }
         /// <summary>
@@ -126,13 +119,13 @@ namespace Easy.HTML
         /// <returns></returns>
         public HiddenHtmlTag AsHidden()
         {
-            HiddenHtmlTag tag = new HiddenHtmlTag(modelType, Key);
-            if (Attributes.ContainsKey(this.Key))
+            HiddenHtmlTag tag = new HiddenHtmlTag(_modelType, _key);
+            if (_attributes.ContainsKey(this._key))
             {
-                Attributes.Remove(this.Key);
+                _attributes.Remove(this._key);
             }
-            tag.DataType = dataType;
-            Attributes.Add(this.Key, tag);
+            tag.DataType = _dataType;
+            _attributes.Add(this._key, tag);
             return tag;
         }
         /// <summary>
@@ -141,24 +134,24 @@ namespace Easy.HTML
         /// <returns></returns>
         public CheckBoxHtmlTag AsCheckBox()
         {
-            CheckBoxHtmlTag tag = new CheckBoxHtmlTag(modelType, Key);
-            if (Attributes.ContainsKey(this.Key))
+            CheckBoxHtmlTag tag = new CheckBoxHtmlTag(_modelType, _key);
+            if (_attributes.ContainsKey(this._key))
             {
-                Attributes.Remove(this.Key);
+                _attributes.Remove(this._key);
             }
-            tag.DataType = dataType;
-            Attributes.Add(this.Key, tag);
+            tag.DataType = _dataType;
+            _attributes.Add(this._key, tag);
             return tag;
         }
         public CollectionAreaTag AsCollectionArea()
         {
-            CollectionAreaTag tag = new CollectionAreaTag(modelType, Key);
-            if (Attributes.ContainsKey(this.Key))
+            CollectionAreaTag tag = new CollectionAreaTag(_modelType, _key);
+            if (_attributes.ContainsKey(this._key))
             {
-                Attributes.Remove(this.Key);
+                _attributes.Remove(this._key);
             }
-            tag.DataType = dataType;
-            Attributes.Add(this.Key, tag);
+            tag.DataType = _dataType;
+            _attributes.Add(this._key, tag);
             return tag;
         }
     }
