@@ -18,13 +18,11 @@ namespace Easy.Data.DataBase
             ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings[ConnectionKey].ConnectionString;
         }
 
-        public Sql(string connectionString)
+
+        public override IEnumerable<string> DataBaseTypeNames()
         {
-            ConnectionString = connectionString;
+            yield return "SQL";
         }
-
-        public string ConnectionString { get; set; }
-
 
         protected override DbConnection GetDbConnection()
         {
@@ -115,6 +113,7 @@ namespace Easy.Data.DataBase
                 .AddParameter("@columnName", columnName)
                 .To<int>() != 0;
         }
+
     }
 
 }

@@ -11,11 +11,14 @@ namespace Easy.Web.ControllerFactory
     {
         protected override IController GetControllerInstance(System.Web.Routing.RequestContext requestContext, Type controllerType)
         {
-            var controller = base.GetControllerInstance(requestContext, controllerType);
-            var controllerResult = controller as System.Web.Mvc.Controller;
-            if (controllerResult != null)
-                controllerResult.ActionInvoker = new FiltersAsyncControllerActionInvoker();
-            return controller;
+            if (controllerType != null)
+            {
+                var controller = base.GetControllerInstance(requestContext, controllerType) as System.Web.Mvc.Controller;
+                if (controller != null)
+                    controller.ActionInvoker = new FiltersAsyncControllerActionInvoker();
+                return controller;
+            }
+            return null;
         }
     }
 }

@@ -8,21 +8,17 @@ using System.Data;
 using System.Reflection;
 using System.Text;
 using Easy.Extend;
+using Easy.IOC;
 
 namespace Easy.Data.DataBase
 {
     /// <summary>
     /// 数据库基类，AppConfig> DataBase>[SQL,Jet,Ace]
     /// </summary>
-    public abstract class DataBasic
+    public abstract class DataBasic : IDependency
     {
         public const string DataBaseAppSetingKey = "DataBase";
         public const string ConnectionKey = "Easy";
-        public const string Ace = "Ace";
-        public const string Jet = "Jet";
-        public const string Sql = "SQL";
-        public const string SqlEarly = "SqlEarly";
-        public const string MySql = "MySql";
 
         #region 私有方法
 
@@ -193,6 +189,8 @@ namespace Easy.Data.DataBase
         }
 
         #endregion
+        public string ConnectionString { get; set; }
+        public abstract IEnumerable<string> DataBaseTypeNames(); 
 
         protected abstract DbDataAdapter GetDbDataAdapter(DbCommand command);
         protected abstract DbConnection GetDbConnection();
@@ -308,7 +306,7 @@ namespace Easy.Data.DataBase
             }
             return ExecCommand(comm) > 0;
         }
-        
+
         public virtual DataTable GetTable(DbCommand command)
         {
             command.Connection = GetDbConnection();
@@ -609,7 +607,7 @@ namespace Easy.Data.DataBase
                             PropertyInfo pro = typeof(T).GetProperty(dataConfig.Value.PropertyName);
                             if (pro != null && pro.CanWrite)
                             {
-                                pro.SetValue(item, Easy.Reflection.ClassAction.ValueConvert(pro, resu), null);
+                                pro.SetValue(item, Reflection.ClassAction.ValueConvert(pro, resu), null);
                             }
                             break;
                         }

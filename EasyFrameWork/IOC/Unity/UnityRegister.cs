@@ -30,11 +30,24 @@ namespace Easy.IOC.Unity
                                 _container.RegisterType(inter, p, GetLifetimeManager(p));
                                 _container.RegisterType(inter, p, inter.Name + p.FullName, GetLifetimeManager(p));
                             }
+                            if (p.BaseType != null && p.BaseType.IsAbstract)
+                            {
+                                RegistBaseType(p, p.BaseType);
+                            }
                         }
                     }
 
                 }
             });
+        }
+
+        private void RegistBaseType(Type type, Type baseType)
+        {
+            if (type != KnownTypes.ObjectType && baseType != null)
+            {
+                _container.RegisterType(baseType, type, baseType.Name + type.FullName, GetLifetimeManager(type));
+                RegistBaseType(type, baseType.BaseType);
+            }
         }
 
         public void Regist()

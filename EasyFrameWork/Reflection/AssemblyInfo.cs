@@ -16,6 +16,7 @@ namespace Easy.Reflection
             public static readonly Type EntityType = typeof(IEntity);
             public static readonly Type SingleInstanceType = typeof (ISingleInstance);
             public static readonly Type PerRequestType = typeof (IPerRequestInstance);
+            public static readonly Type ObjectType = typeof (object);
         }
 
 

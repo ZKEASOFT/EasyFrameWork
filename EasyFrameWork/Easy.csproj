@@ -64,10 +64,6 @@
       <HintPath>..\packages\Unity.2.1.505.2\lib\NET35\Microsoft.Practices.Unity.Configuration.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="MySql.Data, Version=6.9.7.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL">
-      <HintPath>..\packages\MySql.Data.6.9.7\lib\net40\MySql.Data.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="Newtonsoft.Json, Version=7.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.7.0.1\lib\net40\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
@@ -85,8 +81,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Constant\DicKeys.cs" />
+    <Compile Include="Data\DataBase\AccessAce.cs" />
+    <Compile Include="Data\DataBase\AccessJet.cs" />
     <Compile Include="Data\DataBase\SqlEarly.cs" />
-    <Compile Include="Data\DataBase\MySql.cs" />
     <Compile Include="Data\Operation.cs" />
     <Compile Include="Data\TableBuilderEngine.cs" />
     <Compile Include="Extend\ExtDate.cs" />

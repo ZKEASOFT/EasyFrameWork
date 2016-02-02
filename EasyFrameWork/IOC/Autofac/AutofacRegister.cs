@@ -22,10 +22,24 @@ namespace Easy.IOC.Autofac
                             KnownTypes.EntityType.IsAssignableFrom(p)
                                 ? builder.RegisterType(p).AsSelf()
                                 : builder.RegisterType(p).As(p.GetInterfaces()), p);
+
+                        if (p.BaseType != null && p.BaseType.IsAbstract)
+                        {
+                            RegistBaseType(builder, p, p.BaseType);
+                        }
+
                     }
 
                 }
             });
+        }
+        private void RegistBaseType(ContainerBuilder builder, Type type, Type baseType)
+        {
+            if (type != KnownTypes.ObjectType && baseType != null)
+            {
+                MakeLifeTime(builder.RegisterType(type).As(baseType), type);
+                RegistBaseType(builder, type, baseType.BaseType);
+            }
         }
         public ILifetimeScopeProvider Regist(IContainer container)
         {

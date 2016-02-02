@@ -12,41 +12,21 @@ namespace Easy.Web.Extend
 {
     public static class ExMVCHtml
     {
-        public static MvcHtmlString EasyTagFor<TModel, TProperty>(this HtmlHelper<TModel> htmlHelper, Expression<Func<TModel, TProperty>> expression)
-        {
-            using (ViewModelDecode<TModel> de = new ViewModelDecode<TModel>(htmlHelper.ViewData.Model))
-            {
-                string name = ExpressionHelper.GetExpressionText(expression);
-                return new MvcHtmlString(de.GetViewModelPropertyHtmlTag(name));
-            }
-        }
-        public static MvcHtmlString EasyLabelFor<TModel, TProperty>(this HtmlHelper<TModel> htmlHelper, Expression<Func<TModel, TProperty>> expression)
-        {
-            using (ViewModelDecode<TModel> de = new ViewModelDecode<TModel>(htmlHelper.ViewData.Model))
-            {
-                string name = ExpressionHelper.GetExpressionText(expression);
-                return new MvcHtmlString(string.Format("<label for='{0}'>{1}</label>", name, de.GetPropertyDisplayName(name)));
-            }
-        }
         public static MvcHtmlString EditModel<TModel>(this HtmlHelper<TModel> htmlHelper)
-        {
-            return EditModel<TModel>(htmlHelper, 1);
-        }
-        public static MvcHtmlString EditModel<TModel>(this HtmlHelper<TModel> htmlHelper, int cols)
         {
             using (ViewModelDecode<TModel> de = new ViewModelDecode<TModel>(htmlHelper.ViewData.Model))
             {
                 de.ExtendPropertyValue = htmlHelper.ViewContext.Controller.ViewData;
-                List<string> tagsStr = de.GetViewModelPropertyHtmlTag(true);
+                var tags = de.GetViewModelPropertyHtmlTag();
                 List<string> hidenTagsStr = de.GetViewModelHiddenTargets();
                 StringBuilder builder = new StringBuilder();
-                builder.AppendLine("<div class=\"container-fluid\">");
-                builder.AppendLine("<div class=\"row\">");
-                for (int i = 0; i < tagsStr.Count; i++)
+                builder.AppendLine("<div class=\"form-horizontal\">");
+                foreach (var item in tags)
                 {
-                    builder.AppendFormat("<div class='col-md-{0}'><div class='input-group'>{1}</div></div>", 12 / cols, tagsStr[i]);
+                    builder.AppendFormat("<div class='form-group'><label for='{0}' class='col-sm-2 control-label'>{1}</label><div class='col-sm-10'>{2}</div></div>",
+                        item.Name, item.DisplayName, item);
                 }
-                builder.Append("</div></div>");
+                builder.Append("</div>");
                 builder.Append("<div id='Hiddens'>");
                 foreach (var item in hidenTagsStr)
                 {
@@ -56,16 +36,20 @@ namespace Easy.Web.Extend
                 return new MvcHtmlString(builder.ToString());
             }
         }
+
         public static MvcHtmlString DisplayModel<TModel>(this HtmlHelper<TModel> htmlHelper)
         {
             using (ViewModelDecode<TModel> de = new ViewModelDecode<TModel>(htmlHelper.ViewData.Model))
             {
                 var tags = de.GetViewModelPropertyHtmlTag();
                 StringBuilder builder = new StringBuilder();
+                builder.AppendLine("<div class=\"form-horizontal\">");
                 foreach (var item in tags)
                 {
-                    builder.AppendFormat("<div class='input-group'><span class=\"input-group-addon\">{0}</span>{1}</div></div>", item.DisplayName, item.Value);
+                    builder.AppendFormat("<div class='form-group'><label for='{0}' class='col-sm-2 control-label'>{1}</label><div class='col-sm-10'>{2}</div></div>",
+                        item.Name, item.DisplayName, item.Value);
                 }
+                builder.Append("</div>");
                 return new MvcHtmlString(builder.ToString());
             }
         }

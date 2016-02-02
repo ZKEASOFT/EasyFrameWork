@@ -7,18 +7,17 @@ using System.Text;
 
 namespace Easy.Data.DataBase
 {
-    class SqlEarly : DataBasic
+    public class SqlEarly : DataBasic
     {
         public SqlEarly()
         {
             ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings[ConnectionKey].ConnectionString;
         }
-
-        public SqlEarly(string connectionString)
+        public override IEnumerable<string> DataBaseTypeNames()
         {
-            ConnectionString = connectionString;
+            yield return "SQL-Early";
         }
-        public string ConnectionString { get; set; }
+
         protected override DbDataAdapter GetDbDataAdapter(DbCommand command)
         {
             return new SqlDataAdapter(command as SqlCommand);
@@ -58,5 +57,6 @@ namespace Easy.Data.DataBase
                 .AddParameter("@columnName", columnName)
                 .To<int>() != 0;
         }
+
     }
 }

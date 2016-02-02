@@ -13,7 +13,7 @@ namespace Easy.Modules.SystemSetting
     {
         public SystemSettingBase Get()
         {
-            DataTable table = Database.CustomerSql("select Property,Val from SystemSetting").ToDataTable();
+            DataTable table = DataBase.CustomerSql("select Property,Val from SystemSetting").ToDataTable();
             SystemSettingBase setting = ServiceLocator.Current.GetInstance<SystemSettingBase>();
             Type setType = setting.GetType();
             foreach (DataRow item in table.Rows)
@@ -32,12 +32,12 @@ namespace Easy.Modules.SystemSetting
         {
             Type setType = setting.GetType();
             PropertyInfo[] propertys = setType.GetProperties();
-            Database.CustomerSql("Delete From SystemSetting").ExecuteNonQuery();
+            DataBase.CustomerSql("Delete From SystemSetting").ExecuteNonQuery();
             foreach (PropertyInfo item in propertys)
             {
                 object value = item.GetValue(setting, null);
                 if (value == null) value = string.Empty;
-                Database.CustomerSql("Insert into SystemSetting(Property,Val) values (@Property,@Val)")
+                DataBase.CustomerSql("Insert into SystemSetting(Property,Val) values (@Property,@Val)")
                     .AddParameter("Property", item.Name)
                     .AddParameter("Val", value.ToString())
                     .ExecuteNonQuery();

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using Easy.Data.DataBase;
 using Easy.MetaData;
+using Microsoft.Practices.ServiceLocation;
 
 namespace Easy.Data
 {
@@ -12,30 +13,9 @@ namespace Easy.Data
         public TableBuilderEngine()
         {
             string dataBase = System.Configuration.ConfigurationManager.AppSettings[DataBasic.DataBaseAppSetingKey];
-            var con = System.Configuration.ConfigurationManager.ConnectionStrings[DataBasic.ConnectionKey];
-            string connString = string.Empty;
-            if (con != null)
-            {
-                connString = con.ConnectionString;
-            }
-            else
-            {
-                connString = System.Configuration.ConfigurationManager.ConnectionStrings[0].ConnectionString;
-            }
-            if (dataBase == DataBasic.Ace)
-            {
-                DataBase = new Access(connString);
-                (DataBase as Access).DbType = Access.DdTypes.Ace;
-            }
-            else if (dataBase == DataBasic.Jet)
-            {
-                DataBase = new Access(connString);
-                (DataBase as Access).DbType = Access.DdTypes.JET;
-            }
-            else if (dataBase == DataBasic.Sql)
-            {
-                DataBase = new Sql(connString);
-            }
+            DataBase =
+                ServiceLocator.Current.GetAllInstances<DataBasic>()
+                    .FirstOrDefault(m => m.DataBaseTypeNames().Any(n => n == dataBase)) ?? new Sql();
         }
         public DataBasic DataBase
         {

@@ -10,60 +10,15 @@ using Easy.Extend;
 
 namespace Easy.Data.DataBase
 {
-    public class Access : DataBasic
+    public abstract class Access : DataBasic
     {
-        const string AceOleDb = "Provider=Microsoft.ACE.OLEDB.12.0;";
-        const string JetOleDb = "Provider=Microsoft.Jet.OLEDB.4.0;";
-        public enum DdTypes
-        {
-            /// <summary>
-            /// 2007以前版本
-            /// </summary>
-            JET = 1,
-            /// <summary>
-            /// 2007以后版本
-            /// </summary>
-            Ace = 2
-        }
-        public Access()
-        {
-            DataPath = AppDomain.CurrentDomain.BaseDirectory + @"App_Data\DataBase.accdb";
-            this.DbType = DdTypes.JET;
-        }
-
-        public Access(string filePath)
-        {
-            if (filePath.Contains(":"))
-            {
-                DataPath = filePath;
-            }
-            else
-            {
-                DataPath = AppDomain.CurrentDomain.BaseDirectory + filePath;
-            }
-            this.DbType = DdTypes.JET;
-        }
-        public DdTypes DbType { get; set; }
-        private string DataPath { get; set; }
 
         protected override DbDataAdapter GetDbDataAdapter(DbCommand command)
         {
             return new OleDbDataAdapter(command as OleDbCommand);
         }
 
-        protected override DbConnection GetDbConnection()
-        {
-            if (this.DbType == DdTypes.JET)
-            {
-                var conn = new OleDbConnection(string.Format("{1};Data Source={0};persist security info=false;Jet OLEDB:Database Password=easyframework", DataPath, JetOleDb));
-                return conn;
-            }
-            else
-            {
-                var conn = new OleDbConnection(string.Format("{1};Data Source={0};persist security info=false;Jet OLEDB:Database Password=easyframework", DataPath, AceOleDb));
-                return conn;
-            }
-        }
+
 
         protected override DbCommand GetDbCommand()
         {

@@ -318,8 +318,6 @@ namespace Easy.HTML.Grid
 
                 #endregion
 
-
-
                 #region 组合条件
 
                 int groupIndex = GetConditionGroupIndex(item);
@@ -370,7 +368,8 @@ namespace Easy.HTML.Grid
             {
                 string orderp = _form[string.Format("OrderBy[{0}][OrderCol]", i)];
                 string orderType = _form[string.Format("OrderBy[{0}][OrderType]", i)];
-                if (string.IsNullOrEmpty(orderp) || string.IsNullOrEmpty(orderType)) break;
+                if (string.IsNullOrEmpty(orderp) || string.IsNullOrEmpty(orderType))
+                    break;
                 Order order = new Order { Property = orderp };
                 if (custAttribute != null)
                 {
@@ -384,7 +383,7 @@ namespace Easy.HTML.Grid
 
         public Pagination GetPagination()
         {
-            Pagination page = new Pagination() { PageIndex = 0, PageSize = 20 };
+            Pagination page = new Pagination { PageIndex = 0, PageSize = 20 };
             if (!string.IsNullOrEmpty(_form["PageIndex"]))
             {
                 int pageIndex;
