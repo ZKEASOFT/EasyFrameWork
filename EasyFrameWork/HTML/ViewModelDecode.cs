@@ -44,6 +44,22 @@ namespace Easy.HTML
             }
         }
         public IDictionary<string, object> ExtendPropertyValue { get; set; }
+
+        private void UsingExtendPropertyValue(HtmlTagBase item)
+        {
+            if (item is DropDownListHtmlTag)
+            {
+                DropDownListHtmlTag tag = (DropDownListHtmlTag)item;
+                if (ExtendPropertyValue != null && tag.SourceType == Constant.SourceType.ViewData &&
+                    ExtendPropertyValue.ContainsKey(tag.SourceKey))
+                {
+                    if (ExtendPropertyValue[tag.SourceKey] is Dictionary<string, string>)
+                    {
+                        tag.DataSource(ExtendPropertyValue[tag.SourceKey] as IDictionary<string, string>);
+                    }
+                }
+            }
+        }
         /// <summary>
         /// 获取所有可显示属性标签
         /// </summary>
@@ -54,20 +70,9 @@ namespace Easy.HTML
             List<string> lists = new List<string>();
             foreach (var item in _attribute.GetHtmlTags(false))
             {
+                UsingExtendPropertyValue(item);
                 if (_withValue)
                 {
-                    if (item is DropDownListHtmlTag)
-                    {
-                        DropDownListHtmlTag tag = item as DropDownListHtmlTag;
-                        if (tag.SourceType == Constant.SourceType.ViewData &&
-                            ExtendPropertyValue.ContainsKey(tag.SourceKey))
-                        {
-                            if (ExtendPropertyValue[tag.SourceKey] is Dictionary<string, string>)
-                            {
-                                tag.DataSource(ExtendPropertyValue[tag.SourceKey] as Dictionary<string, string>);
-                            }
-                        }
-                    }
                     object val = ClassAction.GetObjPropertyValue(_entity, item.Name);
                     item.SetValue(val);
                 }
@@ -80,6 +85,7 @@ namespace Easy.HTML
             List<HtmlTagBase> results = new List<HtmlTagBase>();
             foreach (var item in _attribute.GetHtmlTags(false))
             {
+                UsingExtendPropertyValue(item);
                 object val = ClassAction.GetObjPropertyValue(_entity, item.Name);
                 item.SetValue(val);
                 results.Add(item);
@@ -95,6 +101,7 @@ namespace Easy.HTML
             List<string> lists = new List<string>();
             foreach (var item in _attribute.GetHtmlHiddenTags())
             {
+                UsingExtendPropertyValue(item);
                 if (_withValue)
                 {
                     object val = ClassAction.GetObjPropertyValue(_entity, item.Name);
@@ -111,7 +118,8 @@ namespace Easy.HTML
         /// <returns></returns>
         public string GetViewModelPropertyHtmlTag(string property)
         {
-            var tag = _attribute.GetHtmlTag(property);
+            var tag = _attribute.GetHtmlTag(property); 
+            UsingExtendPropertyValue(tag);
             if (_withValue)
             {
                 object val = ClassAction.GetObjPropertyValue(_entity, property);

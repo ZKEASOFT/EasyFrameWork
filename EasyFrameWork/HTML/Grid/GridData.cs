@@ -58,7 +58,7 @@ namespace Easy.HTML.Grid
                     && value != null)
                 {
                     var tag = (DropDownListHtmlTag)attribute.MetaData.HtmlTags[item.Name];
-                    Dictionary<string, string> options = tag.OptionItems;
+                    IDictionary<string, string> options = tag.OptionItems;
                     if (tag.SourceType == SourceType.ViewData)
                     {
                         if (_dropDownDataFunc != null)

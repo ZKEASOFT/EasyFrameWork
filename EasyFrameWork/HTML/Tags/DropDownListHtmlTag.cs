@@ -12,7 +12,7 @@ namespace Easy.HTML.Tags
 {
     public class DropDownListHtmlTag : HtmlTagBase
     {
-        private Dictionary<string, string> _data;
+        private IDictionary<string, string> _data;
         private Func<Dictionary<string, string>> _souceFunc;
         public DropDownListHtmlTag(Type modelType, string property)
             : base(modelType, property)
@@ -21,7 +21,7 @@ namespace Easy.HTML.Tags
             this.StartStr = "<select";
             this.EndStr = "></select>";
         }
-        public Dictionary<string, string> OptionItems
+        public IDictionary<string, string> OptionItems
         {
             get
             {
@@ -111,7 +111,7 @@ namespace Easy.HTML.Tags
         /// </summary>
         /// <param name="Data"></param>
         /// <returns></returns>
-        public DropDownListHtmlTag DataSource(Dictionary<string, string> Data)
+        public DropDownListHtmlTag DataSource(IDictionary<string, string> Data)
         {
             this._data = Data;
             return this;
