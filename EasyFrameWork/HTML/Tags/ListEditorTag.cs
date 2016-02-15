@@ -10,7 +10,7 @@ namespace Easy.HTML.Tags
 {
     public class ListEditorTag : HtmlTagBase
     {
-        Type _propertyType;
+        readonly Type _propertyType;
         public ListEditorTag(Type modelType, string property)
             : base(modelType, property)
         {
@@ -75,12 +75,14 @@ namespace Easy.HTML.Tags
                                 builder.AppendLine(m.ToString());
                                 builder.Append("</div>");
                                 builder.Append("</div>");
+                                m.Dispose();
                             });
                             attribute.GetHtmlHiddenTags().Each(m =>
                             {
                                 m.NamePreFix = this.Name + "[{0}].".FormatWith(index);
                                 m.SetValue(Easy.Reflection.ClassAction.GetObjPropertyValue(item, m.Name));
                                 builder.AppendLine(m.ToString(false));
+                                m.Dispose();
                             });
                             builder.AppendFormat("<button type='button' class='close delete' data-value='{0}'><span aria-hidden='true'>&times;</span></button>", Constant.ActionType.Delete);
                             builder.Append("</div>");

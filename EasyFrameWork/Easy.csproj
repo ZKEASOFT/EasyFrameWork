@@ -90,7 +90,7 @@
     <Compile Include="Extend\ExtIEnumerable.cs" />
     <Compile Include="Extend\ExtType.cs" />
     <Compile Include="HTML\jsTree\ContextmenuItem.cs" />
-    <Compile Include="HTML\Tags\CollectionAreaTag.cs" />
+    <Compile Include="HTML\Tags\ListEditorTag.cs" />
     <Compile Include="IOC\Autofac\AutofacRegister.cs" />
     <Compile Include="IOC\Autofac\AutofacContainerAdapter.cs" />
     <Compile Include="IOC\Autofac\AutofacServiceLocator.cs" />
