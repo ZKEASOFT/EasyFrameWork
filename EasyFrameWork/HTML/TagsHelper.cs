@@ -143,9 +143,9 @@ namespace Easy.HTML
             _attributes.Add(this._key, tag);
             return tag;
         }
-        public CollectionAreaTag AsCollectionArea()
+        public ListEditorTag AsListEditor()
         {
-            CollectionAreaTag tag = new CollectionAreaTag(_modelType, _key);
+            ListEditorTag tag = new ListEditorTag(_modelType, _key);
             if (_attributes.ContainsKey(this._key))
             {
                 _attributes.Remove(this._key);

@@ -8,10 +8,10 @@ using System.Collections;
 
 namespace Easy.HTML.Tags
 {
-    public class CollectionAreaTag : HtmlTagBase
+    public class ListEditorTag : HtmlTagBase
     {
         Type _propertyType;
-        public CollectionAreaTag(Type modelType, string property)
+        public ListEditorTag(Type modelType, string property)
             : base(modelType, property)
         {
             _propertyType = this.ModelType.GetProperty(this.Name).PropertyType;
@@ -30,18 +30,19 @@ namespace Easy.HTML.Tags
                 var attribute = DataConfigureAttribute.GetAttribute(genericType);
                 if (widthLabel)
                 {
-                    builder.AppendFormat("<span class=\"input-group-addon {1}\">{0}</span>", this.DisplayName, this.IsRequired ? "required" : "");
+                    builder.AppendFormat("<label for='{0}' class='control-label {1}'>{2}</label>", this.Name, this.IsRequired ? "required" : "", this.DisplayName);
                 }
                 builder.Append("<div class='input-group-collection container-fluid'>");
                 builder.Append("<div class='Template' style='display:none'>");
-                {
+                {//Templete
                     builder.Append("<div class='row item'>");
                     attribute.GetHtmlTags(false).Each(m =>
                     {
                         builder.Append("<div class='col-lg-3 col-md-4 col-sm-6'>");
-                        builder.Append("<div class='input-group'>");
+                        builder.AppendFormat("<label for='{0}' class='control-label {1}'>{2}</label>", m.Name, m.IsRequired ? "required" : "", m.DisplayName);
+                        builder.Append("<div>");
                         m.NamePreFix = this.Name + "[{0}].";
-                        builder.AppendLine(m.ToString(widthLabel));
+                        builder.AppendLine(m.ToString());
                         builder.Append("</div>");
                         builder.Append("</div>");
                     });
@@ -50,7 +51,7 @@ namespace Easy.HTML.Tags
                         m.NamePreFix = this.Name + "[{0}].";
                         builder.AppendLine(m.ToString(false));
                     });
-                    builder.AppendFormat("<div class='col-md-12'><input type='button' value='删除' class='btn btn-danger btn-xs delete' data-value='{0}'/></div>", Constant.ActionType.Unattached);
+                    builder.AppendFormat("<button type='button' class='close delete' data-value='{0}'><span aria-hidden='true'>&times;</span></button>", Constant.ActionType.Delete);
                     builder.Append("</div>");
                 }
                 builder.Append("</div>");
@@ -67,10 +68,11 @@ namespace Easy.HTML.Tags
                             attribute.GetHtmlTags(false).Each(m =>
                             {
                                 builder.Append("<div class='col-lg-3 col-md-4 col-sm-6'>");
-                                builder.Append("<div class='input-group'>");
+                                builder.AppendFormat("<label for='{0}' class='control-label {1}'>{2}</label>", m.Name, m.IsRequired ? "required" : "", m.DisplayName);
+                                builder.Append("<div>");
                                 m.NamePreFix = this.Name + "[{0}].".FormatWith(index);
                                 m.SetValue(Easy.Reflection.ClassAction.GetObjPropertyValue(item, m.Name));
-                                builder.AppendLine(m.ToString(widthLabel));
+                                builder.AppendLine(m.ToString());
                                 builder.Append("</div>");
                                 builder.Append("</div>");
                             });
@@ -80,7 +82,7 @@ namespace Easy.HTML.Tags
                                 m.SetValue(Easy.Reflection.ClassAction.GetObjPropertyValue(item, m.Name));
                                 builder.AppendLine(m.ToString(false));
                             });
-                            builder.AppendFormat("<div class='col-md-12'><input type='button' value='删除' class='btn btn-danger btn-xs delete' data-value='{0}'/></div>", Constant.ActionType.Delete);
+                            builder.AppendFormat("<button type='button' class='close delete' data-value='{0}'><span aria-hidden='true'>&times;</span></button>", Constant.ActionType.Delete);
                             builder.Append("</div>");
                             index++;
                         }
