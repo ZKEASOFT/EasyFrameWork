@@ -438,16 +438,18 @@ namespace Easy.HTML.Grid
                 var propertyType = _propertyInfos.FirstOrDefault(m => m.Name == property);
                 if (propertyType != null)
                 {
-                    Type type = propertyType.PropertyType.IsGenericType ? propertyType.PropertyType.GetGenericArguments()[0] : propertyType.PropertyType;
+                    Type type = propertyType.PropertyType.IsGenericType
+                        ? propertyType.PropertyType.GetGenericArguments()[0]
+                        : propertyType.PropertyType;
                     TypeConverter typeConverter = TypeDescriptor.GetConverter(type);
-                    return typeConverter.ConvertTo(value, type);
+                    return typeConverter.ConvertFrom(value);
                 }
-                return null;
             }
-            catch
+            catch (Exception ex)
             {
-                return null;
+                Logger.Error(ex);
             }
+            return value;
         }
     }
 }

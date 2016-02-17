@@ -38,8 +38,9 @@ namespace Easy.Web.Controller
         {
             Service = service;
         }
-        protected IImage UpLoadImage(IImage entity)
+        protected void UpLoadImage(IImage entity)
         {
+            if (entity == null) return;
             if (!string.IsNullOrEmpty(entity.ImageUrl) && string.IsNullOrEmpty(entity.ImageThumbUrl))
             {
                 entity.ImageThumbUrl = entity.ImageUrl;
@@ -51,12 +52,6 @@ namespace Easy.Web.Controller
                 string fileName = ImageUnity.SetThumb(Server.MapPath(filePath), ImageThumbWidth ?? 64, ImageThumbHeight ?? 64);
                 entity.ImageThumbUrl = filePath.Replace(System.IO.Path.GetFileName(filePath), fileName);
             }
-            if (string.IsNullOrEmpty(entity.ImageUrl) || string.IsNullOrEmpty(entity.ImageThumbUrl))
-            {
-                entity.ImageUrl = string.Empty;
-                entity.ImageThumbUrl = string.Empty;
-            }
-            return entity;
         }
 
         protected object[] GetPrimaryKeys(TEntity entity)
@@ -88,11 +83,7 @@ namespace Easy.Web.Controller
         {
             if (ModelState.IsValid)
             {
-                var image = entity as IImage;
-                if (image != null)
-                {
-                    UpLoadImage(image);
-                }
+                UpLoadImage(entity as IImage);
                 Service.Add(entity);
                 return RedirectToAction("Index");
             }
@@ -117,11 +108,7 @@ namespace Easy.Web.Controller
             ViewBag.Title = entity.Title;
             if (ModelState.IsValid)
             {
-                var image = entity as IImage;
-                if (image != null)
-                {
-                    UpLoadImage(image);
-                }
+                UpLoadImage(entity as IImage);
                 Service.Update(entity);
                 return RedirectToAction("Index");
             }
@@ -168,19 +155,18 @@ namespace Easy.Web.Controller
         [HttpPost]
         public virtual JsonResult GetList()
         {
-            GridData data = new GridData(Request.Form, (tag) =>
+            GridData data = new GridData(Request.Form, tag =>
             {
-                if (tag is DropDownListHtmlTag &&
-                    (tag as DropDownListHtmlTag).SourceType == SourceType.ViewData &&
-                    ViewData.ContainsKey((tag as DropDownListHtmlTag).SourceKey))
+                var dropTag = tag as DropDownListHtmlTag;
+                if (dropTag != null && dropTag.SourceType == SourceType.ViewData && ViewData.ContainsKey(dropTag.SourceKey))
                 {
-                    return ViewData[(tag as DropDownListHtmlTag).SourceKey] as Dictionary<string, string>;
+                    return ViewData[dropTag.SourceKey] as Dictionary<string, string>;
                 }
                 return null;
             });
             var filter = data.GetDataFilter<TEntity>();
             var pagin = data.GetPagination();
-            return Json(data.GetJsonDataForGrid<TEntity>(Service.Get(filter, pagin), pagin));
+            return Json(data.GetJsonDataForGrid(Service.Get(filter, pagin), pagin));
         }
     }
 }
