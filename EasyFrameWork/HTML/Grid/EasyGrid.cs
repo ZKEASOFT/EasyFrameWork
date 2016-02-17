@@ -197,7 +197,7 @@ namespace Easy.HTML.Grid
         public override string ToString()
         {
             StringBuilder builder = new StringBuilder();
-            builder.AppendFormat("<div id='{0}' style='height:100%'></div>", this.parent);
+            builder.AppendFormat("<div id='{0}'></div>", this.parent);
             builder.Append("<script type='text/javascript'>$(function(){");
             builder.Append("Easy.Grid()");
             builder.AppendFormat(".SetGridArea('{0}')", parent);
