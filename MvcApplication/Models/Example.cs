@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using Easy.Data;
 using Easy.MetaData;
 using Easy.Models;
+using MvcApplication.Service;
 
 namespace MvcApplication.Models
 {
@@ -13,7 +15,7 @@ namespace MvcApplication.Models
         public int Id { get; set; }
         public string Text { get; set; }
         public string Value { get; set; }
-        public IEnumerable<ExampleItem> Items { get; set; } 
+        public ICollection<ExampleItem> Items { get; set; }
     }
 
     class ExampleMetaData : DataViewMetaData<Example>
@@ -25,6 +27,12 @@ namespace MvcApplication.Models
             DataConfig(m => m.Id).AsIncreasePrimaryKey();
             DataConfig(m => m.Value).Mapper("ValueText");
             DataConfig(m => m.Title).Ignore();
+            DataConfig(m => m.Items)
+                .SetReference<ExampleItem, IExampleItemService>(m =>new DataFilter().Where("ExampleID", OperatorType.Equal, m.Id),
+                (e, t) =>
+                {
+                    t.ExampleID = e.Id;
+                });
         }
 
         protected override void ViewConfigure()

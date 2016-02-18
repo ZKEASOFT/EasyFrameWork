@@ -1,9 +1,12 @@
 ﻿using System.Data;
 using Easy.MetaData;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Easy.RepositoryPattern;
+using Microsoft.Practices.ServiceLocation;
 
 namespace Easy.Data
 {
@@ -29,7 +32,6 @@ namespace Easy.Data
         /// </summary>
         public bool IsIncreasePrimaryKey { get; set; }
         public int PrimaryKeyIndex { get; set; }
-        public Func<Condition, Condition> Search;
         /// <summary>
         /// 增改查是忽略
         /// </summary>
@@ -59,14 +61,21 @@ namespace Easy.Data
         /// </summary>
         public string TableAlias { get; set; }
         public DbType ColumnType { get; set; }
-
         public int StringLength { get; set; }
+
+        public Func<object, IEnumerable> GetReference { get; set; }
+        public Action<object> UpdateReference { get; set; }
+        public Action<object, object> AddReference { get; set; }
+        public Action<object> DeleteReference { get; set; }
+
     }
 
-    public class PropertyDataInfoHelper
+
+    public class PropertyDataInfoHelper<T> where T : class
     {
         private readonly PropertyDataInfo _dataConig;
         private readonly IDataViewMetaData _viewMetaData;
+        private object _referenceService;
         public PropertyDataInfoHelper(PropertyDataInfo item, IDataViewMetaData viewMetaData)
         {
             _dataConig = item;
@@ -77,7 +86,7 @@ namespace Easy.Data
         /// </summary>
         /// <param name="ignore"></param>
         /// <returns></returns>
-        public PropertyDataInfoHelper Ignore(bool? ignore = true)
+        public PropertyDataInfoHelper<T> Ignore(bool? ignore = true)
         {
             bool nore = ignore ?? true;
             _dataConig.Ignore = nore;
@@ -88,7 +97,7 @@ namespace Easy.Data
         /// </summary>
         /// <param name="canUpdate"></param>
         /// <returns></returns>
-        public PropertyDataInfoHelper Update(bool? canUpdate = false)
+        public PropertyDataInfoHelper<T> Update(bool? canUpdate = false)
         {
             bool update = canUpdate ?? false;
             _dataConig.CanUpdate = update;
@@ -99,7 +108,7 @@ namespace Easy.Data
         /// </summary>
         /// <param name="canInsert"></param>
         /// <returns></returns>
-        public PropertyDataInfoHelper Insert(bool? canInsert = false)
+        public PropertyDataInfoHelper<T> Insert(bool? canInsert = false)
         {
             bool insert = canInsert ?? false;
             _dataConig.CanInsert = insert;
@@ -110,7 +119,7 @@ namespace Easy.Data
         /// </summary>
         /// <param name="column"></param>
         /// <returns></returns>
-        public PropertyDataInfoHelper Mapper(string column)
+        public PropertyDataInfoHelper<T> Mapper(string column)
         {
             _dataConig.ColumnName = column;
             return this;
@@ -120,7 +129,7 @@ namespace Easy.Data
         /// </summary>
         /// <param name="alias">表别名</param>
         /// <returns></returns>
-        public PropertyDataInfoHelper Relation(string alias)
+        public PropertyDataInfoHelper<T> Relation(string alias)
         {
             _dataConig.IsRelation = true;
             _dataConig.TableAlias = alias;
@@ -128,21 +137,12 @@ namespace Easy.Data
             Update(false);
             return this;
         }
-        /// <summary>
-        /// 列表搜索的特别处理,自定义条件ConditionString，条件的值，会自动Format进表达式
-        /// </summary>
-        /// <param name="fun"></param>
-        /// <returns></returns>
-        public PropertyDataInfoHelper OnSearch(Func<Condition, Condition> fun)
-        {
-            _dataConig.Search = fun;
-            return this;
-        }
+
         /// <summary>
         /// 设置主键
         /// </summary>
         /// <returns></returns>
-        public PropertyDataInfoHelper AsPrimaryKey()
+        public PropertyDataInfoHelper<T> AsPrimaryKey()
         {
             if (!_dataConig.IsPrimaryKey)
             {
@@ -156,7 +156,7 @@ namespace Easy.Data
         /// 设置为自增主键
         /// </summary>
         /// <returns></returns>
-        public PropertyDataInfoHelper AsIncreasePrimaryKey()
+        public PropertyDataInfoHelper<T> AsIncreasePrimaryKey()
         {
             if (!_dataConig.IsPrimaryKey)
             {
@@ -169,14 +169,62 @@ namespace Easy.Data
         }
 
 
-        public PropertyDataInfoHelper SetDbType(DbType dbType)
+        public PropertyDataInfoHelper<T> SetDbType(DbType dbType)
         {
             _dataConig.ColumnType = dbType;
             return this;
         }
-        public PropertyDataInfoHelper SetLength(int length)
+        public PropertyDataInfoHelper<T> SetLength(int length)
         {
             _dataConig.StringLength = length;
+            return this;
+        }
+
+        public PropertyDataInfoHelper<T> SetReference<CT, S>(Func<T, DataFilter> filter, Action<T, CT> setReference)
+            where CT : class
+            where S : IService<CT>
+        {
+            Ignore();
+
+            _dataConig.AddReference = (t, ct) =>
+            {
+                _referenceService = _referenceService ?? ServiceLocator.Current.GetInstance(typeof(S));
+                var service = _referenceService as IService<CT>;
+                if (service != null)
+                {
+                    setReference(t as T, ct as CT);
+                    service.Add(ct as CT);
+                }
+            };
+
+            _dataConig.DeleteReference = obj =>
+            {
+                _referenceService = _referenceService ?? ServiceLocator.Current.GetInstance(typeof(S));
+                var service = _referenceService as IService<CT>;
+                if (service != null)
+                {
+                    service.Delete(obj as CT);
+                }
+            };
+
+            _dataConig.GetReference = obj =>
+            {
+                _referenceService = _referenceService ?? ServiceLocator.Current.GetInstance(typeof(S));
+                var service = _referenceService as IService<CT>;
+                if (service != null)
+                    return service.Get(filter(obj as T));
+                return null;
+            };
+
+            _dataConig.UpdateReference = obj =>
+            {
+                _referenceService = _referenceService ?? ServiceLocator.Current.GetInstance(typeof(S));
+                var service = _referenceService as IService<CT>;
+                if (service != null)
+                {
+                    service.Update(obj as CT);
+                }
+            };
             return this;
         }
     }

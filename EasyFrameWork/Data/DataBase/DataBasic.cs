@@ -160,16 +160,16 @@ namespace Easy.Data.DataBase
             return result;
         }
 
-        protected List<string> GetPrimaryKeys(DataConfigureAttribute custAttribute)
+        public List<PrimaryKey> GetPrimaryKeys(DataConfigureAttribute custAttribute)
         {
-            List<string> primaryKey;
+            List<PrimaryKey> primaryKey;
             if (custAttribute != null)
             {
-                primaryKey = custAttribute.MetaData.Primarykey ?? new List<string> { "ID" };
+                primaryKey = custAttribute.MetaData.Primarykey ?? new List<PrimaryKey> { new PrimaryKey { PropertyName = "ID", ColumnName = "ID" } };
             }
             else
             {
-                primaryKey = new List<string> { "ID" };
+                primaryKey = new List<PrimaryKey> { new PrimaryKey { PropertyName = "ID", ColumnName = "ID" } };
             }
             return primaryKey;
         }
@@ -190,7 +190,7 @@ namespace Easy.Data.DataBase
 
         #endregion
         public string ConnectionString { get; set; }
-        public abstract IEnumerable<string> DataBaseTypeNames(); 
+        public abstract IEnumerable<string> DataBaseTypeNames();
 
         protected abstract DbDataAdapter GetDbDataAdapter(DbCommand command);
         protected abstract DbConnection GetDbConnection();
@@ -399,7 +399,7 @@ namespace Easy.Data.DataBase
             var filter = new DataFilter();
             for (int i = 0; i < primaryKey.Count; i++)
             {
-                filter.Where(primaryKey[i], OperatorType.Equal, primaryKeys[i]);
+                filter.Where(primaryKey[i].ColumnName, OperatorType.Equal, primaryKeys[i]);
             }
             return Delete<T>(filter);
         }
@@ -414,7 +414,7 @@ namespace Easy.Data.DataBase
             DataFilter filter = new DataFilter();
             for (int i = 0; i < primaryKey.Count; i++)
             {
-                filter.Where(primaryKey[i], OperatorType.Equal, primaryKeys[i]);
+                filter.Where(primaryKey[i].ColumnName, OperatorType.Equal, primaryKeys[i]);
             }
             var list = Get<T>(filter);
             if (list.Count() == 1)
@@ -670,12 +670,9 @@ namespace Easy.Data.DataBase
         public virtual bool Update<T>(T item, params object[] primaryKeys) where T : class
         {
             DataFilter filter = new DataFilter();
-            var primaryKey = new List<string> { "ID" };
             DataConfigureAttribute custAttribute = DataConfigureAttribute.GetAttribute<T>();
-            if (custAttribute != null)
-            {
-                primaryKey = custAttribute.MetaData.Primarykey ?? primaryKey;
-            }
+            List<PrimaryKey> primaryKey = GetPrimaryKeys(custAttribute);
+
             if (primaryKeys.Length != primaryKey.Count && primaryKeys.Length > 0)
             {
                 throw new Exception("输入的参数与设置的主键个数不对应！");
@@ -684,35 +681,23 @@ namespace Easy.Data.DataBase
             {
                 for (int i = 0; i < primaryKey.Count; i++)
                 {
-                    filter.Where(primaryKey[i], OperatorType.Equal, primaryKeys[i]);
+                    filter.Where(primaryKey[i].ColumnName, OperatorType.Equal, primaryKeys[i]);
                 }
             }
             else
             {
                 Type entityType = typeof(T);
+
                 foreach (var primary in primaryKey)
                 {
-                    PropertyInfo proper = null;
-                    if (custAttribute != null)
-                    {
-                        foreach (string key in custAttribute.MetaData.PropertyDataConfig.Keys)
-                        {
-                            if (custAttribute.MetaData.PropertyDataConfig[key].ColumnName == primary)
-                            {//属性名
-                                proper = entityType.GetProperty(key);
-                                break;
-                            }
-                        }
-                    }
-                    if (proper == null)
-                        proper = entityType.GetProperty(primary);
+                    PropertyInfo proper = entityType.GetProperty(primary.PropertyName);
                     if (proper != null && proper.CanRead)
                     {
-                        filter.Where(primary, OperatorType.Equal, proper.GetValue(item, null));
+                        filter.Where(primary.ColumnName, OperatorType.Equal, proper.GetValue(item, null));
                     }
                 }
             }
-            return Update<T>(item, filter);
+            return Update(item, filter);
 
         }
 

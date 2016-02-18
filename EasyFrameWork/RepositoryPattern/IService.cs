@@ -15,6 +15,7 @@ namespace Easy.RepositoryPattern
         void Add(T item);
         int Delete(params object[] primaryKeys);
         int Delete(DataFilter filter);
+        int Delete(T item);
         bool Update(T item, DataFilter filter);
         bool Update(T item, params object[] primaryKeys);
         long Count(DataFilter filter);

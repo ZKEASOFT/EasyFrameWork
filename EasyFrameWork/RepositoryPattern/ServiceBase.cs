@@ -61,23 +61,6 @@ namespace Easy.RepositoryPattern
         }
         public virtual void Add(T item)
         {
-            if (item is EditorEntity)
-            {
-                EditorEntity entity = item as EditorEntity;
-                if (ApplicationContext != null && ApplicationContext.CurrentUser != null)
-                {
-                    if (string.IsNullOrEmpty(entity.CreateBy))
-                        entity.CreateBy = ApplicationContext.CurrentUser.UserID;
-                    if (string.IsNullOrEmpty(entity.CreatebyName))
-                        entity.CreatebyName = ApplicationContext.CurrentUser.UserName;
-                    if (string.IsNullOrEmpty(entity.LastUpdateBy))
-                        entity.LastUpdateBy = ApplicationContext.CurrentUser.UserID;
-                    if (string.IsNullOrEmpty(entity.LastUpdateByName))
-                        entity.LastUpdateByName = ApplicationContext.CurrentUser.UserName;
-                }
-                entity.CreateDate = DateTime.Now;
-                entity.LastUpdateDate = DateTime.Now;
-            }
             Repository.Add(item);
         }
         public virtual int Delete(params object[] primaryKeys)
@@ -88,36 +71,16 @@ namespace Easy.RepositoryPattern
         {
             return Repository.Delete(filter);
         }
+        public virtual int Delete(T item)
+        {
+            return Repository.Delete(item);
+        }
         public virtual bool Update(T item, DataFilter filter)
         {
-            if (item is EditorEntity)
-            {
-                EditorEntity entity = item as EditorEntity;
-                if (ApplicationContext != null && ApplicationContext.CurrentUser != null)
-                {
-                    if (string.IsNullOrEmpty(entity.LastUpdateBy))
-                        entity.LastUpdateBy = ApplicationContext.CurrentUser.UserID;
-                    if (string.IsNullOrEmpty(entity.LastUpdateByName))
-                        entity.LastUpdateByName = ApplicationContext.CurrentUser.UserName;
-                }
-                entity.LastUpdateDate = DateTime.Now;
-            }
             return Repository.Update(item, filter);
         }
         public virtual bool Update(T item, params object[] primaryKeys)
         {
-            if (item is EditorEntity)
-            {
-                EditorEntity entity = item as EditorEntity;
-                if (ApplicationContext != null && ApplicationContext.CurrentUser != null)
-                {
-                    if (string.IsNullOrEmpty(entity.LastUpdateBy))
-                        entity.LastUpdateBy = ApplicationContext.CurrentUser.UserID;
-                    if (string.IsNullOrEmpty(entity.LastUpdateByName))
-                        entity.LastUpdateByName = ApplicationContext.CurrentUser.UserName;
-                }
-                entity.LastUpdateDate = DateTime.Now;
-            }
             return Repository.Update(item, primaryKeys);
         }
         public virtual long Count(DataFilter filter)

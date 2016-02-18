@@ -20,7 +20,7 @@ namespace Easy.MetaData
     /// 数据元数据特性
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public abstract class DataViewMetaData<T> : IDataViewMetaData
+    public abstract class DataViewMetaData<T> : IDataViewMetaData where T : class
     {
         public DataViewMetaData()
         {
@@ -153,9 +153,16 @@ namespace Easy.MetaData
             get { return _dataRelations; }
             set { _dataRelations = value; }
         }
-        public List<string> Primarykey
+        public List<PrimaryKey> Primarykey
         {
-            get { return PropertyDataConfig.Where(item => item.Value.IsPrimaryKey).ToList(m => m.Value.ColumnName); }
+            get
+            {
+                return PropertyDataConfig.Where(item => item.Value.IsPrimaryKey).ToList(m => new PrimaryKey
+                    {
+                        ColumnName = m.Value.ColumnName,
+                        PropertyName = m.Value.PropertyName
+                    });
+            }
         }
 
         public Dictionary<string, PropertyInfo> Properties
@@ -228,7 +235,7 @@ namespace Easy.MetaData
         /// </summary>
         /// <param name="expression"></param>
         /// <returns></returns>
-        protected PropertyDataInfoHelper DataConfig(Expression<Func<T, object>> expression)
+        protected PropertyDataInfoHelper<T> DataConfig(Expression<Func<T, object>> expression)
         {
             string key = Common.GetLinqExpressionText(expression);
             return DataConfig(key);
@@ -238,7 +245,7 @@ namespace Easy.MetaData
         /// </summary>
         /// <param name="property">实体字段名称</param>
         /// <returns></returns>
-        protected PropertyDataInfoHelper DataConfig(string property)
+        protected PropertyDataInfoHelper<T> DataConfig(string property)
         {
             PropertyDataInfo data;
             if (PropertyDataConfig.ContainsKey(property))
@@ -251,7 +258,7 @@ namespace Easy.MetaData
                 PropertyDataConfig.Add(property, data);
             }
             data.Ignore = false;
-            return new PropertyDataInfoHelper(data, this);
+            return new PropertyDataInfoHelper<T>(data, this);
         }
         /// <summary>
         /// 数据表名称

@@ -14,9 +14,7 @@ namespace MvcApplication
         public override void Application_Starting()
         {
 
-            ContainerAdapter.RegisterType<IApplicationContext, ApplicationContext>(DependencyLifeTime.PerRequest);
 
-            ContainerAdapter.RegisterType<IUserService, UserService>();
             TaskManager
                 .Include<ConfigTask>()
                 .Include<ResourceTask>();

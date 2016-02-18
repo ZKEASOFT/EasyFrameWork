@@ -23,7 +23,9 @@ namespace MvcApplication.Controllers
 
         public override ActionResult Index()
         {
-            var s = Service.Get(new DataFilter().Where("Id", OperatorType.In, new[] { 1, 2 }));
+            var s = Service.Get(129);
+            Service.Delete(s);
+            
             return base.Index();
         }
 

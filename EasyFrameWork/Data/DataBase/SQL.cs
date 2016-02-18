@@ -59,7 +59,7 @@ namespace Easy.Data.DataBase
             var primaryKey = GetPrimaryKeys(custAttribute);
             foreach (var item in primaryKey)
             {
-                filter.OrderBy(item, OrderType.Ascending);
+                filter.OrderBy(item.ColumnName, OrderType.Ascending);
             }
             string orderby = filter.GetOrderString();
             StringBuilder builder = new StringBuilder();

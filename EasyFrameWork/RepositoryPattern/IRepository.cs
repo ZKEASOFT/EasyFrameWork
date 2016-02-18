@@ -9,6 +9,7 @@ namespace Easy.RepositoryPattern
         void Add(T item);
         int Delete(DataFilter filter);
         int Delete(params object[] primaryKeys);
+        int Delete(T item);
         IEnumerable<T> Get(DataFilter filter);
         IEnumerable<T> Get(DataFilter filter, Pagination pagin);
         T Get(params object[] primaryKeys);

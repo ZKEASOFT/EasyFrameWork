@@ -60,7 +60,7 @@ namespace Easy.Web.Controller
             object[] primaryKeys = new object[primaryKey.Count];
             for (int i = 0; i < primaryKey.Count; i++)
             {
-                primaryKeys[i] = Reflection.ClassAction.GetPropertyValue<TEntity>(entity, primaryKey[i]);
+                primaryKeys[i] = Reflection.ClassAction.GetPropertyValue(entity, primaryKey[i].PropertyName);
             }
             return primaryKeys;
         }
@@ -122,7 +122,7 @@ namespace Easy.Web.Controller
             {
                 string[] id = ids.Split(',');
                 List<object> listIds = new List<object>();
-                string primary = DataConfigureAttribute.GetAttribute<TEntity>().MetaData.Primarykey[0];
+                string primary = DataConfigureAttribute.GetAttribute<TEntity>().MetaData.Primarykey[0].ColumnName;
 
                 bool isString = typeof(TEntity).GetProperty(primary).PropertyType.Name.ToLower().Equals("string");
                 foreach (string item in id)

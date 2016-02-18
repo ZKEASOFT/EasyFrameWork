@@ -14,12 +14,13 @@ namespace MvcApplication.Models
 
         protected override void DataConfigure()
         {
-            
+            DataTable("ExampleItem");
+            DataConfig(m => m.ID).AsIncreasePrimaryKey();
         }
 
         protected override void ViewConfigure()
         {
-            
+
         }
     }
 
