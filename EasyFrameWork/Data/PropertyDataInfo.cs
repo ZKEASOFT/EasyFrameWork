@@ -62,7 +62,7 @@ namespace Easy.Data
         public string TableAlias { get; set; }
         public DbType ColumnType { get; set; }
         public int StringLength { get; set; }
-
+        public bool IsReference { get; set; }
         public Func<object, IEnumerable> GetReference { get; set; }
         public Action<object> UpdateReference { get; set; }
         public Action<object, object> AddReference { get; set; }
@@ -180,37 +180,37 @@ namespace Easy.Data
             return this;
         }
 
-        public PropertyDataInfoHelper<T> SetReference<CT, S>(Func<T, DataFilter> filter, Action<T, CT> setReference)
-            where CT : class
-            where S : IService<CT>
+        public PropertyDataInfoHelper<T> SetReference<TEntity, TService>(Func<T, DataFilter> filter, Func<T, TEntity, TEntity> setReference)
+            where TEntity : class
+            where TService : IService<TEntity>
         {
             Ignore();
-
+            _dataConig.IsReference = true;
             _dataConig.AddReference = (t, ct) =>
             {
-                _referenceService = _referenceService ?? ServiceLocator.Current.GetInstance(typeof(S));
-                var service = _referenceService as IService<CT>;
+                _referenceService = _referenceService ?? ServiceLocator.Current.GetInstance(typeof(TService));
+                var service = _referenceService as IService<TEntity>;
                 if (service != null)
                 {
-                    setReference(t as T, ct as CT);
-                    service.Add(ct as CT);
+                    ct = setReference(t as T, ct as TEntity);
+                    service.Add((TEntity)ct);
                 }
             };
 
             _dataConig.DeleteReference = obj =>
             {
-                _referenceService = _referenceService ?? ServiceLocator.Current.GetInstance(typeof(S));
-                var service = _referenceService as IService<CT>;
+                _referenceService = _referenceService ?? ServiceLocator.Current.GetInstance(typeof(TService));
+                var service = _referenceService as IService<TEntity>;
                 if (service != null)
                 {
-                    service.Delete(obj as CT);
+                    service.Delete(obj as TEntity);
                 }
             };
 
             _dataConig.GetReference = obj =>
             {
-                _referenceService = _referenceService ?? ServiceLocator.Current.GetInstance(typeof(S));
-                var service = _referenceService as IService<CT>;
+                _referenceService = _referenceService ?? ServiceLocator.Current.GetInstance(typeof(TService));
+                var service = _referenceService as IService<TEntity>;
                 if (service != null)
                     return service.Get(filter(obj as T));
                 return null;
@@ -218,14 +218,15 @@ namespace Easy.Data
 
             _dataConig.UpdateReference = obj =>
             {
-                _referenceService = _referenceService ?? ServiceLocator.Current.GetInstance(typeof(S));
-                var service = _referenceService as IService<CT>;
+                _referenceService = _referenceService ?? ServiceLocator.Current.GetInstance(typeof(TService));
+                var service = _referenceService as IService<TEntity>;
                 if (service != null)
                 {
-                    service.Update(obj as CT);
+                    service.Update(obj as TEntity);
                 }
             };
             return this;
         }
+
     }
 }

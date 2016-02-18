@@ -29,9 +29,10 @@ namespace MvcApplication.Models
             DataConfig(m => m.Title).Ignore();
             DataConfig(m => m.Items)
                 .SetReference<ExampleItem, IExampleItemService>(m =>new DataFilter().Where("ExampleID", OperatorType.Equal, m.Id),
-                (e, t) =>
+                (example, exampleItem) =>
                 {
-                    t.ExampleID = e.Id;
+                    exampleItem.ExampleID = example.Id;
+                    return exampleItem;
                 });
         }
 

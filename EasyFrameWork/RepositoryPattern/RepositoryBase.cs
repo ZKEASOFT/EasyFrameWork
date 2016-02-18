@@ -5,6 +5,7 @@ using System.Configuration;
 using System.Data;
 using System.Linq;
 using System.Text;
+using Easy.Constant;
 using Easy.Data.DataBase;
 using Easy.Data;
 using Easy.Extend;
@@ -142,19 +143,39 @@ namespace Easy.RepositoryPattern
                 if (_dataConfigure.MetaData.PropertyDataConfig.ContainsKey(m.Key))
                 {
                     var dataInfo = _dataConfigure.MetaData.PropertyDataConfig[m.Key];
-                    if (dataInfo.AddReference != null)
+                    if (dataInfo.IsReference)
                     {
                         var value = m.Value.GetValue(item, null);
                         if (value is IEnumerable)
                         {
                             foreach (var valueItem in value as IEnumerable)
                             {
-                                dataInfo.AddReference(item, valueItem);
+                                if (valueItem is EditorEntity)
+                                {
+                                    if ((valueItem as EditorEntity).ActionType == ActionType.Create)
+                                    {
+                                        dataInfo.AddReference(item, valueItem);
+                                    }
+                                }
+                                else
+                                {
+                                    dataInfo.AddReference(item, valueItem);
+                                }
                             }
                         }
                         else
                         {
-                            dataInfo.AddReference(item, value);
+                            if (value is EditorEntity)
+                            {
+                                if ((value as EditorEntity).ActionType == ActionType.Create)
+                                {
+                                    dataInfo.AddReference(item, value);
+                                }
+                            }
+                            else
+                            {
+                                dataInfo.AddReference(item, value);
+                            }
                         }
                     }
                 }
@@ -167,7 +188,7 @@ namespace Easy.RepositoryPattern
                 if (_dataConfigure.MetaData.PropertyDataConfig.ContainsKey(m.Key))
                 {
                     var dataInfo = _dataConfigure.MetaData.PropertyDataConfig[m.Key];
-                    if (dataInfo.DeleteReference != null)
+                    if (dataInfo.IsReference)
                     {
                         var value = m.Value.GetValue(item, null);
                         if (value is IEnumerable)
@@ -192,7 +213,7 @@ namespace Easy.RepositoryPattern
                 if (_dataConfigure.MetaData.PropertyDataConfig.ContainsKey(m.Key))
                 {
                     var dataInfo = _dataConfigure.MetaData.PropertyDataConfig[m.Key];
-                    if (dataInfo.GetReference != null)
+                    if (dataInfo.IsReference)
                     {
                         var value = dataInfo.GetReference(item);
                         if (_iEnumerableType.IsAssignableFrom(m.Value.PropertyType))
@@ -220,20 +241,48 @@ namespace Easy.RepositoryPattern
                 {
                     var dataInfo = _dataConfigure.MetaData.PropertyDataConfig[m.Key];
 
-                    if (dataInfo.UpdateReference != null)
+                    if (dataInfo.IsReference)
                     {
-                        //add and delete
                         var value = m.Value.GetValue(item, null);
                         if (value is IEnumerable)
                         {
                             foreach (var valueItem in value as IEnumerable)
                             {
-                                dataInfo.UpdateReference(valueItem);
+                                if (valueItem is EditorEntity)
+                                {
+                                    if ((valueItem as EditorEntity).ActionType == ActionType.Update)
+                                    {
+                                        dataInfo.UpdateReference(valueItem);
+                                    }
+                                    else if ((valueItem as EditorEntity).ActionType == ActionType.Create)
+                                    {
+                                        dataInfo.AddReference(item, valueItem);
+                                    }
+                                    else if ((valueItem as EditorEntity).ActionType == ActionType.Delete)
+                                    {
+                                        dataInfo.DeleteReference(valueItem);
+                                    }
+                                }
+                                else
+                                {
+                                    dataInfo.UpdateReference(valueItem);
+                                }
+
                             }
                         }
                         else
                         {
-                            dataInfo.UpdateReference(value);
+                            if (value is EditorEntity)
+                            {
+                                if ((value as EditorEntity).ActionType == ActionType.Create)
+                                {
+                                    dataInfo.AddReference(item, value);
+                                }
+                            }
+                            else
+                            {
+                                dataInfo.AddReference(item, value);
+                            }
                         }
                     }
                 }
