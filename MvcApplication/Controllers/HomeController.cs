@@ -23,6 +23,8 @@ namespace MvcApplication.Controllers
 
         public override ActionResult Index()
         {
+            var entity = Service.Get(1);
+            Service.Add(entity);
             return base.Index();
         }
 

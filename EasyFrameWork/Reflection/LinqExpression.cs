@@ -53,24 +53,39 @@ namespace Easy.Reflection
             {
                 right = expression.Right;
             }
-            if (expression.NodeType == ExpressionType.Equal && left is MemberExpression && right is MemberExpression)
+            if (expression.NodeType == ExpressionType.Equal)
             {
-                MemberExpression memberLeft = (MemberExpression)left;
-                MemberExpression memberRight = (MemberExpression)right;
-                if (memberLeft.Member.ReflectedType == fromType)
+                Func<Expression, string> propertyHandle = exp =>
                 {
-                    var value = fromType.GetProperty(memberLeft.Member.Name).GetValue(from, null);
-                    if (value != null)
+                    if (exp is MemberExpression && (exp as MemberExpression).Member.ReflectedType == toType)
                     {
-                        toType.GetProperty(memberRight.Member.Name).SetValue(to, value, null);
+                        return (left as MemberExpression).Member.Name;
                     }
-                }
-                else if (memberLeft.Member.ReflectedType == toType)
+                    return null;
+                };
+                Func<Expression, object> valueHandle = exp =>
                 {
-                    var value = fromType.GetProperty(memberRight.Member.Name).GetValue(from, null);
+                    if (exp is MemberExpression && (exp as MemberExpression).Member.ReflectedType == fromType)
+                    {
+                        return ClassAction.GetPropertyValue(from, (exp as MemberExpression).Member.Name);
+                    }
+                    if (exp.NodeType == ExpressionType.Constant)
+                    {
+                        return ((ConstantExpression)exp).Value;
+                    }
+                    if (exp.NodeType == ExpressionType.Call)
+                    {
+                        return Expression.Lambda(exp).Compile().DynamicInvoke();
+                    }
+                    return null;
+                };
+                string propertyName = propertyHandle(left) ?? propertyHandle(right);
+                if (propertyName != null)
+                {
+                    object value = valueHandle(left) ?? valueHandle(right);
                     if (value != null)
                     {
-                        toType.GetProperty(memberLeft.Member.Name).SetValue(to, value, null);
+                        toType.GetProperty(propertyName).SetValue(to, value, null);
                     }
                 }
             }
