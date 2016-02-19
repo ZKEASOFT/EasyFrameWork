@@ -98,10 +98,9 @@ namespace Easy.Data
         /// </summary>
         /// <param name="canUpdate"></param>
         /// <returns></returns>
-        public PropertyDataInfoHelper<T> Update(bool? canUpdate = false)
+        public PropertyDataInfoHelper<T> Update(bool canUpdate )
         {
-            bool update = canUpdate ?? false;
-            _dataConig.CanUpdate = update;
+            _dataConig.CanUpdate = canUpdate;
             return this;
         }
         /// <summary>
@@ -109,10 +108,9 @@ namespace Easy.Data
         /// </summary>
         /// <param name="canInsert"></param>
         /// <returns></returns>
-        public PropertyDataInfoHelper<T> Insert(bool? canInsert = false)
+        public PropertyDataInfoHelper<T> Insert(bool canInsert)
         {
-            bool insert = canInsert ?? false;
-            _dataConig.CanInsert = insert;
+            _dataConig.CanInsert = canInsert;
             return this;
         }
         /// <summary>

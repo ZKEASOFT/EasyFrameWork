@@ -21,10 +21,10 @@ namespace Easy.Modules.MutiLanguage
         protected override void DataConfigure()
         {
             DataTable("Language");
-            DataConfig(m => m.LanKey).Update().AsPrimaryKey();
-            DataConfig(m => m.LanID).Update().AsPrimaryKey();
-            DataConfig(m => m.LanType).Update();
-            DataConfig(m => m.Module).Update();
+            DataConfig(m => m.LanKey).Update(false).AsPrimaryKey();
+            DataConfig(m => m.LanID).Update(false).AsPrimaryKey();
+            DataConfig(m => m.LanType).Update(false);
+            DataConfig(m => m.Module).Update(false);
         }
 
         protected override void ViewConfigure()

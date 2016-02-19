@@ -96,9 +96,9 @@ namespace Easy.MetaData
                 ViewConfig("Description").AsMutiLineTextBox().SetColumnWidth(250).Order(101);
                 ViewConfig("Status").AsDropDownList().DataSource(DicKeys.RecordStatus, SourceType.Dictionary).SetColumnWidth(70);
 
-                DataConfig("CreateBy").Update();
-                DataConfig("CreatebyName").Update();
-                DataConfig("CreateDate").Update();
+                DataConfig("CreateBy").Update(false);
+                DataConfig("CreatebyName").Update(false);
+                DataConfig("CreateDate").Update(false);
                 DataConfig("ActionType").Ignore();
             }
             if (typeof(IImage).IsAssignableFrom(TargetType))
