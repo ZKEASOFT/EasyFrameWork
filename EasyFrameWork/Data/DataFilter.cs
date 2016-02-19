@@ -27,6 +27,16 @@ namespace Easy.Data
             Init();
             this.UpdateProperties = updateProperties;
         }
+
+        public DataFilter(string condition, List<KeyValuePair<string, object>> objParams)
+        {
+            Init();
+            _condition = condition;
+            _objParams = objParams;
+        }
+
+        private readonly string _condition;
+        private readonly List<KeyValuePair<string, object>> _objParams;
         public List<string> UpdateProperties { get; set; }
 
         public List<ConditionGroup> ConditionGroups
@@ -55,18 +65,7 @@ namespace Easy.Data
         {
             return Where(new Condition(property, operatorType, value));
         }
-        public DataFilter Where<T>(Expression<Func<T, object>> expression, OperatorType operatorType, object value)
-        {
-            string property = Common.GetLinqExpressionText(expression);
-            DataConfigureAttribute attribute = DataConfigureAttribute.GetAttribute<T>();
-            if (attribute != null && attribute.MetaData.PropertyDataConfig.ContainsKey(property))
-            {
-                string propertyMap = attribute.MetaData.PropertyDataConfig[property].ColumnName;
-                if (!string.IsNullOrEmpty(propertyMap))
-                    property = propertyMap;
-            }
-            return Where(new Condition(property, operatorType, value));
-        }
+
         public DataFilter Where(string condition)
         {
             return Where(new Condition(condition, ConditionType.And));
@@ -121,6 +120,15 @@ namespace Easy.Data
                     builder.Append(Conditions[i]);
                 }
             }
+            if (_condition.IsNotNullAndWhiteSpace())
+            {
+                if (builder.Length > 0)
+                {
+                    builder.Append(" AND ");
+                }
+
+                builder.Append(_condition);
+            }
             return builder.ToString();
         }
         public string GetOrderString()
@@ -171,8 +179,11 @@ namespace Easy.Data
                         values.Add(kv);
                     }
                 });
-
             });
+            if (_objParams != null)
+            {
+                _objParams.Each(m => values.Add(m));
+            }
             return values;
         }
     }

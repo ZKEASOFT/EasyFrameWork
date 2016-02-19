@@ -23,9 +23,6 @@ namespace MvcApplication.Controllers
 
         public override ActionResult Index()
         {
-            var s = Service.Get(129);
-            Service.Delete(s);
-            
             return base.Index();
         }
 

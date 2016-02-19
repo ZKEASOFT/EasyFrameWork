@@ -1,6 +1,7 @@
 ﻿using System;
 using Easy.Data;
 using System.Collections.Generic;
+using System.Linq.Expressions;
 using Easy.IOC;
 
 namespace Easy.RepositoryPattern
@@ -9,6 +10,7 @@ namespace Easy.RepositoryPattern
     {
         T Get(params object[] primaryKeys);
         IEnumerable<T> Get();
+        IEnumerable<T> Get(Expression<Func<T, bool>> exception);
         IEnumerable<T> Get(DataFilter filter);
         IEnumerable<T> Get(DataFilter filter, Pagination pagin);
         IEnumerable<T> Get(string property, OperatorType operatorType, object value);

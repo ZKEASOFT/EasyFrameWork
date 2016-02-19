@@ -28,12 +28,7 @@ namespace MvcApplication.Models
             DataConfig(m => m.Value).Mapper("ValueText");
             DataConfig(m => m.Title).Ignore();
             DataConfig(m => m.Items)
-                .SetReference<ExampleItem, IExampleItemService>(m =>new DataFilter().Where("ExampleID", OperatorType.Equal, m.Id),
-                (example, exampleItem) =>
-                {
-                    exampleItem.ExampleID = example.Id;
-                    return exampleItem;
-                });
+                .SetReference<ExampleItem, IExampleItemService>((example, exampleItem) => example.Id == exampleItem.ExampleID);
         }
 
         protected override void ViewConfigure()

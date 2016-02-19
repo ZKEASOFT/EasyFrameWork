@@ -20,7 +20,7 @@ namespace Easy.HTML.Grid
             }
             public void Add(Expression<Func<T, object>> expression, string TemplateString)
             {
-                string key = Common.GetLinqExpressionText(expression);
+                string key = Reflection.LinqExpression.GetPropertyName(expression.Body);
                 TemplateString = TemplateString.Replace("\"", "\\\"");
                 if (_templates.ContainsKey(key))
                 {
@@ -128,12 +128,12 @@ namespace Easy.HTML.Grid
         /// <summary>
         /// 显示Checkbox
         /// </summary>
-        /// <param name="expresstion"></param>
+        /// <param name="expression"></param>
         /// <returns></returns>
-        public EasyGrid<T> ShowCheckbox(Expression<Func<T, object>> expresstion)
+        public EasyGrid<T> ShowCheckbox(Expression<Func<T, object>> expression)
         {
             showCheckbox = true;
-            checkBoxCol = Common.GetLinqExpressionText(expresstion);
+            checkBoxCol = Reflection.LinqExpression.GetPropertyName(expression.Body);
             return this;
         }
         /// <summary>
@@ -159,12 +159,12 @@ namespace Easy.HTML.Grid
         /// <summary>
         /// 默认排序
         /// </summary>
-        /// <param name="expresstion"></param>
+        /// <param name="expression"></param>
         /// <param name="orderType"></param>
         /// <returns></returns>
-        public EasyGrid<T> OrderBy(Expression<Func<T, object>> expresstion, OrderType orderType)
+        public EasyGrid<T> OrderBy(Expression<Func<T, object>> expression, OrderType orderType)
         {
-            string property = Common.GetLinqExpressionText(expresstion);
+            string property = Reflection.LinqExpression.GetPropertyName(expression.Body);
             if (orderBy.ContainsKey(property))
             {
                 orderBy[property] = (int)orderType;

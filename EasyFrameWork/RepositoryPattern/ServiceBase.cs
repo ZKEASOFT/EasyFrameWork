@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Diagnostics;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using Microsoft.Practices.ServiceLocation;
 using System.Transactions;
@@ -46,6 +47,11 @@ namespace Easy.RepositoryPattern
         public virtual IEnumerable<T> Get()
         {
             return Repository.Get(new DataFilter());
+        }
+
+        public virtual IEnumerable<T> Get(Expression<Func<T, bool>> exception)
+        {
+            return Get(Reflection.LinqExpression.ConvertToDataFilter((BinaryExpression)exception.Body));
         }
         public virtual IEnumerable<T> Get(DataFilter filter)
         {

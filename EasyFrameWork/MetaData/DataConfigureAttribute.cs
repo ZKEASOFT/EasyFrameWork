@@ -80,7 +80,7 @@ namespace Easy.MetaData
         }
         public HTML.Tags.HtmlTagBase GetHtmlTag<T>(System.Linq.Expressions.Expression<Func<T, object>> expression)
         {
-            string property = Common.GetLinqExpressionText(expression);
+            string property = Reflection.LinqExpression.GetPropertyName(expression.Body);
             return GetHtmlTag(property);
         }
         /// <summary>

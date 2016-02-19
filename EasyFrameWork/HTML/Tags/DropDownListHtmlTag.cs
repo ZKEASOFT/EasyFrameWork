@@ -219,9 +219,9 @@ namespace Easy.HTML.Tags
             }
             return this;
         }
-        public DropDownListHtmlTag EffectTo<T>(Expression<Func<T, object>> ex)
+        public DropDownListHtmlTag EffectTo<T>(Expression<Func<T, object>> expression)
         {
-            this.EffectTo(Common.GetLinqExpressionText(ex));
+            this.EffectTo(Reflection.LinqExpression.GetPropertyName(expression.Body));
             return this;
         }
 

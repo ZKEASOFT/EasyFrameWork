@@ -211,11 +211,11 @@ namespace Easy.MetaData
         /// <summary>
         /// 视图配置，界面显示
         /// </summary>
-        /// <param name="ex"></param>
+        /// <param name="expression"></param>
         /// <returns></returns>
-        protected TagsHelper ViewConfig(Expression<Func<T, object>> ex)
+        protected TagsHelper ViewConfig(Expression<Func<T, object>> expression)
         {
-            string key = Common.GetLinqExpressionText(ex);
+            string key = Reflection.LinqExpression.GetPropertyName(expression.Body);
             return ViewConfig(key);
         }
         /// <summary>
@@ -237,7 +237,7 @@ namespace Easy.MetaData
         /// <returns></returns>
         protected PropertyDataInfoHelper<T> DataConfig(Expression<Func<T, object>> expression)
         {
-            string key = Common.GetLinqExpressionText(expression);
+            string key = Reflection.LinqExpression.GetPropertyName(expression.Body);
             return DataConfig(key);
         }
         /// <summary>

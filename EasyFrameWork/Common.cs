@@ -14,17 +14,6 @@ namespace Easy
 {
     public static class Common
     {
-        public static string GetLinqExpressionText(Expression ex)
-        {
-            switch (ex.NodeType)
-            {
-                case ExpressionType.Lambda:
-                    {
-                        return ex.ToString().Split('.')[1].Replace(")", "");
-                    }
-                default: return "NoName";
-            }
-        }
         public static Dictionary<string, string> GetEmum<T>()
         {
             Dictionary<string, string> result = new Dictionary<string, string>();

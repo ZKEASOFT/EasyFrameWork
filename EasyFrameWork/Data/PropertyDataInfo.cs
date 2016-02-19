@@ -4,6 +4,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using Easy.RepositoryPattern;
 using Microsoft.Practices.ServiceLocation;
@@ -180,20 +181,20 @@ namespace Easy.Data
             return this;
         }
 
-        public PropertyDataInfoHelper<T> SetReference<TEntity, TService>(Func<T, DataFilter> filter, Func<T, TEntity, TEntity> setReference)
+        public PropertyDataInfoHelper<T> SetReference<TEntity, TService>(Expression<Func<T, TEntity, bool>> relation)
             where TEntity : class
             where TService : IService<TEntity>
         {
             Ignore();
             _dataConig.IsReference = true;
-            _dataConig.AddReference = (t, ct) =>
+            _dataConig.AddReference = (item, childItem) =>
             {
                 _referenceService = _referenceService ?? ServiceLocator.Current.GetInstance(typeof(TService));
                 var service = _referenceService as IService<TEntity>;
                 if (service != null)
                 {
-                    ct = setReference(t as T, ct as TEntity);
-                    service.Add((TEntity)ct);
+                    Reflection.LinqExpression.CopyTo(item, childItem, relation.Body as BinaryExpression);
+                    service.Add((TEntity)childItem);
                 }
             };
 
@@ -212,7 +213,7 @@ namespace Easy.Data
                 _referenceService = _referenceService ?? ServiceLocator.Current.GetInstance(typeof(TService));
                 var service = _referenceService as IService<TEntity>;
                 if (service != null)
-                    return service.Get(filter(obj as T));
+                    return service.Get(Reflection.LinqExpression.ConvertToDataFilter(relation.Body as BinaryExpression, obj));
                 return null;
             };
 

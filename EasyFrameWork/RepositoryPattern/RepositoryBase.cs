@@ -28,7 +28,7 @@ namespace Easy.RepositoryPattern
         }
         public RepositoryBase()
         {
-            string dataBase = System.Configuration.ConfigurationManager.AppSettings[DataBasic.DataBaseAppSetingKey];
+            string dataBase = ConfigurationManager.AppSettings[DataBasic.DataBaseAppSetingKey];
             DataBase = ServiceLocator.Current.GetAllInstances<DataBasic>().FirstOrDefault(m => m.DataBaseTypeNames().Any(n => n == dataBase)) ?? new Sql();
             ApplicationContext = ServiceLocator.Current.GetInstance<IApplicationContext>();
             _dataConfigure = DataConfigureAttribute.GetAttribute<T>();
@@ -71,14 +71,14 @@ namespace Easy.RepositoryPattern
                 entity.LastUpdateDate = DateTime.Now;
             }
             DataBase.Add(item);
-            AddReference(item);
+            SaveReference(item, ActionType.Create);
         }
         public virtual int Delete(params object[] primaryKeys)
         {
             var item = Get(primaryKeys);
             if (item != null)
             {
-                DeleteReference(item);
+                SaveReference(item, ActionType.Delete);
             }
             return DataBase.Delete<T>(primaryKeys);
         }
@@ -94,7 +94,7 @@ namespace Easy.RepositoryPattern
         }
         public virtual int Delete(DataFilter filter)
         {
-            Get(filter).Each(DeleteReference);
+            Get(filter).Each(m => { SaveReference(m, ActionType.Delete); });
             return DataBase.Delete<T>(filter);
         }
         public virtual bool Update(T item, DataFilter filter)
@@ -111,7 +111,7 @@ namespace Easy.RepositoryPattern
                 }
                 entity.LastUpdateDate = DateTime.Now;
             }
-            UpdateReference(item);
+            SaveReference(item, ActionType.Update);
             return DataBase.Update(item, filter);
         }
         public virtual bool Update(T item, params object[] primaryKeys)
@@ -128,7 +128,7 @@ namespace Easy.RepositoryPattern
                 }
                 entity.LastUpdateDate = DateTime.Now;
             }
-            UpdateReference(item);
+            SaveReference(item, ActionType.Update);
             return DataBase.Update(item, primaryKeys);
         }
         public virtual long Count(DataFilter filter)
@@ -136,53 +136,51 @@ namespace Easy.RepositoryPattern
             return DataBase.Count<T>(filter);
         }
 
-        private void AddReference(T item)
+        private void SaveReference(T item, ActionType actionType)
         {
-            _dataConfigure.MetaData.Properties.Each(m =>
+            Action<PropertyDataInfo, T, object, ActionType> opeartorChoose = (propertyDataInfo, entity, childEntity, action) =>
             {
-                if (_dataConfigure.MetaData.PropertyDataConfig.ContainsKey(m.Key))
+                switch (action)
                 {
-                    var dataInfo = _dataConfigure.MetaData.PropertyDataConfig[m.Key];
-                    if (dataInfo.IsReference)
-                    {
-                        var value = m.Value.GetValue(item, null);
-                        if (value is IEnumerable)
+                    case ActionType.Create:
                         {
-                            foreach (var valueItem in value as IEnumerable)
+                            if (!(childEntity is EditorEntity) || ((EditorEntity)childEntity).ActionType == ActionType.Create)
                             {
-                                if (valueItem is EditorEntity)
-                                {
-                                    if ((valueItem as EditorEntity).ActionType == ActionType.Create)
-                                    {
-                                        dataInfo.AddReference(item, valueItem);
-                                    }
-                                }
-                                else
-                                {
-                                    dataInfo.AddReference(item, valueItem);
-                                }
+                                propertyDataInfo.AddReference(entity, childEntity);
                             }
+                            break;
                         }
-                        else
+                    case ActionType.Update:
                         {
-                            if (value is EditorEntity)
+                            if (childEntity is EditorEntity)
                             {
-                                if ((value as EditorEntity).ActionType == ActionType.Create)
+                                var editor = (EditorEntity)childEntity;
+                                if (editor.ActionType == ActionType.Create)
                                 {
-                                    dataInfo.AddReference(item, value);
+                                    propertyDataInfo.AddReference(entity, childEntity);
+                                }
+                                else if (editor.ActionType == ActionType.Update)
+                                {
+                                    propertyDataInfo.UpdateReference(childEntity);
+                                }
+                                else if (editor.ActionType == ActionType.Delete)
+                                {
+                                    propertyDataInfo.DeleteReference(childEntity);
                                 }
                             }
                             else
                             {
-                                dataInfo.AddReference(item, value);
+                                propertyDataInfo.UpdateReference(childEntity);
                             }
+                            break;
                         }
-                    }
+                    case ActionType.Delete:
+                        {
+                            propertyDataInfo.DeleteReference(childEntity);
+                            break;
+                        }
                 }
-            });
-        }
-        private void DeleteReference(T item)
-        {
+            };
             _dataConfigure.MetaData.Properties.Each(m =>
             {
                 if (_dataConfigure.MetaData.PropertyDataConfig.ContainsKey(m.Key))
@@ -195,17 +193,18 @@ namespace Easy.RepositoryPattern
                         {
                             foreach (var valueItem in value as IEnumerable)
                             {
-                                dataInfo.DeleteReference(valueItem);
+                                opeartorChoose(dataInfo, item, valueItem, actionType);
                             }
                         }
                         else
                         {
-                            dataInfo.DeleteReference(value);
+                            opeartorChoose(dataInfo, item, value, actionType);
                         }
                     }
                 }
             });
         }
+
         private T GetReference(T item)
         {
             _dataConfigure.MetaData.Properties.Each(m =>
@@ -232,61 +231,6 @@ namespace Easy.RepositoryPattern
                 }
             });
             return item;
-        }
-        private void UpdateReference(T item)
-        {
-            _dataConfigure.MetaData.Properties.Each(m =>
-            {
-                if (_dataConfigure.MetaData.PropertyDataConfig.ContainsKey(m.Key))
-                {
-                    var dataInfo = _dataConfigure.MetaData.PropertyDataConfig[m.Key];
-
-                    if (dataInfo.IsReference)
-                    {
-                        var value = m.Value.GetValue(item, null);
-                        if (value is IEnumerable)
-                        {
-                            foreach (var valueItem in value as IEnumerable)
-                            {
-                                if (valueItem is EditorEntity)
-                                {
-                                    if ((valueItem as EditorEntity).ActionType == ActionType.Update)
-                                    {
-                                        dataInfo.UpdateReference(valueItem);
-                                    }
-                                    else if ((valueItem as EditorEntity).ActionType == ActionType.Create)
-                                    {
-                                        dataInfo.AddReference(item, valueItem);
-                                    }
-                                    else if ((valueItem as EditorEntity).ActionType == ActionType.Delete)
-                                    {
-                                        dataInfo.DeleteReference(valueItem);
-                                    }
-                                }
-                                else
-                                {
-                                    dataInfo.UpdateReference(valueItem);
-                                }
-
-                            }
-                        }
-                        else
-                        {
-                            if (value is EditorEntity)
-                            {
-                                if ((value as EditorEntity).ActionType == ActionType.Create)
-                                {
-                                    dataInfo.AddReference(item, value);
-                                }
-                            }
-                            else
-                            {
-                                dataInfo.AddReference(item, value);
-                            }
-                        }
-                    }
-                }
-            });
         }
     }
 }
