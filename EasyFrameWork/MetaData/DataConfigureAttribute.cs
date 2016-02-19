@@ -20,18 +20,17 @@ namespace Easy.MetaData
         }
         public DataConfigureAttribute(Type metaDataType)
         {
-            IDataViewMetaData metaData = Activator.CreateInstance(metaDataType) as IDataViewMetaData;
+            MetaData = Activator.CreateInstance(metaDataType) as IDataViewMetaData;
             //HTML标签的多语言
             if (Localization.IsMultiLanReady())
             {
-                Dictionary<string, string> lan = metaData.HtmlTags.ToDictionary(item => item.Key, item => item.Value.ModelType.Name + "@" + item.Key);
+                Dictionary<string, string> lan = MetaData.HtmlTags.ToDictionary(item => item.Key, item => item.Value.ModelType.Name + "@" + item.Key);
                 lan = Localization.InitLan(lan);
                 foreach (var item in lan)
                 {
-                    metaData.HtmlTags[item.Key].DisplayName = item.Value;
+                    MetaData.HtmlTags[item.Key].DisplayName = item.Value;
                 }
             }
-            MetaData = metaData;
         }
         /// <summary>
         /// 获取属性对表的映射

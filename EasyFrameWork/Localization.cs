@@ -14,7 +14,10 @@ namespace Easy
 
         static Localization()
         {
-            LanService = ServiceLocator.Current.GetInstance<ILanguageService>();
+            if (ServiceLocator.IsLocationProviderSet)
+            {
+                LanService = ServiceLocator.Current.GetInstance<ILanguageService>();
+            }
         }
 
         public static bool IsMultiLanReady()

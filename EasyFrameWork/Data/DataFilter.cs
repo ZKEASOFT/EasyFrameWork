@@ -66,14 +66,11 @@ namespace Easy.Data
             return Where(new Condition(property, operatorType, value));
         }
 
-        public DataFilter Where(string condition)
+        public DataFilter Where(string property, OperatorType operatorType, object value, ConditionType conditionType)
         {
-            return Where(new Condition(condition, ConditionType.And));
+            return Where(new Condition(property, operatorType, value, conditionType));
         }
-        public DataFilter Where(string condition, ConditionType conditionType)
-        {
-            return Where(new Condition(condition, conditionType));
-        }
+
         public DataFilter Where(ConditionGroup conditionGroup)
         {
             this.ConditionGroups.Add(conditionGroup);

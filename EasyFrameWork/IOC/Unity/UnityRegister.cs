@@ -14,7 +14,7 @@ namespace Easy.IOC.Unity
             _container = container;
             PublicTypes.Each(p =>
             {
-                if (p.IsClass && !p.IsAbstract && !p.IsInterface && !p.IsGenericType)
+                if (p != null && p.IsClass && !p.IsAbstract && !p.IsInterface && !p.IsGenericType)
                 {
                     if ((KnownTypes.DependencyType.IsAssignableFrom(p) ||
                         KnownTypes.EntityType.IsAssignableFrom(p)) && !KnownTypes.FreeDependencyType.IsAssignableFrom(p))

@@ -32,6 +32,14 @@ namespace Easy.Data
             this._valueKey = Guid.NewGuid().ToString("N");
         }
 
+        public Condition(string property, OperatorType operatorType, object value,ConditionType conditionType)
+        {
+            this.Property = property;
+            this.OperatorType = operatorType;
+            this.Value = value;
+            this.ConditionType = conditionType;
+            this._valueKey = Guid.NewGuid().ToString("N");
+        }
         public Condition(string condition, ConditionType conditionTyep)
         {
             this.ConditionString = condition;

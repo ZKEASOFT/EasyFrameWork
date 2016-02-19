@@ -161,16 +161,19 @@ namespace Easy.HTML.Tags
             this.SourceType = sourceType;
             if (sourceType == SourceType.Dictionary)
             {
-                IDataDictionaryService dicService = ServiceLocator.Current.GetInstance<IDataDictionaryService>();
-                if (dicService != null)
+                if (ServiceLocator.IsLocationProviderSet)
                 {
-                    if (this._data == null)
+                    IDataDictionaryService dicService = ServiceLocator.Current.GetInstance<IDataDictionaryService>();
+                    if (dicService != null)
                     {
-                        _data = new Dictionary<string, string>();
-                    }
-                    foreach (DataDictionaryEntity item in dicService.GetDictionaryByType(dictionaryType))
-                    {
-                        this._data.Add(item.ID.ToString(), item.Title);
+                        if (this._data == null)
+                        {
+                            _data = new Dictionary<string, string>();
+                        }
+                        foreach (DataDictionaryEntity item in dicService.GetDictionaryByType(dictionaryType))
+                        {
+                            this._data.Add(item.ID.ToString(), item.Title);
+                        }
                     }
                 }
             }
