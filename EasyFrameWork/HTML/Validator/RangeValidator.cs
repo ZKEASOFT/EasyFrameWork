@@ -9,7 +9,7 @@ namespace Easy.HTML.Validator
     {
         public RangeValidator(double min, double max)
         {
-            this.BaseErrorMessage = "{0}" + string.Format("的值范围应在{0}-{1}之间", min, max);
+            this.BaseErrorMessage = "{0}" + string.Format("的值范围应在{0}-{1}之间！", min, max);
             this.Min = min;
             this.Max = max;
         }

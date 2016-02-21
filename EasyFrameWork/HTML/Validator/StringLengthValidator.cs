@@ -11,11 +11,11 @@ namespace Easy.HTML.Validator
         {
             if (min > 0)
             {
-                this.BaseErrorMessage = "{0}的长度应大于" + min + "且小于" + max;
+                this.BaseErrorMessage = "{0}的长度应大于" + min + "且小于" + max + "！";
             }
             else
             {
-                this.BaseErrorMessage = "{0}的长度应小于" + max;
+                this.BaseErrorMessage = "{0}的长度应小于" + max + "！";
             }
             this.Max = max;
             this.Min = min;

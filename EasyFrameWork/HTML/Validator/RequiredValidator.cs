@@ -10,7 +10,7 @@ namespace Easy.HTML.Validator
     {
         public RequiredValidator()
         {
-            this.BaseErrorMessage = "{0} 不可空";
+            this.BaseErrorMessage = "{0}是必填的！";
         }
         public override bool Validate(object value)
         {

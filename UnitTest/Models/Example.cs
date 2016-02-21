@@ -28,7 +28,7 @@ namespace UnitTest.Models
             DataConfig(m => m.Value).Mapper("ValueText");
             DataConfig(m => m.Title).Ignore();
             DataConfig(m => m.Items)
-                .SetReference<ExampleItem, IExampleItemService>((example, exampleItem) => exampleItem.ExampleID == 1);
+                .SetReference<ExampleItem, IExampleItemService>((example, exampleItem) => exampleItem.ExampleID == example.Id);
         }
 
         protected override void ViewConfigure()
