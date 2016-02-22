@@ -17,7 +17,7 @@ namespace UnitTest
         [TestMethod]
         public void TestMethod1()
         {
-            var s = ServiceLocator.Current.GetInstance<IExampleService>().Get(1);
+            var s = ServiceLocator.Current.GetInstance<IExampleService>().Get(m => m.Id == 1);
         }
     }
 }

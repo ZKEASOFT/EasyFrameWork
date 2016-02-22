@@ -193,14 +193,24 @@ namespace Easy.Reflection
         }
         private static KeyValuePair<string, object> MemberConvert(MemberExpression expression, object obj)
         {
+            Func<MemberExpression,object> valueGetter= exp =>
+            {
+                var objectMember = Expression.Convert(exp, typeof(object));
+                var getterLambda = Expression.Lambda<Func<object>>(objectMember);
+                return getterLambda.Compile()();
+            };
             switch (expression.Member.MemberType)
             {
                 case MemberTypes.Field:
                     {
-                        return new KeyValuePair<string, object>(Guid.NewGuid().ToString("N"), Expression.Lambda(expression).Compile().DynamicInvoke());
+                        return new KeyValuePair<string, object>(Guid.NewGuid().ToString("N"), valueGetter(expression));
                     }
                 case MemberTypes.Property:
                     {
+                        if (expression.Expression.NodeType == ExpressionType.MemberAccess)
+                        {
+                            return new KeyValuePair<string, object>(Guid.NewGuid().ToString("N"), valueGetter(expression));
+                        }
                         if (obj != null)
                         {
                             var objType = obj.GetType();
