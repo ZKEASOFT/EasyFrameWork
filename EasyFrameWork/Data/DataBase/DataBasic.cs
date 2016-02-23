@@ -508,7 +508,7 @@ namespace Easy.Data.DataBase
             var primaryKey = GetPrimaryKeys(custAttribute);
             foreach (var item in primaryKey)
             {
-                filter.OrderBy(string.Format("[{0}].[{1}]", alias, item), OrderType.Ascending);
+                filter.OrderBy(string.Format("[{0}].[{1}]", alias, item.ColumnName), OrderType.Ascending);
             }
             string orderby = filter.GetOrderString();
             string orderByContrary = filter.GetContraryOrderString();
