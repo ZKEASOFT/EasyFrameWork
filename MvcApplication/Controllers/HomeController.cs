@@ -23,9 +23,8 @@ namespace MvcApplication.Controllers
 
         public override ActionResult Index()
         {
-            Example a = new Example { Id = 1 };
-            var result = Service.Get(m => m.Id == 1);
-            result = Service.Get(m => m.Id == a.Id);
+            Example a = new Example { Id = 0 };
+            var result = Service.Delete(m => m.Id == a.Id);
             return base.Index();
         }
 

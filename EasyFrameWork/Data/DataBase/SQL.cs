@@ -80,7 +80,7 @@ namespace Easy.Data.DataBase
             }
             builder.Append(string.IsNullOrEmpty(condition) ? "" : " WHERE " + condition);
             builder.AppendFormat(") SELECT * FROM T WHERE RowIndex>{0} AND RowIndex<={1}", pagin.PageIndex * pagin.PageSize, pagin.PageSize * (pagin.PageIndex + 1));
-            DataTable table = GetTable(builder.ToString(), filter.GetParameterValues());
+            DataTable table = GetData(builder.ToString(), filter.GetParameterValues());
             if (table == null) return new List<T>();
             List<T> list = new List<T>();
             Dictionary<string, PropertyInfo> properties = GetProperties<T>(custAttribute);
@@ -88,7 +88,7 @@ namespace Easy.Data.DataBase
             {
                 list.Add(Reflection.ClassAction.GetModel<T>(table, i, comMatch, properties));
             }
-            DataTable recordCound = GetTable(string.Format("SELECT COUNT(1) FROM [{0}] {3} {2} {1}",
+            DataTable recordCound = GetData(string.Format("SELECT COUNT(1) FROM [{0}] {3} {2} {1}",
                 tableName,
                 string.IsNullOrEmpty(condition) ? "" : "WHERE " + condition,
                 builderRela,

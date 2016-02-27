@@ -286,10 +286,13 @@ namespace Easy.Data.DataBase
             }
         }
 
-        public virtual int Delete(string tableName, string condition, List<KeyValuePair<string, object>> keyValue)
+        public virtual int Delete(string tableName, string condition, List<KeyValuePair<string, object>> keyValue, string alias = "T0")
         {
             DbCommand comm = GetDbCommand();
-            comm.CommandText = !string.IsNullOrEmpty(condition) ? string.Format("DELETE FROM [{0}] WHERE {1}", tableName, condition) : string.Format("DELETE FROM [{0}]", tableName);
+            comm.CommandText = !string.IsNullOrEmpty(condition) ?
+                string.Format("DELETE {0} FROM [{1}] AS {0} WHERE {2}", alias, tableName, condition) :
+                string.Format("DELETE {0} FROM [{1}] AS {0}", alias, tableName);
+
             foreach (var item in keyValue)
             {
                 SetParameter(comm, item.Key, item.Value);
@@ -307,7 +310,7 @@ namespace Easy.Data.DataBase
             return ExecCommand(comm) > 0;
         }
 
-        public virtual DataTable GetTable(DbCommand command)
+        public virtual DataTable GetData(DbCommand command)
         {
             command.Connection = GetDbConnection();
             if (command.Connection.State != ConnectionState.Open)
@@ -333,7 +336,7 @@ namespace Easy.Data.DataBase
                 command.Dispose();
             }
         }
-        public virtual DataTable GetTable(string selectCommand, List<KeyValuePair<string, object>> keyValue)
+        public virtual DataTable GetData(string selectCommand, List<KeyValuePair<string, object>> keyValue)
         {
             DbCommand comm = GetDbCommand();
             comm.CommandText = selectCommand;
@@ -341,7 +344,7 @@ namespace Easy.Data.DataBase
             {
                 SetParameter(comm, item.Key, item.Value);
             }
-            return GetTable(comm);
+            return GetData(comm);
         }
 
         public virtual void AlterColumn(string tableName, string columnName, DbType columnType, int length = 255)
@@ -386,7 +389,8 @@ namespace Easy.Data.DataBase
         {
             DataConfigureAttribute custAttribute = DataConfigureAttribute.GetAttribute<T>();
             filter = custAttribute.MetaData.DataAccess(filter);//数据权限
-            return Delete(GetTableName<T>(custAttribute), filter.ToString(), filter.GetParameterValues());
+            var alias = custAttribute == null ? "T0" : custAttribute.MetaData.Alias;
+            return Delete(GetTableName<T>(custAttribute), filter.ToString(), filter.GetParameterValues(), alias);
         }
         public virtual int Delete<T>(params object[] primaryKeys) where T : class
         {
@@ -450,7 +454,7 @@ namespace Easy.Data.DataBase
                 selectCom.AppendFormat(" WHERE {0} ", condition);
             }
             selectCom.AppendFormat(orderby);
-            DataTable table = this.GetTable(selectCom.ToString(), filter.GetParameterValues());
+            DataTable table = this.GetData(selectCom.ToString(), filter.GetParameterValues());
             if (table == null) return new List<T>();
             var list = new List<T>();
             Dictionary<string, PropertyInfo> properties = GetProperties<T>(custAttribute);
@@ -487,7 +491,7 @@ namespace Easy.Data.DataBase
                 selectCom.AppendFormat(" WHERE {0} ", condition);
             }
             selectCom.AppendFormat(orderby);
-            DataTable table = this.GetTable(selectCom.ToString(), filter.GetParameterValues());
+            DataTable table = this.GetData(selectCom.ToString(), filter.GetParameterValues());
             if (table == null) return -1;
             return Convert.ToInt64(table.Rows[0][0]);
         }
@@ -522,7 +526,7 @@ namespace Easy.Data.DataBase
                 }
             }
             const string formatCount = "SELECT COUNT(*) FROM [{0}] {3} {2} {1}";
-            DataTable recordCound = this.GetTable(string.Format(formatCount,
+            DataTable recordCound = this.GetData(string.Format(formatCount,
                 tableName,
                 string.IsNullOrEmpty(condition) ? "" : "WHERE " + condition,
                 builderRela,
@@ -555,7 +559,7 @@ namespace Easy.Data.DataBase
                 orderby.Replace("[{0}].".FormatWith(alias), ""));
 
 
-            DataTable table = this.GetTable(builder.ToString(), filter.GetParameterValues());
+            DataTable table = this.GetData(builder.ToString(), filter.GetParameterValues());
             if (table == null) return new List<T>(); ;
             var list = new List<T>();
             Dictionary<string, PropertyInfo> properties = GetProperties<T>(custAttribute);

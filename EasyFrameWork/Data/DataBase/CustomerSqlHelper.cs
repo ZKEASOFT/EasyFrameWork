@@ -55,7 +55,7 @@ namespace Easy.Data.DataBase
             {
                 _command = "EXEC " + _command;
             }
-            DataTable table = _dataBase.GetTable(_command, _keyValue);
+            DataTable table = _dataBase.GetData(_command, _keyValue);
             var map = GetMap<T>();
             if (map.Count == 0)
             {
@@ -72,7 +72,7 @@ namespace Easy.Data.DataBase
             {
                 _command = "EXEC " + _command;
             }
-            DataTable table = _dataBase.GetTable(_command, _keyValue);
+            DataTable table = _dataBase.GetData(_command, _keyValue);
             var lists = new List<T>();
             var map = GetMap<T>();
             for (int i = 0; i < table.Rows.Count; i++)
@@ -95,7 +95,7 @@ namespace Easy.Data.DataBase
             {
                 _command = "EXEC " + _command;
             }
-            return _dataBase.GetTable(_command, _keyValue);
+            return _dataBase.GetData(_command, _keyValue);
         }
 
     }
