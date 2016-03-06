@@ -67,10 +67,10 @@ namespace Easy.Modules.User.Models
             ViewConfig(p => p.LastLoginDate).AsTextBox().Hide().FormatAsDate();
             ViewConfig(p => p.Sex).AsDropDownList().DataSource(SourceType.Dictionary);
             ViewConfig(p => p.MaritalStatus).AsDropDownList().DataSource(SourceType.Dictionary);
-            ViewConfig(p => p.Description).AsMutiLineTextBox();
-            ViewConfig(p => p.PhotoUrl).AsFileUp().HideInGrid();
-            ViewConfig(p => p.UserTypeCD).AsDropDownList().DataSource(Easy.Constant.SourceType.Dictionary);
-            ViewConfig(p => p.Title).AsTextBox().Ignore();
+            ViewConfig(p => p.Description).AsTextArea();
+            ViewConfig(p => p.PhotoUrl).AsFileInput().HideInGrid();
+            ViewConfig(p => p.UserTypeCD).AsDropDownList().DataSource(SourceType.Dictionary);
+            ViewConfig(p => p.Title).AsHidden();
             ViewConfig(m => m.ApiLoginToken).AsTextBox().ReadOnly().HideInGrid().Hide();
         }
     }

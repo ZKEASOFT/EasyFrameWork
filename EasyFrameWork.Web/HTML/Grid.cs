@@ -8,8 +8,8 @@ using System.Web.Routing;
 using System.Web.UI;
 using Easy.Constant;
 using Easy.Extend;
-using Easy.HTML.Grid;
-using Easy.HTML.Tags;
+using Easy.ViewPort.Grid;
+using Easy.ViewPort.Descriptor;
 
 namespace Easy.Web.HTML
 {
@@ -19,29 +19,35 @@ namespace Easy.Web.HTML
         public Grid(ViewContext viewContex)
         {
             this._viewContex = viewContex;
-            string area = string.Empty;
-            string getList = string.Empty;
-            string delete = string.Empty;
             var controller = this._viewContex.Controller as System.Web.Mvc.Controller;
-            getList = controller.Url.Action("GetList");
-            delete = controller.Url.Action("Delete");
-            base.DataSource(getList);
-            base.DeleteUrl(delete);
-
+            base.DataSource(controller.Url.Action("GetList"));
+            base.DeleteUrl(controller.Url.Action("Delete"));
             var configAttribute = Easy.MetaData.DataConfigureAttribute.GetAttribute<T>();
             if (configAttribute != null)
             {
-                configAttribute.GetHtmlTags(false).Each(m =>
+                configAttribute.GetViewPortDescriptors(false).Each(m =>
                 {
                     if (!this.DropDownOptions.ContainsKey(m.Name) &&
-                        m is DropDownListHtmlTag &&
-                        (m as DropDownListHtmlTag).SourceType == SourceType.ViewData &&
-                        viewContex.ViewData.ContainsKey((m as DropDownListHtmlTag).SourceKey))
+                        m is DropDownListDescriptor &&
+                        (m as DropDownListDescriptor).SourceType == SourceType.ViewData &&
+                        viewContex.ViewData.ContainsKey((m as DropDownListDescriptor).SourceKey))
                     {
-                        var option = viewContex.ViewData[(m as DropDownListHtmlTag).SourceKey] as Dictionary<string, string>;
-                        if (option != null)
+                        var selectList = viewContex.ViewData[(m as DropDownListDescriptor).SourceKey] as SelectList;
+                        if (selectList != null)
                         {
-                            this.DropDownOptions.Add(m.Name, option);
+                            if (!this.DropDownOptions.ContainsKey(m.Name))
+                            {
+                                this.DropDownOptions.Add(m.Name, new Dictionary<string, string>());
+                            }
+                            var options = this.DropDownOptions[m.Name];
+                            selectList.Each(n =>
+                            {
+                                if (!options.ContainsKey(n.Value))
+                                {
+                                    options.Add(n.Value, n.Text);
+                                }
+                            });
+
                         }
                     }
 

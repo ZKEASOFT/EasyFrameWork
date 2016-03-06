@@ -1,5 +1,5 @@
-﻿using Easy.HTML;
-using Easy.HTML.Tags;
+﻿using Easy.ViewPort;
+using Easy.ViewPort.Descriptor;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,7 +12,7 @@ namespace Easy.MetaData
 {
     public interface IDataViewMetaData
     {
-        Dictionary<string, HtmlTagBase> HtmlTags { get; }
+        Dictionary<string, BaseDescriptor> ViewPortDescriptors { get; }
         Dictionary<string, PropertyDataInfo> PropertyDataConfig { get; }
         Dictionary<string, PropertyInfo> Properties { get; }
         List<Relation> DataRelations { get; }

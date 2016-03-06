@@ -1,5 +1,5 @@
 ﻿using Easy.Data;
-using Easy.HTML.Grid;
+using Easy.ViewPort.Grid;
 using Easy.Models;
 using Easy.RepositoryPattern;
 using System;
@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using System.Web.Mvc;
 using Easy.Web.Extend;
 using Easy.Constant;
-using Easy.HTML.Tags;
+using Easy.ViewPort.Descriptor;
 using Easy.MetaData;
 
 namespace Easy.Web.Controller
@@ -73,7 +73,6 @@ namespace Easy.Web.Controller
         {
             var entity = Activator.CreateInstance<TEntity>();
             entity.Status = (int)RecordStatus.Active;
-            ViewBag.Title = "添加";
             return View(entity);
         }
 
@@ -157,7 +156,7 @@ namespace Easy.Web.Controller
         {
             GridData data = new GridData(Request.Form, tag =>
             {
-                var dropTag = tag as DropDownListHtmlTag;
+                var dropTag = tag as DropDownListDescriptor ;
                 if (dropTag != null && dropTag.SourceType == SourceType.ViewData && ViewData.ContainsKey(dropTag.SourceKey))
                 {
                     return ViewData[dropTag.SourceKey] as Dictionary<string, string>;

@@ -1,4 +1,4 @@
-﻿using Easy.HTML.Validator;
+﻿using Easy.ViewPort.Validator;
 using Easy.Web.Metadata;
 using System;
 using System.Collections.Generic;

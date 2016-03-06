@@ -1,4 +1,4 @@
-﻿using Easy.HTML.jsTree;
+﻿using Easy.ViewPort.jsTree;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,11 +12,11 @@ namespace Easy.Web.HTML
     public class Tree<T> where T : class
     {
         private readonly ViewContext _viewContex;
-        private readonly Easy.HTML.jsTree.Tree<T> _tree;
+        private readonly Easy.ViewPort.jsTree.Tree<T> _tree;
         public Tree(ViewContext viewContex)
         {
             this._viewContex = viewContex;
-            _tree = new Easy.HTML.jsTree.Tree<T>();
+            _tree = new Easy.ViewPort.jsTree.Tree<T>();
         }
 
         public Tree<T> Name(string name)

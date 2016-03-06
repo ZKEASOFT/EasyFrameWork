@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Linq.Expressions;
-using Easy.HTML;
-using Easy.HTML.Tags;
+using Easy.ViewPort;
+using Easy.ViewPort.Descriptor;
 using Easy.Data;
 using Easy.Constant;
 using Easy.Models;
@@ -28,7 +28,9 @@ namespace Easy.MetaData
         }
         public void Init()
         {
-
+            ViewPortDescriptors = new Dictionary<string, BaseDescriptor>();
+            PropertyDataConfig = new Dictionary<string, PropertyDataInfo>();
+            DataRelations=new List<Relation>();
             Alias = "T0";
             TargetType = typeof(T);
             foreach (var item in TargetType.GetProperties())
@@ -91,9 +93,9 @@ namespace Easy.MetaData
                 ViewConfig("LastUpdateBy").AsHidden();
                 ViewConfig("LastUpdateByName").AsTextBox().Hide().SetColumnWidth(80);
                 ViewConfig("LastUpdateDate").AsTextBox().Hide().FormatAsDateTime().SetColumnWidth(140);
-                ViewConfig("ActionType").AsHidden().AddClass("actionType");
+                ViewConfig("ActionType").AsHidden().AddClass("ActionType");
                 ViewConfig("Title").AsTextBox().Order(1).SetColumnWidth(200);
-                ViewConfig("Description").AsMutiLineTextBox().SetColumnWidth(250).Order(101);
+                ViewConfig("Description").AsTextArea().SetColumnWidth(250).Order(101);
                 ViewConfig("Status").AsDropDownList().DataSource(DicKeys.RecordStatus, SourceType.Dictionary).SetColumnWidth(70);
 
                 DataConfig("CreateBy").Update(false);
@@ -114,11 +116,10 @@ namespace Easy.MetaData
             ViewConfigure();
         }
 
-        Dictionary<string, HtmlTagBase> _htmlTags = new Dictionary<string, HtmlTagBase>();
-        public Dictionary<string, HtmlTagBase> HtmlTags
+        public Dictionary<string, BaseDescriptor> ViewPortDescriptors
         {
-            get { return _htmlTags; }
-            set { _htmlTags = value; }
+            get;
+            set;
         }
 
         public Type TargetType
@@ -127,11 +128,10 @@ namespace Easy.MetaData
             private set;
         }
 
-        Dictionary<string, PropertyDataInfo> _propertyDataConfig = new Dictionary<string, PropertyDataInfo>();
         public Dictionary<string, PropertyDataInfo> PropertyDataConfig
         {
-            get { return _propertyDataConfig; }
-            set { _propertyDataConfig = value; }
+            get;
+            set;
         }
         IUser _user;
         public IUser User
@@ -147,12 +147,7 @@ namespace Easy.MetaData
             }
         }
 
-        List<Relation> _dataRelations = new List<Relation>();
-        public List<Relation> DataRelations
-        {
-            get { return _dataRelations; }
-            set { _dataRelations = value; }
-        }
+        public List<Relation> DataRelations { get; set; }
         public List<PrimaryKey> Primarykey
         {
             get
@@ -225,7 +220,7 @@ namespace Easy.MetaData
         /// <returns></returns>
         protected TagsHelper ViewConfig(string properyt)
         {
-            return new TagsHelper(properyt, ref _htmlTags, TargetType, TargetType.GetProperty(properyt));
+            return new TagsHelper(properyt, ViewPortDescriptors, TargetType, TargetType.GetProperty(properyt));
         }
         /// <summary>
         /// 主键

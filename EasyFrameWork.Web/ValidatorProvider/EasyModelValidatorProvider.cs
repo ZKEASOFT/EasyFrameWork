@@ -1,5 +1,5 @@
 ﻿using Easy.Web.Metadata;
-using Easy.HTML.Validator;
+using Easy.ViewPort.Validator;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,9 +15,9 @@ namespace Easy.Web.ValidatorProvider
         {
             List<ModelValidator> validators = new List<ModelValidator>();
             EasyModelMetaData data = metadata as EasyModelMetaData;
-            if (data != null && data.HtmlTag != null)
+            if (data != null && data.ViewPortDescriptor != null)
             {
-                validators.AddRange(data.HtmlTag.Validator.Select(item => GetValidator(data, context, item)).Where(validator => validator != null));
+                validators.AddRange(data.ViewPortDescriptor.Validator.Select(item => GetValidator(data, context, item)).Where(validator => validator != null));
             }
             return validators;
         }
@@ -25,7 +25,7 @@ namespace Easy.Web.ValidatorProvider
         {
             if (string.IsNullOrEmpty(validator.DisplayName))
             {
-                validator.DisplayName = string.IsNullOrEmpty(metadata.HtmlTag.DisplayName) ? metadata.HtmlTag.Name : metadata.HtmlTag.DisplayName;
+                validator.DisplayName = string.IsNullOrEmpty(metadata.ViewPortDescriptor.DisplayName) ? metadata.ViewPortDescriptor.Name : metadata.ViewPortDescriptor.DisplayName;
             }
             if (validator is RequiredValidator)
             {

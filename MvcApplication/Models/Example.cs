@@ -35,7 +35,7 @@ namespace MvcApplication.Models
         {
             ViewConfig(m => m.Id).AsHidden();
             ViewConfig(m => m.Text).AsTextBox().Required();
-            ViewConfig(m => m.Value).AsMutiLineTextBox().MaxLength(200);
+            ViewConfig(m => m.Value).AsTextArea().MaxLength(200);
             ViewConfig(m => m.Items).AsListEditor();
         }
 

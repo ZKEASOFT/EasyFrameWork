@@ -131,7 +131,7 @@
     <Compile Include="Extend\ExHttpContext.cs" />
     <Compile Include="Extend\ExHttpRequest.cs" />
     <Compile Include="Extend\ExMvcForm.cs" />
-    <Compile Include="Extend\ExMVCHtml.cs" />
+    <Compile Include="Extend\ExHtmlHelper.cs" />
     <Compile Include="HTML\Grid.cs" />
     <Compile Include="HTML\Tree.cs" />
     <Compile Include="MetadataProvider\EasyModelMetaDataProvider.cs" />

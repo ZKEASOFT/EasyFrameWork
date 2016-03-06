@@ -1,5 +1,6 @@
 ﻿using Easy.Cache;
 using Easy.Data;
+using Easy.ViewPort.Descriptor;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,11 +25,11 @@ namespace Easy.MetaData
             //HTML标签的多语言
             if (Localization.IsMultiLanReady())
             {
-                Dictionary<string, string> lan = MetaData.HtmlTags.ToDictionary(item => item.Key, item => item.Value.ModelType.Name + "@" + item.Key);
+                Dictionary<string, string> lan = MetaData.ViewPortDescriptors.ToDictionary(item => item.Key, item => item.Value.ModelType.Name + "@" + item.Key);
                 lan = Localization.InitLan(lan);
                 foreach (var item in lan)
                 {
-                    MetaData.HtmlTags[item.Key].DisplayName = item.Value;
+                    MetaData.ViewPortDescriptors[item.Key].DisplayName = item.Value;
                 }
             }
         }
@@ -59,9 +60,9 @@ namespace Easy.MetaData
         /// 获取所有HTML标签
         /// </summary>
         /// <returns></returns>
-        public List<HTML.Tags.HtmlTagBase> GetHtmlTags(bool widthHidden)
+        public List<BaseDescriptor> GetViewPortDescriptors(bool widthHidden)
         {
-            List<HTML.Tags.HtmlTagBase> returnValue = (from item in MetaData.HtmlTags where !item.Value.IsIgnore where (item.Value.TagType != HTML.HTMLEnumerate.HTMLTagTypes.Hidden && !item.Value.IsHidden) || widthHidden select item.Value).ToList();
+            List<BaseDescriptor> returnValue = (from item in MetaData.ViewPortDescriptors where !item.Value.IsIgnore where (item.Value.TagType != ViewPort.HTMLEnumerate.HTMLTagTypes.Hidden && !item.Value.IsHidden) || widthHidden select item.Value).ToList();
             return returnValue.OrderBy(q => q.OrderIndex).ToList();
         }
         /// <summary>
@@ -69,18 +70,18 @@ namespace Easy.MetaData
         /// </summary>
         /// <param name="property"></param>
         /// <returns></returns>
-        public HTML.Tags.HtmlTagBase GetHtmlTag(string property)
+        public BaseDescriptor GetViewPortDescriptor(string property)
         {
-            if (MetaData.HtmlTags.ContainsKey(property))
+            if (MetaData.ViewPortDescriptors.ContainsKey(property))
             {
-                return MetaData.HtmlTags[property];
+                return MetaData.ViewPortDescriptors[property];
             }
-            return new HTML.Tags.TextBoxHtmlTag(MetaData.TargetType, property);
+            return new TextBoxDescriptor(MetaData.TargetType, property);
         }
-        public HTML.Tags.HtmlTagBase GetHtmlTag<T>(System.Linq.Expressions.Expression<Func<T, object>> expression)
+        public BaseDescriptor GetHtmlTag<T>(System.Linq.Expressions.Expression<Func<T, object>> expression)
         {
             string property = Reflection.LinqExpression.GetPropertyName(expression.Body);
-            return GetHtmlTag(property);
+            return GetViewPortDescriptor(property);
         }
         /// <summary>
         /// 获取显示名称
@@ -89,21 +90,13 @@ namespace Easy.MetaData
         /// <returns></returns>
         public string GetDisplayName(string property)
         {
-            if (MetaData.HtmlTags.ContainsKey(property))
+            if (MetaData.ViewPortDescriptors.ContainsKey(property))
             {
-                return MetaData.HtmlTags[property].DisplayName;
+                return MetaData.ViewPortDescriptors[property].DisplayName;
             }
             else return property;
         }
-        /// <summary>
-        /// 获取隐藏域标签
-        /// </summary>
-        /// <returns></returns>
-        public List<HTML.Tags.HtmlTagBase> GetHtmlHiddenTags()
-        {
-            List<HTML.Tags.HtmlTagBase> returnValue = (from item in MetaData.HtmlTags where !item.Value.IsIgnore where item.Value.TagType == HTML.HTMLEnumerate.HTMLTagTypes.Hidden || item.Value.IsHidden select item.Value).ToList();
-            return returnValue.OrderBy(q => q.OrderIndex).ToList();
-        }
+ 
         /// <summary>
         /// 获取数据配置的特性
         /// </summary>
