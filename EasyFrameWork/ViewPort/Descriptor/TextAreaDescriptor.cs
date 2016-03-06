@@ -105,7 +105,7 @@ namespace Easy.ViewPort.Descriptor
         }
         public TextAreaDescriptor Hide()
         {
-            this.AddStyle("display", "none");
+            this.IsHidden = true;
             return this;
         }
         public TextAreaDescriptor Ignore()
@@ -140,5 +140,40 @@ namespace Easy.ViewPort.Descriptor
         }
 
         #endregion
+
+        public TextAreaDescriptor MaxLength(int max)
+        {
+            this.Validator.Add(new StringLengthValidator(0, max)
+            {
+                Property = this.Name
+            });
+            return this;
+        }
+        public TextAreaDescriptor MaxLength(int max, string errorMsg)
+        {
+            this.Validator.Add(new StringLengthValidator(0, max)
+            {
+                ErrorMessage = errorMsg,
+                Property = this.Name
+            });
+            return this;
+        }
+        public TextAreaDescriptor MaxLength(int min, int max)
+        {
+            this.Validator.Add(new StringLengthValidator(min, max)
+            {
+                Property = this.Name
+            });
+            return this;
+        }
+        public TextAreaDescriptor MaxLength(int min, int max, string errorMsg)
+        {
+            this.Validator.Add(new StringLengthValidator(min, max)
+            {
+                ErrorMessage = errorMsg,
+                Property = this.Name
+            });
+            return this;
+        }
     }
 }

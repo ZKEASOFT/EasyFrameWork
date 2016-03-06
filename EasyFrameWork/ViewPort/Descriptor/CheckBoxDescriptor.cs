@@ -106,7 +106,7 @@ namespace Easy.ViewPort.Descriptor
         }
         public CheckBoxDescriptor Hide()
         {
-            this.AddStyle("display", "none");
+            this.IsHidden = true;
             return this;
         }
         public CheckBoxDescriptor Ignore()

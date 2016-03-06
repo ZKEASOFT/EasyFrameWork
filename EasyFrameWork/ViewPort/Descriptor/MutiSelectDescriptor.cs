@@ -106,7 +106,7 @@ namespace Easy.ViewPort.Descriptor
         }
         public new MutiSelectDescriptor Hide()
         {
-            this.AddStyle("display", "none");
+            this.IsHidden = true;
             return this;
         }
         public new MutiSelectDescriptor Ignore()

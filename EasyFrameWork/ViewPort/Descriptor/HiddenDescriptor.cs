@@ -105,7 +105,7 @@ namespace Easy.ViewPort.Descriptor
         }
         public HiddenDescriptor Hide()
         {
-            this.AddStyle("display", "none");
+            this.IsHidden = true;
             return this;
         }
         public HiddenDescriptor Ignore()

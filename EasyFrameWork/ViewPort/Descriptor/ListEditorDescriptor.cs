@@ -44,7 +44,7 @@ namespace Easy.ViewPort.Descriptor
         }
         public ListEditorDescriptor Hide()
         {
-            this.AddStyle("display", "none");
+            this.IsHidden = true;
             return this;
         }
         public ListEditorDescriptor Ignore()

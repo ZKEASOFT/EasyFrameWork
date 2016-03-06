@@ -113,7 +113,7 @@ namespace Easy.ViewPort.Descriptor
         }
         public DropDownListDescriptor Hide()
         {
-            this.AddStyle("display", "none");
+            this.IsHidden = true;
             return this;
         }
         public DropDownListDescriptor Ignore()

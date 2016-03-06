@@ -105,7 +105,7 @@ namespace Easy.ViewPort.Descriptor
         }
         public FileDescriptor Hide()
         {
-            this.AddStyle("display", "none");
+            this.IsHidden = true;
             return this;
         }
         public FileDescriptor Ignore()
