@@ -156,10 +156,19 @@ namespace Easy.Web.Controller
         {
             GridData data = new GridData(Request.Form, tag =>
             {
-                var dropTag = tag as DropDownListDescriptor ;
+                var dropTag = tag as DropDownListDescriptor;
                 if (dropTag != null && dropTag.SourceType == SourceType.ViewData && ViewData.ContainsKey(dropTag.SourceKey))
                 {
-                    return ViewData[dropTag.SourceKey] as Dictionary<string, string>;
+                    Dictionary<string, string> options = new Dictionary<string, string>();
+                    var list = (ViewData[dropTag.SourceKey] as SelectList);
+                    foreach (SelectListItem item in list)
+                    {
+                        if (!options.ContainsKey(item.Value))
+                        {
+                            options.Add(item.Value, item.Text);
+                        }
+                    }
+                    return options;
                 }
                 return null;
             });

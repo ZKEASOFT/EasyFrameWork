@@ -7,14 +7,14 @@ namespace Easy.Web.ValueProvider
 {
     public class Cookie : ICookie
     {
-        private readonly HttpContextBase _httpContext;
+        private readonly HttpContext _httpContext;
         private const float DefaultExpireDurationMinutes = 43200; // 1 month
         private const bool DefaultHttpOnly = true;
         private const bool ExpireWithBrowser = false;
 
-        public Cookie(HttpContextBase httpContext)
+        public Cookie()
         {
-            this._httpContext = httpContext;
+            this._httpContext = HttpContext.Current;
         }
 
         public T GetValue<T>(string name)

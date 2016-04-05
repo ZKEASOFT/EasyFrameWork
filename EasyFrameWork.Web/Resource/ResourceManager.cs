@@ -24,8 +24,14 @@ namespace Easy.Web.Resource
             return new ResourceHelper(name, ResourceType.Style);
         }
 
-        public abstract void InitScript();
-        public abstract void InitStyle();
+        protected abstract void InitScript(Func<string, ResourceHelper> script);
+        protected abstract void InitStyle(Func<string, ResourceHelper> style);
+
+        public virtual void Excute()
+        {
+            InitScript(Script);
+            InitStyle(Style);
+        }
     }
 
 }

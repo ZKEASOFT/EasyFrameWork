@@ -7,9 +7,8 @@ namespace MvcApplication.Tasks
     {
         public void Excute()
         {
-            var mgr = new ResourceManager();
-            mgr.InitScript();
-            mgr.InitStyle();
+            new ResourceManager().Excute();
+
         }
     }
 }

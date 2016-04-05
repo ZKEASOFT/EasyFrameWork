@@ -2,23 +2,24 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using Easy.Web.Resource;
 
 namespace MvcApplication
 {
     public class ResourceManager : Easy.Web.Resource.ResourceManager
     {
-        public override void InitScript()
+        protected override void InitScript(Func<string, ResourceHelper> script)
         {
-            Script("base")
+            script("base")
                 .Include("~/JavaScripts/EasyPlug/jquery.js")
                 .Include("~/JavaScripts/EasyPlug/Easy.js")
                 .Include("~/JavaScripts/EasyPlug/Easy.Grid.js")
                 .RequiredAtHead();
         }
 
-        public override void InitStyle()
+        protected override void InitStyle(Func<string, ResourceHelper> style)
         {
-            Style("base")
+            style("base")
                 .Include("~/Content/Site.css")
                 .Include("~/JavaScripts/EasyPlug/Css/Easy.css")
                 .Include("~/JavaScripts/EasyPlug/Css/Easy.Grid.css")
