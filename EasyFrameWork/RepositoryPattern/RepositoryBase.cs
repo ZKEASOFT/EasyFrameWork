@@ -24,7 +24,7 @@ namespace Easy.RepositoryPattern
         public DataBasic DataBase
         {
             get;
-            private set;
+            set;
         }
         public RepositoryBase()
         {
