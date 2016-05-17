@@ -20,7 +20,6 @@ namespace Easy.ViewPort.Descriptor
             GridSetting = new GridSetting();
             this.ModelType = modelType;
             this.Name = property;
-            this.DisplayName = this.Name;
             this.OrderIndex = 100;
             this.IsShowForEdit = true;
             this.IsShowForDisplay = true;

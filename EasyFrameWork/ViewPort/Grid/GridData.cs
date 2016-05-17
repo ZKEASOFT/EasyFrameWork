@@ -188,10 +188,10 @@ namespace Easy.ViewPort.Grid
             {
                 hidden = 1;
             }
-            tag.DisplayName = string.IsNullOrEmpty(tag.DisplayName) ? tag.Name : tag.DisplayName;
+            string displayName = string.IsNullOrEmpty(tag.DisplayName) ? tag.Name : tag.DisplayName;
             StringBuilder columnBuilder = new StringBuilder();
             columnBuilder.AppendFormat("{0}:{{", tag.Name);
-            columnBuilder.AppendFormat("DisplayName:'{0}',", tag.DisplayName.Replace("\"", "\\\"").Replace("\'", "\\\'"));
+            columnBuilder.AppendFormat("DisplayName:'{0}',", displayName.Replace("\"", "\\\"").Replace("\'", "\\\'"));
             columnBuilder.AppendFormat("Name:'{0}',", tag.Name);
             columnBuilder.AppendFormat("Width:{0},", tag.GridSetting.ColumnWidth);
             columnBuilder.AppendFormat("DataType:'{0}',", dataType);

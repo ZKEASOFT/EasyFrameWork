@@ -29,7 +29,10 @@ namespace Easy.MetaData
                 lan = Localization.InitLan(lan);
                 foreach (var item in lan)
                 {
-                    MetaData.ViewPortDescriptors[item.Key].DisplayName = item.Value;
+                    if (string.IsNullOrWhiteSpace(MetaData.ViewPortDescriptors[item.Key].DisplayName))
+                    {
+                        MetaData.ViewPortDescriptors[item.Key].DisplayName = item.Value;
+                    }
                 }
             }
         }
