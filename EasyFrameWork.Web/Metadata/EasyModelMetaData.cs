@@ -21,6 +21,7 @@ namespace Easy.Web.Metadata
                 DataConfigureAttribute custAttribute = DataConfigureAttribute.GetAttribute(containerType);
                 if (custAttribute != null)
                 {
+                    custAttribute.InitDisplayName();
                     if (custAttribute.MetaData.ViewPortDescriptors.ContainsKey(propertyName))
                     {
                         ViewPortDescriptor = custAttribute.MetaData.ViewPortDescriptors[propertyName];
