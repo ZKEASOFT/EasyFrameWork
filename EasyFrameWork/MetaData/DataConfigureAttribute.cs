@@ -14,6 +14,7 @@ namespace Easy.MetaData
     [AttributeUsage(AttributeTargets.Class)]
     public class DataConfigureAttribute : Attribute
     {
+        private bool _isInitDisplayName;
         public IDataViewMetaData MetaData
         {
             get;
@@ -22,19 +23,6 @@ namespace Easy.MetaData
         public DataConfigureAttribute(Type metaDataType)
         {
             MetaData = Activator.CreateInstance(metaDataType) as IDataViewMetaData;
-            //HTML标签的多语言
-            if (Localization.IsMultiLanReady())
-            {
-                Dictionary<string, string> lan = MetaData.ViewPortDescriptors.ToDictionary(item => item.Key, item => item.Value.ModelType.Name + "@" + item.Key);
-                lan = Localization.InitLan(lan);
-                foreach (var item in lan)
-                {
-                    if (string.IsNullOrWhiteSpace(MetaData.ViewPortDescriptors[item.Key].DisplayName))
-                    {
-                        MetaData.ViewPortDescriptors[item.Key].DisplayName = item.Value;
-                    }
-                }
-            }
         }
         /// <summary>
         /// 获取属性对表的映射
@@ -99,7 +87,23 @@ namespace Easy.MetaData
             }
             else return property;
         }
- 
+
+        public void InitDisplayName()
+        {
+            if (!_isInitDisplayName && Localization.IsMultiLanReady())
+            {
+                Dictionary<string, string> lan = MetaData.ViewPortDescriptors.ToDictionary(item => item.Key, item => item.Value.ModelType.Name + "@" + item.Key);
+                lan = Localization.InitLan(lan);
+                foreach (var item in lan)
+                {
+                    if (string.IsNullOrWhiteSpace(MetaData.ViewPortDescriptors[item.Key].DisplayName))
+                    {
+                        MetaData.ViewPortDescriptors[item.Key].DisplayName = item.Value;
+                    }
+                }
+            }
+            _isInitDisplayName = true;
+        }
         /// <summary>
         /// 获取数据配置的特性
         /// </summary>

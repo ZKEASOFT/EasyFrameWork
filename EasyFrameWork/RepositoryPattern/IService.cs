@@ -8,6 +8,8 @@ namespace Easy.RepositoryPattern
 {
     public interface IService<T> : IDependency where T : class
     {
+        IRepository<T> Repository { get; set; }
+        IApplicationContext ApplicationContext { get; set; }
         T Get(params object[] primaryKeys);
         IEnumerable<T> Get();
         IEnumerable<T> Get(DataFilter filter);

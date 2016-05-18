@@ -19,18 +19,32 @@ namespace Easy.RepositoryPattern
     {
         private readonly DataConfigureAttribute _dataConfigure;
         private readonly Type _iEnumerableType;
-        public IApplicationContext ApplicationContext { get; private set; }
-
+        private IApplicationContext _applicationContext;
+        public IApplicationContext ApplicationContext
+        {
+            get
+            {
+                return _applicationContext ??
+                       (_applicationContext = ServiceLocator.Current.GetInstance<IApplicationContext>());
+            }
+            set { _applicationContext = value; }
+        }
+        private DataBasic _dataBase;
         public DataBasic DataBase
         {
-            get;
-            set;
+            get
+            {
+                if (_dataBase == null)
+                {
+                    string dataBaseKey = ConfigurationManager.AppSettings[DataBasic.DataBaseAppSetingKey];
+                    _dataBase = ServiceLocator.Current.GetAllInstances<DataBasic>().FirstOrDefault(m => m.DataBaseTypeNames().Any(n => n == dataBaseKey)) ?? new Sql();
+                }
+                return _dataBase;
+            }
+            set { _dataBase = value; }
         }
         public RepositoryBase()
         {
-            string dataBase = ConfigurationManager.AppSettings[DataBasic.DataBaseAppSetingKey];
-            DataBase = ServiceLocator.Current.GetAllInstances<DataBasic>().FirstOrDefault(m => m.DataBaseTypeNames().Any(n => n == dataBase)) ?? new Sql();
-            ApplicationContext = ServiceLocator.Current.GetInstance<IApplicationContext>();
             _dataConfigure = DataConfigureAttribute.GetAttribute<T>();
             _iEnumerableType = typeof(IEnumerable);
         }

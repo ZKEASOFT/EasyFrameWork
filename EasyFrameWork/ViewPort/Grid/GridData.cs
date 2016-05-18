@@ -278,6 +278,7 @@ namespace Easy.ViewPort.Grid
             StringBuilder columnBuilder = new StringBuilder();
             if (attribute != null)
             {
+                attribute.InitDisplayName();
                 foreach (var item in attribute.GetViewPortDescriptors(true))
                 {
                     columnBuilder.Append(GetHtmlModelString(item, item.DataType.Name));

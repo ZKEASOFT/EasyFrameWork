@@ -14,13 +14,26 @@ namespace Easy.RepositoryPattern
 {
     public abstract class ServiceBase<T> : IService<T> where T : class
     {
-        public RepositoryBase<T> Repository { get; private set; }
-        public IApplicationContext ApplicationContext { get; private set; }
-        public ServiceBase()
+        private IRepository<T> _repository;
+
+        public IRepository<T> Repository
         {
-            Repository = new RepositoryBase<T>();
-            ApplicationContext = ServiceLocator.Current.GetInstance<IApplicationContext>();
+            get { return _repository ?? (_repository = new RepositoryBase<T>()); }
+            set { _repository = value; }
         }
+
+        private IApplicationContext _applicationContext;
+
+        public IApplicationContext ApplicationContext
+        {
+            get
+            {
+                return _applicationContext ??
+                       (_applicationContext = ServiceLocator.Current.GetInstance<IApplicationContext>());
+            }
+            set { _applicationContext = value; }
+        }
+
         [DebuggerStepThrough]
         protected TResult ExecuteTransaction<TResult>(Func<TResult> command)
         {
