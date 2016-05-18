@@ -156,7 +156,6 @@
     <Compile Include="Modules\MutiLanguage\LanguageEntity.cs" />
     <Compile Include="Modules\MutiLanguage\LanguageRepository.cs" />
     <Compile Include="Modules\MutiLanguage\LanguageService.cs" />
-    <Compile Include="Modules\SystemSetting\SystemSetting.cs" />
     <Compile Include="Modules\SystemSetting\SystemSettingBase.cs" />
     <Compile Include="Modules\SystemSetting\SystemSettingRepository.cs" />
     <Compile Include="Modules\SystemSetting\SystemSettingService.cs" />

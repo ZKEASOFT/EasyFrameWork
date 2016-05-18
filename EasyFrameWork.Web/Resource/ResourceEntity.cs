@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Web;
 using System.Web.WebPages;
+using Easy.Extend;
 
 namespace Easy.Web.Resource
 {
@@ -19,30 +20,41 @@ namespace Easy.Web.Resource
         public ResourceType SourceType { get; set; }
         public string ReleaseSource { get; set; }
         public string DebugSource { get; set; }
+        public string CNDSource { get; set; }
+        public bool UseCNDSource
+        {
+            get
+            {
+                var setting = System.Configuration.ConfigurationManager.AppSettings["UseCND"];
+                return setting.IsNotNullAndWhiteSpace() && setting.Equals("true", StringComparison.CurrentCultureIgnoreCase) && CNDSource.IsNotNullAndWhiteSpace();
+            }
+        }
 
-        public TextWriter ToSource<T>(Page.ViewPage<T> page,HttpContextBase httpContext)
+        public TextWriter ToSource<T>(Page.ViewPage<T> page, HttpContextBase httpContext)
         {
             if (Source != null)
             {
                 return Source;
             }
             Page.HtmlStringWriter writer = new Page.HtmlStringWriter();
+            string source = null;
             if (System.Diagnostics.Debugger.IsAttached || httpContext.IsDebuggingEnabled)
             {
                 switch (SourceType)
                 {
-                    case ResourceType.Script: writer.Write(string.Format(ScriptFormt, page.Url.Content(DebugSource))); break;
-                    case ResourceType.Style: writer.Write(string.Format(StyleFormt, page.Url.Content(DebugSource))); break;
+                    case ResourceType.Script: source = string.Format(ScriptFormt, page.Url.Content(DebugSource)); break;
+                    case ResourceType.Style: source = string.Format(StyleFormt, page.Url.Content(DebugSource)); break;
                 }
             }
             else
             {
                 switch (SourceType)
                 {
-                    case ResourceType.Script: writer.Write(string.Format(ScriptFormt, page.Url.Content(ReleaseSource))); break;
-                    case ResourceType.Style: writer.Write(string.Format(StyleFormt, page.Url.Content(ReleaseSource))); break;
+                    case ResourceType.Script: source = string.Format(ScriptFormt, UseCNDSource ? CNDSource : page.Url.Content(ReleaseSource)); break;
+                    case ResourceType.Style: source = string.Format(StyleFormt, UseCNDSource ? CNDSource : page.Url.Content(ReleaseSource)); break;
                 }
             }
+            writer.Write(source);
             return writer;
         }
 

@@ -9,7 +9,7 @@ namespace Easy.IOC.Autofac
 {
     public sealed class AutofacRegister : AssemblyInfo
     {
-        public AutofacRegister(ContainerBuilder builder)
+        public AutofacRegister(ContainerBuilder builder, Type controllerType)
         {
             PublicTypes.Each(p =>
             {
@@ -28,6 +28,14 @@ namespace Easy.IOC.Autofac
                             RegistBaseType(builder, p, p.BaseType);
                         }
 
+                    }
+                    if (controllerType.IsAssignableFrom(p))
+                    {//register controller
+                        builder.RegisterType(p);
+                    }
+                    if (KnownTypes.ModuleType.IsAssignableFrom(p))
+                    {
+                        ((IModule)Activator.CreateInstance(p)).Load(new AutofacContainerAdapter(builder));
                     }
 
                 }

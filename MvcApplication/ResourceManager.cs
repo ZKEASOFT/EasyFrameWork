@@ -11,7 +11,7 @@ namespace MvcApplication
         protected override void InitScript(Func<string, ResourceHelper> script)
         {
             script("base")
-                .Include("~/JavaScripts/EasyPlug/jquery.js")
+                .Include("~/JavaScripts/EasyPlug/jquery.js", "~/JavaScripts/EasyPlug/jquery.js", "//cdn.bootcss.com/jquery/2.2.3/jquery.js")
                 .Include("~/JavaScripts/EasyPlug/Easy.js")
                 .Include("~/JavaScripts/EasyPlug/Easy.Grid.js")
                 .RequiredAtHead();

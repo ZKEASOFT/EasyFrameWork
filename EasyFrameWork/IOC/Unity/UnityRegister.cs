@@ -36,6 +36,10 @@ namespace Easy.IOC.Unity
                             }
                         }
                     }
+                    if (KnownTypes.ModuleType.IsAssignableFrom(p))
+                    {
+                        ((IModule)Activator.CreateInstance(p)).Load(new UnityContainerAdapter(container));
+                    }
 
                 }
             });

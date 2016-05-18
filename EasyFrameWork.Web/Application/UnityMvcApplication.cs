@@ -41,18 +41,7 @@ namespace Easy.Web.Application
 
             //Container.RegisterType<IDataDictionaryService, DataDictionaryService>();
             //Container.RegisterType<ILanguageService, LanguageService>(new ContainerControlledLifetimeManager());
-            var moduleType = typeof(IModule);
-            PublicTypes.Each(t =>
-            {
-                if (t != null && !t.IsInterface && !t.IsAbstract && t.IsPublic && !t.IsGenericType)
-                {
-                    if (moduleType.IsAssignableFrom(t))
-                    {
-                        ((IModule)Activator.CreateInstance(t)).Load(new UnityContainerAdapter(Container));
-                    }
-                }
-
-            });
+           
 
             System.Web.Mvc.DependencyResolver.SetResolver(new EasyDependencyResolver());
 
