@@ -90,6 +90,7 @@
     <Compile Include="Extend\ExtDate.cs" />
     <Compile Include="Extend\ExtIEnumerable.cs" />
     <Compile Include="Extend\ExtType.cs" />
+    <Compile Include="Storage\IStorageService.cs" />
     <Compile Include="ViewPort\jsTree\ContextmenuItem.cs" />
     <Compile Include="ViewPort\Descriptor\ListEditorDescriptor.cs" />
     <Compile Include="IOC\Autofac\AutofacRegister.cs" />

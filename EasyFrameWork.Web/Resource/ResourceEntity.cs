@@ -20,13 +20,13 @@ namespace Easy.Web.Resource
         public ResourceType SourceType { get; set; }
         public string ReleaseSource { get; set; }
         public string DebugSource { get; set; }
-        public string CNDSource { get; set; }
+        public string CDNSource { get; set; }
         public bool UseCNDSource
         {
             get
             {
-                var setting = System.Configuration.ConfigurationManager.AppSettings["UseCND"];
-                return setting.IsNotNullAndWhiteSpace() && setting.Equals("true", StringComparison.CurrentCultureIgnoreCase) && CNDSource.IsNotNullAndWhiteSpace();
+                var setting = System.Configuration.ConfigurationManager.AppSettings["UseCDN"];
+                return setting.IsNotNullAndWhiteSpace() && setting.Equals("true", StringComparison.CurrentCultureIgnoreCase) && CDNSource.IsNotNullAndWhiteSpace();
             }
         }
 
@@ -50,8 +50,8 @@ namespace Easy.Web.Resource
             {
                 switch (SourceType)
                 {
-                    case ResourceType.Script: source = string.Format(ScriptFormt, UseCNDSource ? CNDSource : page.Url.Content(ReleaseSource)); break;
-                    case ResourceType.Style: source = string.Format(StyleFormt, UseCNDSource ? CNDSource : page.Url.Content(ReleaseSource)); break;
+                    case ResourceType.Script: source = string.Format(ScriptFormt, UseCNDSource ? CDNSource : page.Url.Content(ReleaseSource)); break;
+                    case ResourceType.Style: source = string.Format(StyleFormt, UseCNDSource ? CDNSource : page.Url.Content(ReleaseSource)); break;
                 }
             }
             writer.Write(source);
@@ -66,6 +66,7 @@ namespace Easy.Web.Resource
                 Source = Source,
                 SourceType = SourceType,
                 ReleaseSource = ReleaseSource,
+                CDNSource = CDNSource,
                 DebugSource = DebugSource
             };
         }

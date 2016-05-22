@@ -18,6 +18,12 @@
         </div>
     </section>
 }
+
+@using (Html.BeginForm("index","home", FormMethod.Post,new { enctype = "multipart/form-data" }))
+{
+    <input type="file" name="ddd"/>
+    <input type="submit" />
+}
 <h3>We suggest the following:</h3>
 <ol class="round">
     <li class="one">

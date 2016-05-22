@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Web;
+using Microsoft.Practices.ServiceLocation;
+using Easy.Storage;
+using Easy.Extend;
 
 namespace Easy.Web.Extend
 {
@@ -21,6 +24,11 @@ namespace Easy.Web.Extend
             if (!System.IO.Directory.Exists(path))
             {
                 System.IO.Directory.CreateDirectory(path);
+                var storage = ServiceLocator.Current.GetInstance<IStorageService>();
+                if (storage != null)
+                {
+                    storage.CreateFolder(path);
+                }
             }
             return path;
         }
@@ -38,9 +46,19 @@ namespace Easy.Web.Extend
                 string ext = System.IO.Path.GetExtension(fileName);
                 if (Common.IsImage(ext))
                 {
-                    fileName = string.Format("{0}{1}", DateTime.Now.ToFileTime(), ext);
+                    fileName = string.Format("{0}{1}", Guid.NewGuid().ToString("N"), ext);
                     path += fileName;
                     request.Files[0].SaveAs(path);
+
+                    var storage = ServiceLocator.Current.GetInstance<IStorageService>();
+                    if (storage != null)
+                    {
+                        string filePath = storage.SaveFile(path);
+                        if (filePath.IsNotNullAndWhiteSpace())
+                        {
+                            return filePath;
+                        }
+                    }
                     return path.Replace(request.MapPath("~/"), "~/").Replace("\\", "/");
                 }
             }
@@ -55,9 +73,18 @@ namespace Easy.Web.Extend
                 string ext = System.IO.Path.GetExtension(fileName);
                 if (Common.IsImage(ext))
                 {
-                    fileName = string.Format("{0}{1}", DateTime.Now.ToFileTime(), ext);
+                    fileName = string.Format("{0}{1}", Guid.NewGuid().ToString("N"), ext);
                     path += fileName;
                     request.Files[name].SaveAs(path);
+                    var storage = ServiceLocator.Current.GetInstance<IStorageService>();
+                    if (storage != null)
+                    {
+                        string filePath = storage.SaveFile(path);
+                        if (filePath.IsNotNullAndWhiteSpace())
+                        {
+                            return filePath;
+                        }
+                    }
                     return path.Replace(request.MapPath("~/"), "~/").Replace("\\", "/");
                 }
             }
@@ -77,9 +104,18 @@ namespace Easy.Web.Extend
                 string ext = System.IO.Path.GetExtension(fileName);
                 if (Common.FileCanUp(ext))
                 {
-                    fileName = string.Format("{0}{1}", DateTime.Now.ToFileTime(), ext);
+                    fileName = string.Format("{0}{1}", Guid.NewGuid().ToString("N"), ext);
                     path += fileName;
                     request.Files[0].SaveAs(path);
+                    var storage = ServiceLocator.Current.GetInstance<IStorageService>();
+                    if (storage != null)
+                    {
+                        string filePath = storage.SaveFile(path);
+                        if (filePath.IsNotNullAndWhiteSpace())
+                        {
+                            return filePath;
+                        }
+                    }
                     return path.Replace(request.MapPath("~/"), "~/").Replace("\\", "/");
                 }
             }
@@ -94,13 +130,44 @@ namespace Easy.Web.Extend
                 string ext = System.IO.Path.GetExtension(fileName);
                 if (Common.FileCanUp(ext))
                 {
-                    fileName = string.Format("{0}{1}", DateTime.Now.ToFileTime(), ext);
+                    fileName = string.Format("{0}{1}", Guid.NewGuid().ToString("N"), ext);
                     path += fileName;
                     request.Files[0].SaveAs(path);
+                    var storage = ServiceLocator.Current.GetInstance<IStorageService>();
+                    if (storage != null)
+                    {
+                        string filePath = storage.SaveFile(path);
+                        if (filePath.IsNotNullAndWhiteSpace())
+                        {
+                            return filePath;
+                        }
+                    }
                     return path.Replace(request.MapPath("~/"), "~/").Replace("\\", "/");
                 }
             }
             return string.Empty;
+        }
+
+        public static void DeleteFile(this HttpRequestBase request, string filePath)
+        {
+            try
+            {
+                string file = request.MapPath(filePath);
+                if (System.IO.File.Exists(file))
+                {
+                    System.IO.File.Delete(file);
+                }
+                var storage = ServiceLocator.Current.GetInstance<IStorageService>();
+                if (storage != null)
+                {
+                    storage.DeleteFile(file);
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Error(ex);
+            }
+
         }
     }
 }

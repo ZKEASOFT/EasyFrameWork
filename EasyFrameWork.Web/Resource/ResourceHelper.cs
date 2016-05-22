@@ -34,7 +34,7 @@ namespace Easy.Web.Resource
         }
         public ResourceHelper Include(string debuger, string release, string cdn)
         {
-            _source[_name].Add(new ResourceEntity { SourceType = _resourceType, DebugSource = debuger, CNDSource = cdn, ReleaseSource = release });
+            _source[_name].Add(new ResourceEntity { SourceType = _resourceType, DebugSource = debuger, CDNSource = cdn, ReleaseSource = release });
             return this;
         }
         public ResourceHelper RequiredAtHead()
