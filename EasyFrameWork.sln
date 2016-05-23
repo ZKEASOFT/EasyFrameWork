@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25123.0
+# Visual Studio 2013
+VisualStudioVersion = 12.0.31101.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Easy", "EasyFrameWork\Easy.csproj", "{EDB1BAA7-EC61-4292-BBE5-3BC39EB171E4}"
 EndProject
@@ -10,10 +10,6 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MvcApplication", "MvcApplication\MvcApplication.csproj", "{775BD8A6-3C5B-4F98-B406-2E14C0A67998}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTest", "UnitTest\UnitTest.csproj", "{0EAA0202-8452-4250-97AB-0ABD192199E3}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Easy.Data.DataBase.SQLite", "Easy.Data.DataBase.SQLite\Easy.Data.DataBase.SQLite.csproj", "{CE5F6DA3-5C2C-4200-95F5-B65C52B584C8}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Easy.Storage.QCloud", "Easy.Storage.QCloud\Easy.Storage.QCloud.csproj", "{544ABBD9-AC27-42B7-AB8C-A2714AAAFC57}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -37,14 +33,6 @@ Global
 		{0EAA0202-8452-4250-97AB-0ABD192199E3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0EAA0202-8452-4250-97AB-0ABD192199E3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0EAA0202-8452-4250-97AB-0ABD192199E3}.Release|Any CPU.Build.0 = Release|Any CPU
-		{CE5F6DA3-5C2C-4200-95F5-B65C52B584C8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{CE5F6DA3-5C2C-4200-95F5-B65C52B584C8}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{CE5F6DA3-5C2C-4200-95F5-B65C52B584C8}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{CE5F6DA3-5C2C-4200-95F5-B65C52B584C8}.Release|Any CPU.Build.0 = Release|Any CPU
-		{544ABBD9-AC27-42B7-AB8C-A2714AAAFC57}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{544ABBD9-AC27-42B7-AB8C-A2714AAAFC57}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{544ABBD9-AC27-42B7-AB8C-A2714AAAFC57}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{544ABBD9-AC27-42B7-AB8C-A2714AAAFC57}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

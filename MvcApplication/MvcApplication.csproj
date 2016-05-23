@@ -315,7 +315,6 @@
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
     <None Include="Scripts\jquery-1.8.2.intellisense.js" />
-    <None Include="QCloudStorage.config" />
     <Content Include="Scripts\jquery-1.8.2.js" />
     <Content Include="Scripts\jquery-1.8.2.min.js" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
@@ -367,10 +366,6 @@
     <Content Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Easy.Storage.QCloud\Easy.Storage.QCloud.csproj">
-      <Project>{544abbd9-ac27-42b7-ab8c-a2714aaafc57}</Project>
-      <Name>Easy.Storage.QCloud</Name>
-    </ProjectReference>
     <ProjectReference Include="..\EasyFrameWork.Web\Easy.Web.csproj">
       <Project>{a1228125-f5c4-4001-ac7d-1accf1679828}</Project>
       <Name>Easy.Web</Name>
