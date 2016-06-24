@@ -46,8 +46,9 @@ namespace Easy.Web.Resource
             ResourceEntity resource = new ResourceEntity();
             resource.Position = _position;
             resource.Source = _page.OutputStack.Pop();
-            var resources=new ResourceCollection();
-            resources.Name = Guid.NewGuid().ToString("N");
+            var resources = new ResourceCollection();
+            StringWriter stringWriter = resource.Source as StringWriter;
+            resources.Name = _key + resource.Source.ToString().GetHashCode();
             resources.Add(resource);
             _callBack(resources, _key);
         }

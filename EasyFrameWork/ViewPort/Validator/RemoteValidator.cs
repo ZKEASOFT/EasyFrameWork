@@ -10,7 +10,7 @@ namespace Easy.ViewPort.Validator
     {
         public RemoteValidator()
         {
-            this.BaseErrorMessage = "{0}验证失败！";
+            this.BaseErrorMessage = "{0}验证失败";
         }
         public string Url
         {

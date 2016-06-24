@@ -13,13 +13,15 @@ namespace Easy.Cache
         public class CacheObject
         {
             public bool AutoRemove { get; set; }
+            public int? ExpireMinutes { get; set; }
             public DateTime LastVisit { get; set; }
             readonly object _obj;
-            public CacheObject(object obj, bool autoRemove)
+            public CacheObject(object obj, bool autoRemove, int? expireMinutes)
             {
                 _obj = obj;
                 LastVisit = DateTime.Now;
                 AutoRemove = autoRemove;
+                ExpireMinutes = expireMinutes;
             }
             public object Get()
             {
@@ -36,30 +38,7 @@ namespace Easy.Cache
         internal static Dictionary<string, CacheObject> Cache;
         private static Task _timer;
 
-        static StaticCache()
-        {
-            Cache = new Dictionary<string, CacheObject>();
-            _timer = new Task(() =>
-            {
-                while (true)
-                {
-                    Thread.Sleep(new TimeSpan(0, 20, 1));
-                    lock (Cache)
-                    {
-                        var needRemove = new List<string>();
-                        Cache.Each(item =>
-                        {
-                            if (item.Value.AutoRemove && (DateTime.Now - item.Value.LastVisit).TotalMinutes > 20)
-                            {
-                                needRemove.Add(item.Key);
-                            }
-                        });
-                        needRemove.Each(item => Cache.Remove(item));
-                    }
-                }
-            });
-            _timer.Start();
-        }
+
 
 
         public T Get<T>(string key, Func<Signal, T> source)
@@ -68,12 +47,20 @@ namespace Easy.Cache
             {
                 if (Cache.ContainsKey(key))
                 {
-                    return (T)Cache[key].Get();
+                    var cacheObj = Cache[key];
+                    if (cacheObj.AutoRemove && (DateTime.Now - cacheObj.LastVisit).TotalMinutes > (cacheObj.ExpireMinutes ?? 30))
+                    {
+                        Remove(key);
+                    }
+                    else
+                    {
+                        return (T)cacheObj.Get();
+                    }
                 }
 
                 var signal = new Signal(key);
                 T result = source.Invoke(signal);
-                Cache.Add(key, new CacheObject(result, signal.AutoRemove));
+                Cache.Add(key, new CacheObject(result, signal.AutoRemove, signal.ExpireMinutes));
                 return result;
 
             }
@@ -119,6 +106,7 @@ namespace Easy.Cache
             SignalRela = new Dictionary<string, List<string>>();
         }
         public bool AutoRemove { get; set; }
+        public int? ExpireMinutes { get; set; }
         public void When(string signal)
         {
             lock (SignalRela)
