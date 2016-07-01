@@ -20,7 +20,7 @@ namespace Easy.Web.Extend
             {
                 System.IO.Directory.CreateDirectory(path);
             }
-            path += string.Format("\\{0}\\", DateTime.Now.ToString("yyyyMMdd"));
+            path += string.Format("\\{0}\\", DateTime.Now.ToString("yyyyMM"));
             if (!System.IO.Directory.Exists(path))
             {
                 System.IO.Directory.CreateDirectory(path);
