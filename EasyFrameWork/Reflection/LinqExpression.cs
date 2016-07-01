@@ -67,7 +67,7 @@ namespace Easy.Reflection
                 {
                     if (exp is MemberExpression && (exp as MemberExpression).Member.ReflectedType == fromType)
                     {
-                        return ClassAction.GetPropertyValue(from, (exp as MemberExpression).Member.Name);
+                        return ClassAction.GetObjPropertyValue(from, (exp as MemberExpression).Member.Name);
                     }
                     if (exp.NodeType == ExpressionType.Constant)
                     {

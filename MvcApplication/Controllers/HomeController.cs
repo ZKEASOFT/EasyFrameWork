@@ -11,6 +11,7 @@ using Microsoft.Practices.ServiceLocation;
 using MvcApplication.Models;
 using MvcApplication.Service;
 using Easy.Web.Extend;
+using System.Collections.Generic;
 
 namespace MvcApplication.Controllers
 {
@@ -24,6 +25,7 @@ namespace MvcApplication.Controllers
         }
         public override ActionResult Index()
         {
+            Service.Add(new Example { Items = new List<ExampleItem> { new ExampleItem { } } });
             return base.Index();
         }
         [HttpPost]

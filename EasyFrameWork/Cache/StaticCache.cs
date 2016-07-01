@@ -36,11 +36,10 @@ namespace Easy.Cache
         }
 
         internal static Dictionary<string, CacheObject> Cache;
-        private static Task _timer;
-
-
-
-
+        static StaticCache()
+        {
+            Cache = new Dictionary<string, CacheObject>();
+        }
         public T Get<T>(string key, Func<Signal, T> source)
         {
             lock (Cache)
