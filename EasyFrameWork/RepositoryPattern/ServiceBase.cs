@@ -64,7 +64,7 @@ namespace Easy.RepositoryPattern
 
         public virtual IEnumerable<T> Get(Expression<Func<T, bool>> expression)
         {
-            return Get(Reflection.LinqExpression.ConvertToDataFilter((BinaryExpression)expression.Body));
+            return Get(Reflection.LinqExpression.ConvertToDataFilter(expression.Parameters, (BinaryExpression)expression.Body));
         }
         public virtual IEnumerable<T> Get(DataFilter filter)
         {
@@ -92,7 +92,7 @@ namespace Easy.RepositoryPattern
         }
         public virtual int Delete(Expression<Func<T, bool>> expression)
         {
-            return Delete(Reflection.LinqExpression.ConvertToDataFilter(expression.Body as BinaryExpression));
+            return Delete(Reflection.LinqExpression.ConvertToDataFilter(expression.Parameters, expression.Body as BinaryExpression));
         }
         public virtual int Delete(T item)
         {
@@ -113,7 +113,7 @@ namespace Easy.RepositoryPattern
 
         public virtual long Count(Expression<Func<T, bool>> expression)
         {
-            return Count(Reflection.LinqExpression.ConvertToDataFilter(expression.Body as BinaryExpression));
+            return Count(Reflection.LinqExpression.ConvertToDataFilter(expression.Parameters, expression.Body as BinaryExpression));
         }
     }
 }

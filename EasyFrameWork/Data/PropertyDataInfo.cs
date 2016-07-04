@@ -98,7 +98,7 @@ namespace Easy.Data
         /// </summary>
         /// <param name="canUpdate"></param>
         /// <returns></returns>
-        public PropertyDataInfoHelper<T> Update(bool canUpdate )
+        public PropertyDataInfoHelper<T> Update(bool canUpdate)
         {
             _dataConig.CanUpdate = canUpdate;
             return this;
@@ -185,13 +185,14 @@ namespace Easy.Data
         {
             Ignore();
             _dataConig.IsReference = true;
+
             _dataConig.AddReference = (item, childItem) =>
             {
                 _referenceService = _referenceService ?? ServiceLocator.Current.GetInstance(typeof(TService));
                 var service = _referenceService as IService<TEntity>;
                 if (service != null)
                 {
-                    Reflection.LinqExpression.CopyTo(item, childItem, relation.Body as BinaryExpression);
+                    Reflection.LinqExpression.CopyTo(item, childItem, relation.Parameters, relation.Body as BinaryExpression);
                     service.Add((TEntity)childItem);
                 }
             };
@@ -211,7 +212,7 @@ namespace Easy.Data
                 _referenceService = _referenceService ?? ServiceLocator.Current.GetInstance(typeof(TService));
                 var service = _referenceService as IService<TEntity>;
                 if (service != null)
-                    return service.Get(Reflection.LinqExpression.ConvertToDataFilter(relation.Body as BinaryExpression, obj));
+                    return service.Get(Reflection.LinqExpression.ConvertToDataFilter(relation.Parameters, relation.Body as BinaryExpression, obj));
                 return null;
             };
 

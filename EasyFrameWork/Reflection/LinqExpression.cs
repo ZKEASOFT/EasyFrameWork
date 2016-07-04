@@ -29,7 +29,7 @@ namespace Easy.Reflection
             }
             return "";
         }
-        public static void CopyTo(object from, object to, BinaryExpression expression)
+        public static void CopyTo(object from, object to, IEnumerable<ParameterExpression> paras, BinaryExpression expression)
         {
             var fromType = from.GetType();
             var toType = to.GetType();
@@ -57,9 +57,9 @@ namespace Easy.Reflection
             {
                 Func<Expression, string> propertyHandle = exp =>
                 {
-                    if (exp is MemberExpression && (exp as MemberExpression).Member.ReflectedType == toType)
+                    if (exp is MemberExpression)
                     {
-                        return (left as MemberExpression).Member.Name;
+                        return (exp as MemberExpression).Member.Name;
                     }
                     return null;
                 };
@@ -75,15 +75,17 @@ namespace Easy.Reflection
                     }
                     if (exp.NodeType == ExpressionType.Call)
                     {
-                        object[] args = { from };
-                        return Expression.Lambda(exp).Compile().DynamicInvoke(args);
+                        var type = GetExpressParamaterType(exp);
+                        return Expression.Lambda(exp, paras.FirstOrDefault(m => m.Type.IsAssignableFrom(type))).Compile().DynamicInvoke(from);
                     }
                     return null;
                 };
-                string propertyName = propertyHandle(left);
+                var leftIsTarget = !fromType.IsAssignableFrom(GetExpressParamaterType(left)) && left.NodeType != ExpressionType.Constant;
+
+                string propertyName = leftIsTarget ? propertyHandle(left) : propertyHandle(right);
                 if (propertyName != null)
                 {
-                    object value = valueHandle(right);
+                    object value = leftIsTarget ? valueHandle(right) : valueHandle(left);
                     if (value != null)
                     {
                         toType.GetProperty(propertyName).SetValue(to, value, null);
@@ -92,20 +94,34 @@ namespace Easy.Reflection
             }
             if (expression.Left is BinaryExpression)
             {
-                CopyTo(from, to, (BinaryExpression)expression.Left);
+                CopyTo(from, to, paras, (BinaryExpression)expression.Left);
             }
             if (expression.Right is BinaryExpression)
             {
-                CopyTo(from, to, (BinaryExpression)expression.Right);
+                CopyTo(from, to, paras, (BinaryExpression)expression.Right);
             }
         }
-        public static DataFilter ConvertToDataFilter(BinaryExpression expression, object obj = null)
+        private static Type GetExpressParamaterType(Expression exp)
+        {
+            if (exp.NodeType == ExpressionType.Call)
+            {
+                var call = exp as MethodCallExpression;
+                return GetExpressParamaterType(call.Object);
+            }
+            else if (exp.NodeType == ExpressionType.MemberAccess)
+            {
+                var member = exp as MemberExpression;
+                return member.Expression.Type;
+            }
+            return exp.Type;
+        }
+        public static DataFilter ConvertToDataFilter(IEnumerable<ParameterExpression> paras, BinaryExpression expression, object obj = null)
         {
             List<KeyValuePair<string, object>> objParams = new List<KeyValuePair<string, object>>();
-            string condition = BinaryConvert(expression, obj, ref objParams);
+            string condition = BinaryConvert(paras, expression, obj, ref objParams);
             return new DataFilter(condition, objParams);
         }
-        private static string BinaryConvert(BinaryExpression expression, object obj, ref List<KeyValuePair<string, object>> objParams)
+        private static string BinaryConvert(IEnumerable<ParameterExpression> paras, BinaryExpression expression, object obj, ref List<KeyValuePair<string, object>> objParams)
         {
             string operatorStr;
             switch (expression.NodeType)
@@ -151,7 +167,7 @@ namespace Easy.Reflection
                 }
                 if (exp is BinaryExpression)
                 {
-                    str = BinaryConvert((BinaryExpression)exp, obj, ref parmas);
+                    str = BinaryConvert(paras, (BinaryExpression)exp, obj, ref parmas);
                 }
                 else if (exp.NodeType == ExpressionType.MemberAccess)
                 {
@@ -175,7 +191,17 @@ namespace Easy.Reflection
                 }
                 else if (exp.NodeType == ExpressionType.Call)
                 {
-                    KeyValuePair<string, object> keyValue = new KeyValuePair<string, object>(Guid.NewGuid().ToString("N"), Expression.Lambda(exp).Compile().DynamicInvoke(obj));
+                    var paraType = paras.FirstOrDefault(m => m.Type.IsAssignableFrom(GetExpressParamaterType(exp)));
+                    object value;
+                    if (paraType != null)
+                    {
+                        value = Expression.Lambda(exp, paraType).Compile().DynamicInvoke(obj);
+                    }
+                    else
+                    {
+                        value = Expression.Lambda(exp).Compile().DynamicInvoke();
+                    }
+                    KeyValuePair<string, object> keyValue = new KeyValuePair<string, object>(Guid.NewGuid().ToString("N"), value);
                     str = "@" + keyValue.Key;
                     parmas.Add(keyValue);
                 }
@@ -221,7 +247,7 @@ namespace Easy.Reflection
                                 if (value != null)
                                 {
                                     return new KeyValuePair<string, object>(Guid.NewGuid().ToString("N"), value);
-                                }   
+                                }
                             }
 
                         }
