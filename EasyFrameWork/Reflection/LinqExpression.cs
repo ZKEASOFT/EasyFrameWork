@@ -75,7 +75,8 @@ namespace Easy.Reflection
                     }
                     if (exp.NodeType == ExpressionType.Call)
                     {
-                        return Expression.Lambda(exp).Compile().DynamicInvoke();
+                        object[] args = { from };
+                        return Expression.Lambda(exp).Compile().DynamicInvoke(args);
                     }
                     return null;
                 };
@@ -174,7 +175,7 @@ namespace Easy.Reflection
                 }
                 else if (exp.NodeType == ExpressionType.Call)
                 {
-                    KeyValuePair<string, object> keyValue = new KeyValuePair<string, object>(Guid.NewGuid().ToString("N"), Expression.Lambda(exp).Compile().DynamicInvoke());
+                    KeyValuePair<string, object> keyValue = new KeyValuePair<string, object>(Guid.NewGuid().ToString("N"), Expression.Lambda(exp).Compile().DynamicInvoke(obj));
                     str = "@" + keyValue.Key;
                     parmas.Add(keyValue);
                 }

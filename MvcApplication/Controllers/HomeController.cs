@@ -12,6 +12,7 @@ using MvcApplication.Models;
 using MvcApplication.Service;
 using Easy.Web.Extend;
 using System.Collections.Generic;
+using System.Linq.Expressions;
 
 namespace MvcApplication.Controllers
 {
@@ -25,7 +26,14 @@ namespace MvcApplication.Controllers
         }
         public override ActionResult Index()
         {
-            Service.Add(new Example { Items = new List<ExampleItem> { new ExampleItem { } } });
+            Example m1 = new Example { Id = 1 };
+            ExampleItem m2 = new ExampleItem { ID = 2 };
+            Expression<Func<Example, ExampleItem, bool>> express = (p1, p2) => p1.Id == p2.ID;
+
+            Expression.Lambda((express.Body as BinaryExpression).Left, Expression.Parameter(typeof(Example), "p1")).Compile().DynamicInvoke(m1);
+
+            Expression.Lambda((express.Body as BinaryExpression).Right, Expression.Parameter(typeof(Example), "p2")).Compile().DynamicInvoke(m2);
+
             return base.Index();
         }
         [HttpPost]

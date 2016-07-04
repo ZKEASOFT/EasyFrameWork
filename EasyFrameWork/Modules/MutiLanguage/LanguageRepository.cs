@@ -34,15 +34,19 @@ namespace Easy.Modules.MutiLanguage
                 else
                 {
                     newLan.Add(item.Key, item.Value);
+                    var lan = Get(new DataFilter().Where("LanKey", OperatorType.EndWith, "@" + item.Key)).FirstOrDefault();
+                    if (lan != null)
+                    {
+                        result.Add(item.Key, lan.LanValue);
+                    }
                 }
             }
             foreach (var item in newLan)
             {
-                var lan = Get(new DataFilter().Where("LanKey", OperatorType.EndWith, "@" + item.Key)).FirstOrDefault();
                 var sql = DataBase.CustomerSql("INSERT INTO [Language] ([LanKey],[LanID],[LanValue],[Module],[LanType]) VALUES (@LanKey,@LanID,@LanValue,@Module,@LanType)")
                      .AddParameter("LanKey", item.Value)
                      .AddParameter("LanID", Localization.GetCurrentLanID())
-                     .AddParameter("LanValue", lan == null ? item.Key : lan.LanValue);
+                     .AddParameter("LanValue", result.ContainsKey(item.Key) ? result[item.Key] : item.Key);
                 if (item.Value.Contains("@"))
                 {
                     sql.AddParameter("Module", item.Value.Split('@')[0])

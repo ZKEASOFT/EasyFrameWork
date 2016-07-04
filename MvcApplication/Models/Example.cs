@@ -28,7 +28,7 @@ namespace MvcApplication.Models
             DataConfig(m => m.Value).Mapper("ValueText");
             DataConfig(m => m.Title).Ignore();
             DataConfig(m => m.Items)
-                .SetReference<ExampleItem, IExampleItemService>((example, exampleItem) => 1 == exampleItem.ID && example.Id == exampleItem.ExampleID);
+                .SetReference<ExampleItem, IExampleItemService>((example, exampleItem) => exampleItem.ID == 1 && exampleItem.OwnerId == example.Id.ToString());
         }
 
         protected override void ViewConfigure()

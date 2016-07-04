@@ -7,6 +7,7 @@ namespace MvcApplication.Models
     {
         public int? ID { get; set; }
         public int? ExampleID { get; set; }
+        public string OwnerId { get; set; }
     }
 
     class ExampleItemMeterData : DataViewMetaData<ExampleItem>
