@@ -65,7 +65,7 @@ namespace Easy.Reflection
                 };
                 Func<Expression, object> valueHandle = exp =>
                 {
-                    if (exp is MemberExpression && (exp as MemberExpression).Member.ReflectedType == fromType)
+                    if (exp is MemberExpression)
                     {
                         return ClassAction.GetObjPropertyValue(from, (exp as MemberExpression).Member.Name);
                     }
@@ -79,10 +79,10 @@ namespace Easy.Reflection
                     }
                     return null;
                 };
-                string propertyName = propertyHandle(left) ?? propertyHandle(right);
+                string propertyName = propertyHandle(left);
                 if (propertyName != null)
                 {
-                    object value = valueHandle(left) ?? valueHandle(right);
+                    object value = valueHandle(right);
                     if (value != null)
                     {
                         toType.GetProperty(propertyName).SetValue(to, value, null);
@@ -193,7 +193,7 @@ namespace Easy.Reflection
         }
         private static KeyValuePair<string, object> MemberConvert(MemberExpression expression, object obj)
         {
-            Func<MemberExpression,object> valueGetter= exp =>
+            Func<MemberExpression, object> valueGetter = exp =>
             {
                 var objectMember = Expression.Convert(exp, typeof(object));
                 var getterLambda = Expression.Lambda<Func<object>>(objectMember);
@@ -213,15 +213,16 @@ namespace Easy.Reflection
                         }
                         if (obj != null)
                         {
-                            var objType = obj.GetType();
-                            if (expression.Member.ReflectedType == objType)
+                            var property = obj.GetType().GetProperty(expression.Member.Name);
+                            if (property != null)
                             {
-                                var value = objType.GetProperty(expression.Member.Name).GetValue(obj, null);
+                                var value = property.GetValue(obj, null);
                                 if (value != null)
                                 {
                                     return new KeyValuePair<string, object>(Guid.NewGuid().ToString("N"), value);
-                                }
+                                }   
                             }
+
                         }
                         DataConfigureAttribute attribute = DataConfigureAttribute.GetAttribute(expression.Member.ReflectedType);
                         string column = attribute != null ? attribute.GetPropertyMapper(expression.Member.Name) : expression.Member.Name;

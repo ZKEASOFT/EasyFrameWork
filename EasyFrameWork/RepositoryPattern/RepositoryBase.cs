@@ -203,16 +203,19 @@ namespace Easy.RepositoryPattern
                     if (dataInfo.IsReference)
                     {
                         var value = m.Value.GetValue(item, null);
-                        if (value is IEnumerable)
+                        if (value != null)
                         {
-                            foreach (var valueItem in value as IEnumerable)
+                            if (value is IEnumerable)
                             {
-                                opeartorChoose(dataInfo, item, valueItem, actionType);
+                                foreach (var valueItem in value as IEnumerable)
+                                {
+                                    opeartorChoose(dataInfo, item, valueItem, actionType);
+                                }
                             }
-                        }
-                        else
-                        {
-                            opeartorChoose(dataInfo, item, value, actionType);
+                            else
+                            {
+                                opeartorChoose(dataInfo, item, value, actionType);
+                            }
                         }
                     }
                 }
