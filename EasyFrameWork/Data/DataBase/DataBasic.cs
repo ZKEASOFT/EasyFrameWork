@@ -572,7 +572,16 @@ namespace Easy.Data.DataBase
         public virtual void Add<T>(T item) where T : class
         {
             DataConfigureAttribute custAttribute = DataConfigureAttribute.GetAttribute<T>();
-
+            if (custAttribute != null)
+            {
+                custAttribute.MetaData.PropertyDataConfig.Each(dic =>
+                {
+                    if (dic.Value.CanInsert && dic.Value.ValueProvider != null)
+                    {
+                        Reflection.ClassAction.SetPropertyValue(item, dic.Value.PropertyName, dic.Value.ValueProvider.GenerateValue());
+                    }
+                });
+            }
             string tableName = GetTableName<T>(custAttribute);
             Dictionary<string, object> allValues = Reflection.ClassAction.GetPropertieValues<T>(item);
             Dictionary<string, object> insertValues = new Dictionary<string, object>();
@@ -602,26 +611,37 @@ namespace Easy.Data.DataBase
             object resu = this.Insert(tableName, insertValues);
             if (custAttribute != null && resu != null && !resu.Equals(0))
             {
-                if (custAttribute.MetaData.Primarykey != null && custAttribute.MetaData.Primarykey.Count == 1)
+                if (custAttribute.MetaData.Primarykey != null)
                 {
-                    foreach (var dataConfig in custAttribute.MetaData.PropertyDataConfig)
+                    custAttribute.MetaData.Primarykey.Each(key =>
                     {
-                        if (dataConfig.Value.IsPrimaryKey && dataConfig.Value.IsIncreasePrimaryKey)
+                        if (custAttribute.MetaData.PropertyDataConfig.ContainsKey(key.PropertyName))
                         {
-                            PropertyInfo pro = typeof(T).GetProperty(dataConfig.Value.PropertyName);
-                            if (pro != null && pro.CanWrite)
+                            var config = custAttribute.MetaData.PropertyDataConfig[key.PropertyName];
+                            if (config.IsIncreasePrimaryKey && config.ValueProvider == null)
                             {
-                                pro.SetValue(item, Reflection.ClassAction.ValueConvert(pro, resu), null);
+                                Reflection.ClassAction.SetPropertyValue(item, key.PropertyName, resu);
                             }
-                            break;
                         }
-                    }
+                    });
                 }
             }
         }
         public virtual bool Update<T>(T item, DataFilter filter) where T : class
         {
             DataConfigureAttribute custAttribute = DataConfigureAttribute.GetAttribute<T>();
+
+            if (custAttribute != null)
+            {
+                custAttribute.MetaData.PropertyDataConfig.Each(dic =>
+                {
+                    if (dic.Value.CanUpdate && dic.Value.ValueProvider != null)
+                    {
+                        Reflection.ClassAction.SetPropertyValue(item, dic.Value.PropertyName, dic.Value.ValueProvider.GenerateValue());
+                    }
+                });
+            }
+
             string tableName = GetTableName<T>(custAttribute);
             PropertyInfo[] propertys = typeof(T).GetProperties();
             StringBuilder builder = new StringBuilder();

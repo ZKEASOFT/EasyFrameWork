@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
+using Easy.Data.ValueProvider;
 using Easy.RepositoryPattern;
 using Microsoft.Practices.ServiceLocation;
 
@@ -32,6 +33,7 @@ namespace Easy.Data
         /// 是否为自增主键
         /// </summary>
         public bool IsIncreasePrimaryKey { get; set; }
+        public IValueProvider ValueProvider { get; set; }
         public int PrimaryKeyIndex { get; set; }
         /// <summary>
         /// 增改查是忽略
@@ -149,6 +151,12 @@ namespace Easy.Data
                 _dataConig.IsPrimaryKey = true;
                 Update(false);
             }
+            return this;
+        }
+
+        public PropertyDataInfoHelper<T> SetValueProvider(IValueProvider primaryKeyProvider)
+        {
+            _dataConig.ValueProvider = primaryKeyProvider;
             return this;
         }
         /// <summary>

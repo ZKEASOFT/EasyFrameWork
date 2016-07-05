@@ -26,7 +26,8 @@ namespace MvcApplication.Controllers
         }
         public override ActionResult Index()
         {
-            Service.Get(m => m.Id == getI());
+            var s = Service.Get(m => m.Id == 1);
+            Service.Add(new Example());
 
 
             return base.Index();

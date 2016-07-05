@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using Easy.Data;
+using Easy.Data.ValueProvider;
 using Easy.MetaData;
 using Easy.Models;
 using MvcApplication.Service;
@@ -25,10 +26,11 @@ namespace MvcApplication.Models
         {
             DataTable("Example");
             DataConfig(m => m.Id).AsIncreasePrimaryKey();
-            DataConfig(m => m.Value).Mapper("ValueText");
+            DataConfig(m => m.Value).Mapper("ValueText").SetValueProvider(new GuidProvider());
             DataConfig(m => m.Title).Ignore();
             DataConfig(m => m.Items)
                 .SetReference<ExampleItem, IExampleItemService>((example, exampleItem) => 1 == exampleItem.ExampleID && example.Id.ToString() == exampleItem.OwnerId);
+
         }
 
         protected override void ViewConfigure()

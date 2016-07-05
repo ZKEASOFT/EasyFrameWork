@@ -89,6 +89,9 @@
     <Compile Include="Data\DataBase\SqlEarly.cs" />
     <Compile Include="Data\Operation.cs" />
     <Compile Include="Data\PrimaryKey.cs" />
+    <Compile Include="Data\ValueProvider\CurrentDateProvider.cs" />
+    <Compile Include="Data\ValueProvider\GuidProvider.cs" />
+    <Compile Include="Data\ValueProvider\IPrimaryKeyProvider.cs" />
     <Compile Include="Data\TableBuilderEngine.cs" />
     <Compile Include="Extend\ExtDate.cs" />
     <Compile Include="Extend\ExtIEnumerable.cs" />
