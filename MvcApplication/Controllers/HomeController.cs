@@ -26,8 +26,8 @@ namespace MvcApplication.Controllers
         }
         public override ActionResult Index()
         {
+            Service.Add(new Example { Items = new List<ExampleItem> { new ExampleItem() } });
             var s = Service.Get(m => m.Id == 1);
-            Service.Add(new Example());
 
 
             return base.Index();

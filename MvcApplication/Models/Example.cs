@@ -29,7 +29,7 @@ namespace MvcApplication.Models
             DataConfig(m => m.Value).Mapper("ValueText").SetValueProvider(new GuidProvider());
             DataConfig(m => m.Title).Ignore();
             DataConfig(m => m.Items)
-                .SetReference<ExampleItem, IExampleItemService>((example, exampleItem) => 1 == exampleItem.ExampleID && example.Id.ToString() == exampleItem.OwnerId);
+                .SetReference<ExampleItem, IExampleItemService>((example, exampleItem) => TargetType.Name == exampleItem.OwnerId);
 
         }
 
