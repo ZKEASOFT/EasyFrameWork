@@ -31,7 +31,6 @@ namespace Easy.Reflection
         }
         public static void CopyTo(object from, object to, IEnumerable<ParameterExpression> paras, BinaryExpression expression)
         {
-            var fromType = from.GetType();
             var toType = to.GetType();
             Expression left;
             Expression right;
@@ -65,22 +64,25 @@ namespace Easy.Reflection
                 };
                 Func<Expression, object> valueHandle = exp =>
                 {
-                    if (exp is MemberExpression)
-                    {
-                        return ClassAction.GetObjPropertyValue(from, (exp as MemberExpression).Member.Name);
-                    }
                     if (exp.NodeType == ExpressionType.Constant)
                     {
                         return ((ConstantExpression)exp).Value;
                     }
-                    if (exp.NodeType == ExpressionType.Call)
+                    if (exp.NodeType == ExpressionType.Call || exp.NodeType == ExpressionType.MemberAccess)
                     {
-                        var type = GetExpressParamaterType(exp);
-                        return Expression.Lambda(exp, paras.FirstOrDefault(m => m.Type.IsAssignableFrom(type))).Compile().DynamicInvoke(from);
+                        var paraType = paras.FirstOrDefault(m => m.Type.IsAssignableFrom(GetExpressParamaterType(exp)));
+                        if (paraType != null)
+                        {
+                            return Expression.Lambda(exp, paraType).Compile().DynamicInvoke(from);
+                        }
+                        else
+                        {
+                            return Expression.Lambda(exp).Compile().DynamicInvoke();
+                        }
                     }
                     return null;
                 };
-                var leftIsTarget = !fromType.IsAssignableFrom(GetExpressParamaterType(left)) && left.NodeType != ExpressionType.Constant;
+                var leftIsTarget = !toType.IsAssignableFrom(GetExpressParamaterType(right));
 
                 string propertyName = leftIsTarget ? propertyHandle(left) : propertyHandle(right);
                 if (propertyName != null)
@@ -240,13 +242,17 @@ namespace Easy.Reflection
                         }
                         if (obj != null)
                         {
-                            var property = obj.GetType().GetProperty(expression.Member.Name);
-                            if (property != null)
+                            var objType = obj.GetType();
+                            if (expression.Member.ReflectedType != null && expression.Member.ReflectedType.IsAssignableFrom(objType))
                             {
-                                var value = property.GetValue(obj, null);
-                                if (value != null)
+                                var property = objType.GetProperty(expression.Member.Name);
+                                if (property != null)
                                 {
-                                    return new KeyValuePair<string, object>(Guid.NewGuid().ToString("N"), value);
+                                    var value = property.GetValue(obj, null);
+                                    if (value != null)
+                                    {
+                                        return new KeyValuePair<string, object>(Guid.NewGuid().ToString("N"), value);
+                                    }
                                 }
                             }
 
