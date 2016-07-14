@@ -78,7 +78,6 @@ namespace Easy.Data
     {
         private readonly PropertyDataInfo _dataConig;
         private readonly IDataViewMetaData _viewMetaData;
-        private object _referenceService;
         public PropertyDataInfoHelper(PropertyDataInfo item, IDataViewMetaData viewMetaData)
         {
             _dataConig = item;
@@ -196,7 +195,7 @@ namespace Easy.Data
 
             _dataConig.AddReference = (item, childItem) =>
             {
-                _referenceService = _referenceService ?? ServiceLocator.Current.GetInstance(typeof(TService));
+                var _referenceService = ServiceLocator.Current.GetInstance(typeof(TService));
                 var service = _referenceService as IService<TEntity>;
                 if (service != null)
                 {
@@ -207,7 +206,7 @@ namespace Easy.Data
 
             _dataConig.DeleteReference = obj =>
             {
-                _referenceService = _referenceService ?? ServiceLocator.Current.GetInstance(typeof(TService));
+                var _referenceService = ServiceLocator.Current.GetInstance(typeof(TService));
                 var service = _referenceService as IService<TEntity>;
                 if (service != null)
                 {
@@ -217,7 +216,7 @@ namespace Easy.Data
 
             _dataConig.GetReference = obj =>
             {
-                _referenceService = _referenceService ?? ServiceLocator.Current.GetInstance(typeof(TService));
+                var _referenceService = ServiceLocator.Current.GetInstance(typeof(TService));
                 var service = _referenceService as IService<TEntity>;
                 if (service != null)
                     return service.Get(Reflection.LinqExpression.ConvertToDataFilter(relation.Parameters, relation.Body as BinaryExpression, obj));
@@ -226,7 +225,7 @@ namespace Easy.Data
 
             _dataConig.UpdateReference = obj =>
             {
-                _referenceService = _referenceService ?? ServiceLocator.Current.GetInstance(typeof(TService));
+                var _referenceService = ServiceLocator.Current.GetInstance(typeof(TService));
                 var service = _referenceService as IService<TEntity>;
                 if (service != null)
                 {
