@@ -152,6 +152,8 @@ namespace Easy.RepositoryPattern
 
         private void SaveReference(T item, ActionType actionType)
         {
+            if (item == null)
+                return;
             Action<PropertyDataInfo, T, object, ActionType> opeartorChoose = (propertyDataInfo, entity, childEntity, action) =>
             {
                 switch (action)
@@ -224,6 +226,9 @@ namespace Easy.RepositoryPattern
 
         private T GetReference(T item)
         {
+            if (item == null)
+                return null;
+
             _dataConfigure.MetaData.Properties.Each(m =>
             {
                 if (_dataConfigure.MetaData.PropertyDataConfig.ContainsKey(m.Key))

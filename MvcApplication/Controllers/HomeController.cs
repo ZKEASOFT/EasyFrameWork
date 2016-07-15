@@ -26,12 +26,14 @@ namespace MvcApplication.Controllers
         }
         public override ActionResult Index()
         {
-            
+            Service.Get(getI());
+
+
             return base.Index();
         }
         int getI()
         {
-            return 1;
+            return 0;
         }
         [HttpPost]
         public ActionResult Index(string s)
