@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Web;
 using Easy.Data;
@@ -14,6 +15,7 @@ namespace MvcApplication.Models
     public class Example : EditorEntity
     {
         public int Id { get; set; }
+        [DisplayName("文本")]
         public string Text { get; set; }
         public string Value { get; set; }
         public ICollection<ExampleItem> Items { get; set; }
