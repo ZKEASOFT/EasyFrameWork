@@ -7,6 +7,8 @@ using Easy.RepositoryPattern;
 using Easy.Modules.User.Models;
 using Easy.Constant;
 using Easy.Extend;
+using Easy.Modules.Role;
+using Microsoft.Practices.ServiceLocation;
 
 namespace Easy.Modules.User.Service
 {
@@ -44,6 +46,21 @@ namespace Easy.Modules.User.Service
                 return user;
             }
             return null;
+        }
+
+
+        public int GetPermissionValue(string userId)
+        {
+            var roleIds = Get(userId).Roles.ToList(m => m.RoleID);
+            if (roleIds.Any())
+            {
+                int permission = 0;
+                ServiceLocator.Current.GetInstance<IRoleService>()
+                    .Get(new DataFilter().Where("ID", OperatorType.In, roleIds))
+                    .Each(m => permission += m.RolePermission);
+                return permission;
+            }
+            return -1;
         }
     }
 }

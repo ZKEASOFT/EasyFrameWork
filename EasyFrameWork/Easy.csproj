@@ -96,6 +96,14 @@
     <Compile Include="Extend\ExtDate.cs" />
     <Compile Include="Extend\ExtIEnumerable.cs" />
     <Compile Include="Extend\ExtType.cs" />
+    <Compile Include="Modules\Role\IRoleService.cs" />
+    <Compile Include="Modules\Role\IUserRoleRelationService.cs" />
+    <Compile Include="Modules\Role\RoleEntity.cs" />
+    <Compile Include="Modules\Role\RoleService.cs" />
+    <Compile Include="Modules\Role\UserRoleRelation.cs" />
+    <Compile Include="Modules\Role\UserRoleRelationService.cs" />
+    <Compile Include="Security\DefaultAuthorizer.cs" />
+    <Compile Include="Security\IAuthorizer.cs" />
     <Compile Include="Storage\IStorageService.cs" />
     <Compile Include="ViewPort\jsTree\ContextmenuItem.cs" />
     <Compile Include="ViewPort\Descriptor\ListEditorDescriptor.cs" />

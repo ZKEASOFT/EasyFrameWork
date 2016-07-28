@@ -11,5 +11,6 @@ namespace Easy.Modules.User.Service
     public interface IUserService : IService<UserEntity>, IFreeDependency
     {
         UserEntity Login(string userID, string passWord, string ip);
+        int GetPermissionValue(string userId);
     }
 }

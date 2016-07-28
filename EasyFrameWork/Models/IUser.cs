@@ -32,5 +32,6 @@ namespace Easy.Models
         string Hobby { get; set; }
         string QQ { get; set; }
         string Email { get; set; }
+        int PermissionValue { get; set; }
     }
 }
