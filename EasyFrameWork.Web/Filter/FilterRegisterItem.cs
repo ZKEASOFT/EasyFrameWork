@@ -14,14 +14,20 @@ namespace Easy.Web.Filter
             ActionDescriptor = actionDescriptor;
             _actionParameterDescriptors = ActionDescriptor.GetParameters();
             FilterTypes = filterTypes;
-            Filters = () => FilterTypes.Select(f => Activator.CreateInstance(f) as FilterAttribute);
+            Filters = () =>
+            {
+                if (FilterAttributesInstance != null)
+                {
+                    return FilterAttributesInstance;
+                }
+                return FilterAttributesInstance = FilterTypes.Select(f => Activator.CreateInstance(f) as FilterAttribute).ToList();
+            };
         }
-
         public Type ControllerType { get; private set; }
         public ReflectedActionDescriptor ActionDescriptor { get; private set; }
         public Type[] FilterTypes { get; private set; }
         public Func<IEnumerable<FilterAttribute>> Filters;
-
+        protected IEnumerable<FilterAttribute> FilterAttributesInstance;
         public bool IsSameAction(ActionDescriptor descriptor)
         {
             var desc = descriptor as ReflectedActionDescriptor;
@@ -53,5 +59,28 @@ namespace Easy.Web.Filter
 
             return same;
         }
+    }
+
+    public class FilterRegisterConfigureItem<T> : FilterRegisterItem where T : FilterAttribute
+    {
+        public FilterRegisterConfigureItem(Type controllerType, ReflectedActionDescriptor actionDescriptor, Action<T> configureFilter, Type[] filterTypes)
+            : base(controllerType, actionDescriptor, filterTypes)
+        {
+            ConfigureFilter = configureFilter;
+            Filters = () =>
+            {
+                if (FilterAttributesInstance != null)
+                {
+                    return FilterAttributesInstance;
+                }
+                return FilterAttributesInstance = FilterTypes.Select(f =>
+                {
+                    var attribute = Activator.CreateInstance(f) as FilterAttribute;
+                    configureFilter.Invoke(attribute as T);
+                    return attribute;
+                }).ToList();
+            };
+        }
+        public Action<T> ConfigureFilter { get; private set; }
     }
 }

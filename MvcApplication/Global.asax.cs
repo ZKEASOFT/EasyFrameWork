@@ -13,7 +13,7 @@ namespace MvcApplication
     {
         public override void Application_Starting()
         {
-
+            ContainerAdapter.RegisterType<IApplicationContext, ApplicationContext>();
 
             TaskManager
                 .Include<ConfigTask>()

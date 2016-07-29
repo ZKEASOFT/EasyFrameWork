@@ -5,7 +5,7 @@ namespace Easy.Security
 {
     public interface IAuthorizer
     {
-        bool Authorize(int permission);
-        bool Authorize(int permission, IUser user);
+        bool Authorize(string permission);
+        bool Authorize(string permission, IUser user);
     }
 }

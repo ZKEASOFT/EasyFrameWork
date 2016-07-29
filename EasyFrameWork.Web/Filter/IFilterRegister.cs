@@ -11,6 +11,10 @@ namespace Easy.Web.Filter
             where TController : System.Web.Mvc.Controller
             where TFilterAttribute : FilterAttribute;
 
+        void Register<TController, TFilterAttribute>(Expression<Action<TController>> action, Action<TFilterAttribute> configFilter)
+            where TController : System.Web.Mvc.Controller
+            where TFilterAttribute : FilterAttribute;
+
         void Register<TController, TFilterAttribute1, TFilterAttribute2>(Expression<Action<TController>> action)
             where TController : System.Web.Mvc.Controller
             where TFilterAttribute1 : FilterAttribute

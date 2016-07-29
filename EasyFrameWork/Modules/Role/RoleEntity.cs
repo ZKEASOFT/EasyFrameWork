@@ -11,7 +11,7 @@ namespace Easy.Modules.Role
     public class RoleEntity : EditorEntity
     {
         public int ID { get; set; }
-        public int RolePermission { get; set; }
+        public IEnumerable<Permission> Permissions { get; set; }
     }
 
     class RoleMetaData : DataViewMetaData<RoleEntity>
@@ -20,12 +20,12 @@ namespace Easy.Modules.Role
         {
             DataTable("Role");
             DataConfig(m => m.ID).AsIncreasePrimaryKey();
+            DataConfig(m => m.Permissions).SetReference<Permission, IPermissionService>((role, permission) => role.ID == permission.RoleId);
         }
 
         protected override void ViewConfigure()
         {
             ViewConfig(m => m.ID).AsHidden();
-            ViewConfig(m => m.RolePermission).AsHidden();
         }
     }
 }

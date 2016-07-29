@@ -17,13 +17,13 @@ namespace Easy.Web.Application
 {
     public abstract class UnityMvcApplication : TaskApplication
     {
-        public IUnityContainer Container { get; private set; }
+        private IUnityContainer _container;
 
         private IContainerAdapter _containerAdapter;
 
         public override IContainerAdapter ContainerAdapter
         {
-            get { return _containerAdapter ?? (_containerAdapter = new UnityContainerAdapter(Container)); }
+            get { return _containerAdapter ?? (_containerAdapter = new UnityContainerAdapter(_container)); }
         }
 
         protected void Application_Start()
@@ -33,10 +33,10 @@ namespace Easy.Web.Application
             ModelMetadataProviders.Current = new EasyModelMetaDataProvider();
             //ModelBinderProviders.BinderProviders.Add(new EasyBinderProvider());
 
-            Container = new UnityContainer();
-            Container.RegisterType<IControllerFactory, FilterControllerFactory>();
-            Container.RegisterType<IControllerActivator, EasyControllerActivator>();
-            Container.RegisterType<IHttpItemsValueProvider, HttpItemsValueProvider>(new ContainerControlledLifetimeManager());
+            _container = new UnityContainer();
+            _container.RegisterType<IControllerFactory, FilterControllerFactory>();
+            _container.RegisterType<IControllerActivator, EasyControllerActivator>();
+            _container.RegisterType<IHttpItemsValueProvider, HttpItemsValueProvider>(new ContainerControlledLifetimeManager());
             //Container.RegisterType<IApplicationContext, ApplicationContext>(new PerRequestLifetimeManager());
 
             //Container.RegisterType<IDataDictionaryService, DataDictionaryService>();
@@ -47,7 +47,7 @@ namespace Easy.Web.Application
 
             Application_Starting();
 
-            new UnityRegister(Container).Regist();
+            new UnityRegister(_container).Regist();
 
             TaskManager.ExcuteAll();
 

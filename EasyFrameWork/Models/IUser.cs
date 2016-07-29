@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using Easy.IOC;
+using Easy.Modules.Role;
 
 namespace Easy.Models
 {
@@ -32,6 +34,6 @@ namespace Easy.Models
         string Hobby { get; set; }
         string QQ { get; set; }
         string Email { get; set; }
-        int PermissionValue { get; set; }
+        IEnumerable<UserRoleRelation> Roles { get; set; }
     }
 }

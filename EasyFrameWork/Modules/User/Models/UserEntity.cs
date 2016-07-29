@@ -38,7 +38,6 @@ namespace Easy.Modules.User.Models
 
         public string ApiLoginToken { get; set; }
         public IEnumerable<UserRoleRelation> Roles { get; set; }
-        public int PermissionValue { get; set; }
     }
     class UserMetaData : DataViewMetaData<UserEntity>
     {
@@ -51,7 +50,6 @@ namespace Easy.Modules.User.Models
             DataConfig(m => m.PassWordNew).Ignore();
             DataConfig(m => m.Roles)
                 .SetReference<UserRoleRelation, IUserRoleRelationService>((user, relation) => user.UserID == relation.UserID);
-            DataConfig(m => m.PermissionValue).Ignore();
         }
 
         protected override void ViewConfigure()
@@ -79,7 +77,6 @@ namespace Easy.Modules.User.Models
             ViewConfig(p => p.UserTypeCD).AsDropDownList().DataSource(SourceType.Dictionary);
             ViewConfig(p => p.Title).AsHidden();
             ViewConfig(m => m.ApiLoginToken).AsTextBox().ReadOnly().HideInGrid().Hide();
-            ViewConfig(p => p.PermissionValue).AsHidden().Ignore();
         }
     }
 }

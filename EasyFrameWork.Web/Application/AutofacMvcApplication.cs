@@ -35,12 +35,12 @@ namespace Easy.Web.Application
             _lifetimeScopeProvider.EndLifetimeScope();
         }
 
-        public ContainerBuilder AutofacContainerBuilder { get; private set; }
+        private ContainerBuilder _autofacContainerBuilder;
 
         private IContainerAdapter _containerAdapter;
         public override IContainerAdapter ContainerAdapter
         {
-            get { return _containerAdapter ?? (_containerAdapter = new AutofacContainerAdapter(AutofacContainerBuilder)); }
+            get { return _containerAdapter ?? (_containerAdapter = new AutofacContainerAdapter(_autofacContainerBuilder)); }
         }
 
 
@@ -51,13 +51,13 @@ namespace Easy.Web.Application
             ModelMetadataProviders.Current = new EasyModelMetaDataProvider();
             //ModelBinderProviders.BinderProviders.Add(new EasyBinderProvider());
 
-            AutofacContainerBuilder = new ContainerBuilder();
-            AutofacContainerBuilder.RegisterType<FilterControllerFactory>().As<IControllerFactory>();
-            AutofacContainerBuilder.RegisterType<EasyControllerActivator>().As<IControllerActivator>();
-            AutofacContainerBuilder.RegisterType<HttpItemsValueProvider>().As<IHttpItemsValueProvider>().SingleInstance();
+            _autofacContainerBuilder = new ContainerBuilder();
+            _autofacContainerBuilder.RegisterType<FilterControllerFactory>().As<IControllerFactory>();
+            _autofacContainerBuilder.RegisterType<EasyControllerActivator>().As<IControllerActivator>();
+            _autofacContainerBuilder.RegisterType<HttpItemsValueProvider>().As<IHttpItemsValueProvider>().SingleInstance();
             //AutofacContainerBuilder.RegisterType<ApplicationContext>().As<IApplicationContext>().InstancePerLifetimeScope();
 
-            AutofacContainerBuilder.RegisterType<RequestLifetimeScopeProvider>().As<ILifetimeScopeProvider>().SingleInstance();
+            _autofacContainerBuilder.RegisterType<RequestLifetimeScopeProvider>().As<ILifetimeScopeProvider>().SingleInstance();
             //AutofacContainerBuilder.RegisterType<DataDictionaryService>().As<IDataDictionaryService>();
             //AutofacContainerBuilder.RegisterType<LanguageService>().As<ILanguageService>().SingleInstance();
 
@@ -68,7 +68,7 @@ namespace Easy.Web.Application
 
             Application_Starting();
 
-            _lifetimeScopeProvider = new AutofacRegister(AutofacContainerBuilder,typeof(System.Web.Mvc.Controller)).Regist(AutofacContainerBuilder.Build());
+            _lifetimeScopeProvider = new AutofacRegister(_autofacContainerBuilder,typeof(System.Web.Mvc.Controller)).Regist(_autofacContainerBuilder.Build());
 
             TaskManager.ExcuteAll();
 

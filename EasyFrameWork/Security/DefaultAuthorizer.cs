@@ -1,4 +1,8 @@
-﻿using Easy.Models;
+﻿using System.Linq;
+using Easy.Data;
+using Easy.Extend;
+using Easy.Models;
+using Easy.Modules.Role;
 using Easy.Modules.User.Models;
 using Easy.Modules.User.Service;
 using Microsoft.Practices.ServiceLocation;
@@ -8,20 +12,21 @@ namespace Easy.Security
     public class DefaultAuthorizer : IAuthorizer
     {
 
-        public bool Authorize(int permission)
+        public bool Authorize(string permission)
         {
             return Authorize(permission, ServiceLocator.Current.GetInstance<IApplicationContext>().CurrentUser);
         }
 
-        public bool Authorize(int permission, IUser user)
+        public bool Authorize(string permission, IUser user)
         {
-            if (user.PermissionValue == 0)
+            if (user.Roles == null || !user.Roles.Any())
             {
-                user.PermissionValue = ServiceLocator.Current.GetInstance<IUserService>().GetPermissionValue(user.UserID);
-                if (user.PermissionValue < 0) return false;
+                return false;
             }
-
-            return (user.PermissionValue & permission) == permission;
+            var roles = user.Roles.ToList(m => m.ID);
+            return ServiceLocator.Current.GetInstance<IRoleService>()
+                 .Get(new DataFilter().Where("ID", OperatorType.In, roles))
+                 .Any(r => r.Permissions.Any(p => p.PermissionKey == permission));
         }
     }
 }

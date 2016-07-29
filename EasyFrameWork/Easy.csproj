@@ -96,8 +96,11 @@
     <Compile Include="Extend\ExtDate.cs" />
     <Compile Include="Extend\ExtIEnumerable.cs" />
     <Compile Include="Extend\ExtType.cs" />
+    <Compile Include="Modules\Role\IPermissionService.cs" />
     <Compile Include="Modules\Role\IRoleService.cs" />
     <Compile Include="Modules\Role\IUserRoleRelationService.cs" />
+    <Compile Include="Modules\Role\Permission.cs" />
+    <Compile Include="Modules\Role\PermissionService.cs" />
     <Compile Include="Modules\Role\RoleEntity.cs" />
     <Compile Include="Modules\Role\RoleService.cs" />
     <Compile Include="Modules\Role\UserRoleRelation.cs" />

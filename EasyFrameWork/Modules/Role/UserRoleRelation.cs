@@ -21,6 +21,7 @@ namespace Easy.Modules.Role
         {
             DataTable("UserRoleRelation");
             DataConfig(m => m.ID).AsIncreasePrimaryKey();
+            DataConfig(m => m.Status).Ignore();
         }
 
         protected override void ViewConfigure()

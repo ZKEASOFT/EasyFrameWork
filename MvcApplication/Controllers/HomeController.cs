@@ -13,9 +13,11 @@ using MvcApplication.Service;
 using Easy.Web.Extend;
 using System.Collections.Generic;
 using System.Linq.Expressions;
+using Easy.Web.Authorize;
 
 namespace MvcApplication.Controllers
 {
+    [DefaultAuthorize("dddd")]
     public class HomeController : BasicController<Example, int, IExampleService>
     {
 

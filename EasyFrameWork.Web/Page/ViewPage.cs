@@ -9,6 +9,7 @@ using System.Web;
 using System.Web.Mvc;
 using Easy.Extend;
 using Microsoft.Practices.ServiceLocation;
+using Easy.Security;
 
 namespace Easy.Web.Page
 {
@@ -101,6 +102,15 @@ namespace Easy.Web.Page
             get
             {
                 return _applicationContext ?? (_applicationContext = ServiceLocator.Current.GetInstance<IApplicationContext>());
+            }
+        }
+
+        private IAuthorizer _authorizer;
+        public IAuthorizer Authorizer
+        {
+            get
+            {
+                return _authorizer ?? (_authorizer = ServiceLocator.Current.GetInstance<IAuthorizer>());
             }
         }
     }

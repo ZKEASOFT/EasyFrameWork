@@ -4,6 +4,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Web.Mvc;
 using Easy.Extend;
+using Easy.Security;
 
 namespace Easy.Web.Filter
 {
@@ -21,6 +22,12 @@ namespace Easy.Web.Filter
             where TFilterAttribute : FilterAttribute
         {
             Register(action, typeof(TFilterAttribute));
+        }
+        public void Register<TController, TFilterAttribute>(Expression<Action<TController>> action, Action<TFilterAttribute> configFilter)
+            where TController : System.Web.Mvc.Controller
+            where TFilterAttribute : FilterAttribute
+        {
+            Register(action, configFilter, typeof(TFilterAttribute));
         }
         public void Register<TController, TFilterAttribute1, TFilterAttribute2>(Expression<Action<TController>> action)
             where TController : System.Web.Mvc.Controller
@@ -109,7 +116,22 @@ namespace Easy.Web.Filter
                 new ReflectedControllerDescriptor(typeof(TController))), filterTypes));
 
         }
+        public void Register<TController, TFilterAttribute>(Expression<Action<TController>> action, Action<TFilterAttribute> configeFilter, params Type[] filterTypes)
+            where TController : System.Web.Mvc.Controller
+            where TFilterAttribute : FilterAttribute
+        {
+            var controllerType = typeof(TController);
+            var methodCall = action.Body as MethodCallExpression;
+            List<FilterRegisterItem> registerItems;
+            if (!_filterRegisterItems.TryGetValue(controllerType, out registerItems))
+            {
+                registerItems = new List<FilterRegisterItem>();
+                _filterRegisterItems[controllerType] = registerItems;
+            }
+            registerItems.Add(new FilterRegisterConfigureItem<TFilterAttribute>(controllerType,
+                new ReflectedActionDescriptor(methodCall.Method, methodCall.Method.Name, new ReflectedControllerDescriptor(typeof(TController))), configeFilter, filterTypes));
 
+        }
         public FilterInfo GetMatched(ControllerContext controllerContext, ActionDescriptor actionDescriptor)
         {
             List<FilterRegisterItem> registerItems;
