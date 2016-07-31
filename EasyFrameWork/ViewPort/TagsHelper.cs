@@ -152,6 +152,7 @@ namespace Easy.ViewPort
                 _attributes.Remove(this._key);
             }
             tag.DataType = _dataType;
+            tag.GridSetting.Visiable = false;
             _attributes.Add(this._key, tag);
             return tag;
         }

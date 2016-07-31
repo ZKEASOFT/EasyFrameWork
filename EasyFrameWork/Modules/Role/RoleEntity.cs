@@ -18,7 +18,7 @@ namespace Easy.Modules.Role
     {
         protected override void DataConfigure()
         {
-            DataTable("Role");
+            DataTable("Roles");
             DataConfig(m => m.ID).AsIncreasePrimaryKey();
             DataConfig(m => m.Permissions).SetReference<Permission, IPermissionService>((role, permission) => role.ID == permission.RoleId);
         }
@@ -26,6 +26,7 @@ namespace Easy.Modules.Role
         protected override void ViewConfigure()
         {
             ViewConfig(m => m.ID).AsHidden();
+            ViewConfig(m => m.Title).AsTextBox().Required();
         }
     }
 }

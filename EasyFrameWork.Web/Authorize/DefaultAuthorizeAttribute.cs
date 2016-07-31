@@ -28,7 +28,15 @@ namespace Easy.Web.Authorize
 
         protected override void HandleUnauthorizedRequest(AuthorizationContext filterContext)
         {
-            filterContext.Result = new HttpForbiddenResult();
+            if (!filterContext.HttpContext.Request.IsAuthenticated)
+            {
+                filterContext.Result = new HttpUnauthorizedResult();
+            }
+            else
+            {
+                filterContext.Result = new HttpForbiddenResult();
+            }
+
         }
 
         protected override bool AuthorizeCore(HttpContextBase httpContext)
