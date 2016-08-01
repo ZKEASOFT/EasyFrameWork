@@ -18,6 +18,7 @@ namespace Easy.Modules.Role
         {
             DataTable("Permission");
             DataConfig(m => m.PermissionKey).AsPrimaryKey();
+            DataConfig(m => m.RoleId).AsPrimaryKey();
         }
 
         protected override void ViewConfigure()

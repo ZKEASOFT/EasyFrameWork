@@ -1,4 +1,6 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
+using Easy.Constant;
 using Easy.Data;
 using Easy.Extend;
 using Easy.Models;
@@ -11,7 +13,7 @@ namespace Easy.Security
 {
     public class DefaultAuthorizer : IAuthorizer
     {
-
+        private Dictionary<string, IEnumerable<Permission>> _userPermissions;
         public bool Authorize(string permission)
         {
             return Authorize(permission, ServiceLocator.Current.GetInstance<IApplicationContext>().CurrentUser);
@@ -23,14 +25,22 @@ namespace Easy.Security
             {
                 return true;
             }
+            if (_userPermissions != null && _userPermissions.ContainsKey(user.UserID))
+            {
+                return _userPermissions[user.UserID].Any(m => m.PermissionKey == permission);
+            }
             if (user.Roles == null || !user.Roles.Any())
             {
                 return false;
             }
-            var roles = user.Roles.ToList(m => m.ID);
-            return ServiceLocator.Current.GetInstance<IRoleService>()
-                 .Get(new DataFilter().Where("ID", OperatorType.In, roles))
-                 .Any(r => r.Permissions.Any(p => p.PermissionKey == permission));
+            _userPermissions = _userPermissions ?? new Dictionary<string, IEnumerable<Permission>>();
+
+            var roles = user.Roles.ToList(m => m.RoleID);
+            List<Permission> permissions = new List<Permission>();
+            ServiceLocator.Current.GetInstance<IRoleService>()
+                 .Get(new DataFilter().Where("ID", OperatorType.In, roles).Where("Status", OperatorType.Equal, (int)RecordStatus.Active)).Each(r => permissions.AddRange(r.Permissions));
+            _userPermissions.Add(user.UserID, permissions);
+            return permissions.Any(m => m.PermissionKey == permission);
         }
     }
 }
