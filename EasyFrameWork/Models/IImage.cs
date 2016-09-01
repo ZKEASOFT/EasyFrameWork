@@ -1,4 +1,5 @@
 ﻿using Easy.IOC;
+using System;
 
 namespace Easy.Models
 {

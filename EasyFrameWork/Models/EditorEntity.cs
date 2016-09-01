@@ -3,6 +3,7 @@ using Easy.IOC;
 
 namespace Easy.Models
 {
+    [Serializable]
     public class EditorEntity : IEntity
     {
 
@@ -39,7 +40,7 @@ namespace Easy.Models
         /// 最后更新日期
         /// </summary>
         public DateTime? LastUpdateDate { get; set; }
-
+        
         public Constant.ActionType? ActionType { get; set; }
     }
 

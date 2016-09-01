@@ -113,6 +113,10 @@ namespace Easy.Reflection
             else if (exp.NodeType == ExpressionType.MemberAccess)
             {
                 var member = exp as MemberExpression;
+                if (member.Expression == null)
+                {
+                    return member.Type;
+                }
                 return member.Expression.Type;
             }
             return exp.Type;

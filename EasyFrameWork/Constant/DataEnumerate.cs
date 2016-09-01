@@ -17,6 +17,7 @@ namespace Easy.Constant
         Active = 1,
         InActive = 2
     }
+    [Serializable]
     public enum ActionType
     {
         Create = 1,

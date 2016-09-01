@@ -5,6 +5,7 @@ using System.Text;
 
 namespace Easy.Models
 {
+    [Serializable]
     public class HumanBase : EditorEntity
     {
         /// <summary>

@@ -17,7 +17,6 @@ using Easy.Web.Authorize;
 
 namespace MvcApplication.Controllers
 {
-    [DefaultAuthorize("dddd")]
     public class HomeController : BasicController<Example, int, IExampleService>
     {
 
@@ -28,9 +27,6 @@ namespace MvcApplication.Controllers
         }
         public override ActionResult Index()
         {
-            Service.Get(getI());
-
-
             return base.Index();
         }
         int getI()
