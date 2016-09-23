@@ -1,4 +1,5 @@
-﻿using System;
+/* http://www.zkea.net/ Copyright 2016 ZKEASOFT http://www.zkea.net/licenses */
+using System;
 using Easy.Web.Resource;
 using Easy.Web.Resource.Enums;
 using System.Collections.Generic;

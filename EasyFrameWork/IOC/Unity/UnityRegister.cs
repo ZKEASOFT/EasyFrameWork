@@ -1,4 +1,5 @@
-﻿using System;
+/* http://www.zkea.net/ Copyright 2016 ZKEASOFT http://www.zkea.net/licenses */
+using System;
 using Easy.Extend;
 using Microsoft.Practices.ServiceLocation;
 using Microsoft.Practices.Unity;

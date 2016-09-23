@@ -1,4 +1,5 @@
-﻿using Easy.Data;
+/* http://www.zkea.net/ Copyright 2016 ZKEASOFT http://www.zkea.net/licenses */
+using Easy.Data;
 using System.Collections.Generic;
 using Easy.Data.DataBase;
 using Easy.IOC;

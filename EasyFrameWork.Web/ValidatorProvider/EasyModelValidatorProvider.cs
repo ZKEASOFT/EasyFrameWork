@@ -1,4 +1,5 @@
-﻿using Easy.Web.Metadata;
+/* http://www.zkea.net/ Copyright 2016 ZKEASOFT http://www.zkea.net/licenses */
+using Easy.Web.Metadata;
 using Easy.ViewPort.Validator;
 using System;
 using System.Collections.Generic;

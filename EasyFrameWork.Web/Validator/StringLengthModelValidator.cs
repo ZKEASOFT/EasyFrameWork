@@ -1,4 +1,5 @@
-﻿using Easy.ViewPort.Validator;
+/* http://www.zkea.net/ Copyright 2016 ZKEASOFT http://www.zkea.net/licenses */
+using Easy.ViewPort.Validator;
 using Easy.Web.Metadata;
 using System;
 using System.Collections.Generic;

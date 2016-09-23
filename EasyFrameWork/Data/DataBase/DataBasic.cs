@@ -1,4 +1,5 @@
-﻿using System.Data.Common;
+/* http://www.zkea.net/ Copyright 2016 ZKEASOFT http://www.zkea.net/licenses */
+using System.Data.Common;
 using System.Linq;
 using Easy.MetaData;
 using Easy.Constant;

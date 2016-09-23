@@ -1,4 +1,5 @@
-﻿using Easy.ViewPort.Grid;
+/* http://www.zkea.net/ Copyright 2016 ZKEASOFT http://www.zkea.net/licenses */
+using Easy.ViewPort.Grid;
 using Easy.ViewPort.Validator;
 using Easy.Extend;
 using System;

@@ -1,4 +1,5 @@
-﻿using Easy.IOC;
+/* http://www.zkea.net/ Copyright 2016 ZKEASOFT http://www.zkea.net/licenses */
+using Easy.IOC;
 using System;
 using System.Collections.Generic;
 using System.Linq;

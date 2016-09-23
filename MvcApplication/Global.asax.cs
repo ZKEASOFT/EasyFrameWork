@@ -1,4 +1,5 @@
-﻿using Easy;
+/* http://www.zkea.net/ Copyright 2016 ZKEASOFT http://www.zkea.net/licenses */
+using Easy;
 using Easy.IOC;
 using Easy.Modules.MutiLanguage;
 using Easy.Modules.User.Service;

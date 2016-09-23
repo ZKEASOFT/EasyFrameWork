@@ -1,4 +1,5 @@
-﻿using System.Data;
+/* http://www.zkea.net/ Copyright 2016 ZKEASOFT http://www.zkea.net/licenses */
+using System.Data;
 using Easy.MetaData;
 using System;
 using System.Collections;

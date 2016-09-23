@@ -1,4 +1,5 @@
-﻿using Easy.Models;
+/* http://www.zkea.net/ Copyright 2016 ZKEASOFT http://www.zkea.net/licenses */
+using Easy.Models;
 using System;
 using System.Collections;
 using System.Collections.Generic;
