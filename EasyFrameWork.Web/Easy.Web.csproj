@@ -165,7 +165,9 @@
     <Compile Include="Validator\RemoteModelValidator.cs" />
     <Compile Include="Validator\RegularModelValidator.cs" />
     <Compile Include="Validator\RequiredModelValidator.cs" />
-    <Compile Include="ViewEngine\PlugViewEngine.cs" />
+    <Compile Include="ViewEngine\PrecompliedViewEngine.cs" />
+    <Compile Include="ViewEngine\PrecompiledPageActivator.cs" />
+    <Compile Include="ViewEngine\PrecompiledView.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
