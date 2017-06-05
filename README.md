@@ -1,3 +1,9 @@
+#该项目不再单独维护，请移步至：
+
+[ZKEACMS](https://github.com/SeriaWei/ASP.NET-MVC-CMS)
+
+[ZKEACMS .net core](https://github.com/SeriaWei/ZKEACMS.Core)
+
 #EasyFrameWork
 主旨：简单使用，快速开发。
 =============
