@@ -59,6 +59,3 @@
 
 
 EasyFramework使用如此简单，并不代表它只能实现这样简单的东西。简约，但并不简单。
-License
-------
-[Apache-2.0](http://opensource.org/licenses/Apache-2.0)
